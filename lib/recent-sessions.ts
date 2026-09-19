@@ -42,6 +42,37 @@ export function saveRecentSession(
   }
 }
 
+export function removeRecentSession(sessionId: string): void {
+  const storage = getStorage();
+  if (!storage) {
+    return;
+  }
+  const existing = getRecentSessions().filter((r) => r.sessionId !== sessionId);
+  try {
+    storage.setItem(KEY, JSON.stringify(existing));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("grouptalk-recent-sessions-updated"));
+    }
+  } catch {
+    /* quota */
+  }
+}
+
+export function clearRecentSessions(): void {
+  const storage = getStorage();
+  if (!storage) {
+    return;
+  }
+  try {
+    storage.removeItem(KEY);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("grouptalk-recent-sessions-updated"));
+    }
+  } catch {
+    /* quota */
+  }
+}
+
 export function getRecentSessions(): RecentSessionEntry[] {
   const storage = getStorage();
   if (!storage) {

@@ -18,6 +18,7 @@ export type SessionDraftSnapshot = {
 type SessionDraftState = SessionDraftSnapshot & {
   hasHydrated: boolean;
   setHasHydrated: (value: boolean) => void;
+  selectCategory: (category: Category) => void;
   toggleCategory: (category: Category) => void;
   setCrush: (value: boolean) => void;
   addPlayer: (name: string) => { ok: true } | { ok: false; error: string };
@@ -37,6 +38,13 @@ export const useSessionDraftStore = create<SessionDraftState>()(
       ...emptyDraft,
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
+      selectCategory: (category) => {
+        set({
+          categories: [category],
+          crushQuestionEnabled:
+            category === Category.FRIENDS ? get().crushQuestionEnabled : false,
+        });
+      },
       toggleCategory: (category) => {
         const { categories } = get();
         const isSelected = categories.includes(category);

@@ -10,6 +10,7 @@ import {
 } from "@/lib/game/category-tone";
 import type { PlayPlayer } from "@/lib/game/play-types";
 import { Category } from "@/generated/prisma/enums";
+import { cn } from "@/lib/utils";
 
 type WheelProps = {
   players: PlayPlayer[];
@@ -18,6 +19,8 @@ type WheelProps = {
   durationMs: number;
   spinning: boolean;
   onSpinComplete: () => void;
+  onClick?: () => void;
+  disabled?: boolean;
 };
 
 const SIZE = 320;
@@ -49,6 +52,8 @@ export function Wheel({
   durationMs,
   spinning,
   onSpinComplete,
+  onClick,
+  disabled = false,
 }: WheelProps) {
   const count = Math.max(players.length, 1);
   const slice = 360 / count;
@@ -56,8 +61,25 @@ export function Wheel({
   const tone = categoryTone(category);
 
   return (
-    <div className="relative mx-auto size-[min(86vw,20.5rem)]">
-      <div className="absolute top-[-6px] left-1/2 z-10 -translate-x-1/2">
+    <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-label="Quay bánh xe"
+      aria-disabled={disabled}
+      onClick={disabled ? undefined : onClick}
+      onKeyDown={(e) => {
+        if (!disabled && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className={cn(
+        "relative mx-auto size-[min(86vw,20.5rem)] select-none",
+        !disabled && onClick && "cursor-pointer transition hover:scale-[1.02] active:scale-[0.98]",
+        disabled && "cursor-default",
+      )}
+    >
+      <div className="absolute top-[-6px] left-1/2 z-10 -translate-x-1/2 pointer-events-none">
         <div className="h-0 w-0 border-x-[10px] border-t-[18px] border-x-transparent border-t-ink" />
       </div>
       <motion.div

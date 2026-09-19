@@ -256,6 +256,8 @@ export function PlayScreen({
               durationMs={spinMs}
               spinning={spinning}
               onSpinComplete={finishSpin}
+              onClick={handleSpin}
+              disabled={phase !== "idle" || busy}
             />
             <motion.div
               animate={

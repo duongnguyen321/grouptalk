@@ -1,7 +1,9 @@
 import { expect, test, beforeEach } from "bun:test";
 import { Category } from "@/generated/prisma/enums";
 import {
+  clearRecentSessions,
   getRecentSessions,
+  removeRecentSession,
   saveRecentSession,
 } from "@/lib/recent-sessions";
 
@@ -88,4 +90,38 @@ test("caps recent sessions at maximum 5 entries", () => {
   expect(sessions.length).toBe(5);
   expect(sessions[0].sessionId).toBe("s7");
   expect(sessions[4].sessionId).toBe("s3");
+});
+
+test("removes a specific recent session", () => {
+  saveRecentSession({
+    sessionId: "s1",
+    sessionCode: "11111111",
+    categories: [Category.FRIENDS],
+  });
+  saveRecentSession({
+    sessionId: "s2",
+    sessionCode: "22222222",
+    categories: [Category.COUPLE],
+  });
+
+  removeRecentSession("s1");
+  const sessions = getRecentSessions();
+  expect(sessions.length).toBe(1);
+  expect(sessions[0].sessionId).toBe("s2");
+});
+
+test("clears all recent sessions", () => {
+  saveRecentSession({
+    sessionId: "s1",
+    sessionCode: "11111111",
+    categories: [Category.FRIENDS],
+  });
+  saveRecentSession({
+    sessionId: "s2",
+    sessionCode: "22222222",
+    categories: [Category.COUPLE],
+  });
+
+  clearRecentSessions();
+  expect(getRecentSessions()).toEqual([]);
 });

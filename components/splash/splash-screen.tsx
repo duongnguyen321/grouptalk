@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "@/app/auth/actions";
 import { getDeviceId, getOrCreateDeviceId } from "@/lib/device";
@@ -114,6 +115,13 @@ export function SplashScreen({
               Google chưa cấu hình — chơi ngay vẫn được.
             </p>
           )}
+
+          <Link
+            href="/contribute"
+            className="mt-2 text-center text-sm font-bold text-ink-muted underline underline-offset-4 transition hover:text-ink"
+          >
+            Đóng góp câu hỏi
+          </Link>
         </div>
       </div>
     </main>

@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
 import { Category } from "@/generated/prisma/enums";
 import { BackHeader } from "@/components/ui/back-header";
 import { Button } from "@/components/ui/button";
@@ -18,10 +17,10 @@ export function CategorySelect() {
   const crushQuestionEnabled = useSessionDraftStore(
     (state) => state.crushQuestionEnabled,
   );
-  const toggleCategory = useSessionDraftStore((state) => state.toggleCategory);
+  const selectCategory = useSessionDraftStore((state) => state.selectCategory);
   const setCrush = useSessionDraftStore((state) => state.setCrush);
   const hasFriends = categories.includes(Category.FRIENDS);
-  const canContinue = categories.length > 0;
+  const canContinue = categories.length === 1;
 
   return (
     <main className="flex min-h-full flex-1 flex-col bg-canvas">
@@ -35,38 +34,41 @@ export function CategorySelect() {
             Chơi với nhóm nào?
           </h1>
           <p className="mt-3 text-base text-ink-soft">
-            Chọn một hoặc nhiều. Câu hỏi sẽ theo đúng nhóm này.
+            Chọn nhóm bạn đang chơi cùng. Câu hỏi sẽ theo đúng nhóm này.
           </p>
         </header>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div
+          role="radiogroup"
+          aria-label="Chọn nhóm chơi"
+          className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4"
+        >
           {CATEGORY_OPTIONS.map((option) => {
-            const isSelected = categories.includes(option.value);
+            const isSelected = categories[0] === option.value;
             const Icon = option.icon;
 
             return (
               <motion.button
                 key={option.value}
                 type="button"
-                aria-pressed={isSelected}
+                role="radio"
+                aria-checked={isSelected}
                 whileTap={{ scale: TAP_SCALE }}
-                onClick={() => toggleCategory(option.value)}
+                onClick={() => selectCategory(option.value)}
                 className={cn(
                   "relative flex min-h-36 flex-col items-start justify-between rounded-[1.75rem] border-2 px-4 py-4 text-left transition",
                   isSelected
-                    ? `${option.selectedClass} border-white/80`
-                    : "border-ink/10 bg-white text-ink",
+                    ? `${option.selectedClass} border-white/80 shadow-md`
+                    : "border-ink/10 bg-white text-ink hover:border-ink/20",
                 )}
               >
-                <div className="flex size-10 items-center justify-center rounded-xl bg-black/5">
-                  <Icon className="size-6" />
-                </div>
+                <Icon className="size-8" />
                 <span className="font-display text-xl font-extrabold">
                   {option.label}
                 </span>
                 {isSelected ? (
                   <span className="absolute top-3 right-3 grid size-7 place-items-center rounded-full bg-white/90 text-sm font-extrabold text-ink">
-                    <Check className="size-4 stroke-[3]" />
+                    ✓
                   </span>
                 ) : null}
               </motion.button>
@@ -75,10 +77,8 @@ export function CategorySelect() {
         </div>
 
         {hasFriends ? (
-          <label className="mt-5 flex min-h-20 cursor-pointer items-center gap-4 rounded-[1.5rem] bg-white px-4 py-4 shadow-[0_4px_12px_rgba(28,25,23,0.04)]">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-cat-friends/15 text-cat-friends-deep">
-              <Sparkles className="size-5" />
-            </div>
+          <label className="mt-5 flex min-h-20 cursor-pointer items-center gap-4 rounded-[1.5rem] bg-white px-4 py-4">
+            <span className="text-2xl font-bold">💌</span>
             <span className="flex-1 text-lg leading-snug font-extrabold text-ink">
               Trong nhóm có ai đang &lsquo;thích thầm&rsquo; không?
             </span>
