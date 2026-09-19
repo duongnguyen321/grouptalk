@@ -16,17 +16,23 @@ import { QuestionCard } from "@/components/cards/question-card";
 import { VoteHideDialog } from "@/components/cards/vote-hide-dialog";
 import { ExitSessionDialog } from "@/components/play/exit-session-dialog";
 import { PlayerChipRow } from "@/components/play/player-chip-row";
+import { PrioritySheet } from "@/components/play/priority-sheet";
 import { Wheel } from "@/components/wheel/wheel";
 import { WinnerReveal } from "@/components/wheel/winner-reveal";
 import { Button } from "@/components/ui/button";
 import { Category } from "@/generated/prisma/enums";
-import { HIDE_TOAST_MS, SPIN_BUSY_ERROR } from "@/lib/constants";
+import {
+  HIDE_TOAST_MS,
+  PRIORITY_LONG_PRESS_MS,
+  SPIN_BUSY_ERROR,
+} from "@/lib/constants";
 import { getOrCreateDeviceId } from "@/lib/device";
 import {
   categoryIcon,
   categoryLabel,
   primaryCategory,
 } from "@/lib/game/category-tone";
+import { useLongPress } from "@/lib/hooks/use-long-press";
 import {
   MENU_DURATION_S,
   PHASE_EASE,
@@ -53,6 +59,7 @@ type PlayScreenProps = {
   sessionCode: string;
   categories: Category[];
   players: PlayPlayer[];
+  initialWeights: Record<string, number>;
 };
 
 export function PlayScreen({
@@ -60,6 +67,7 @@ export function PlayScreen({
   sessionCode,
   categories,
   players,
+  initialWeights,
 }: PlayScreenProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<PlayPhase>("idle");
@@ -70,6 +78,8 @@ export function PlayScreen({
   const [revealed, setRevealed] = useState<RevealedCard | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
+  const [priorityOpen, setPriorityOpen] = useState(false);
+  const [weights, setWeights] = useState<Record<string, number>>(initialWeights);
   const [hideOpen, setHideOpen] = useState(false);
   const [hideBusy, setHideBusy] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -78,6 +88,11 @@ export function PlayScreen({
   const accent = primaryCategory(categories);
   const spinning = phase === "spinning";
   const spinningRef = useRef(false);
+
+  const { handlers: longPressHandlers, didLongPress } = useLongPress(
+    () => setPriorityOpen(true),
+    { delayMs: PRIORITY_LONG_PRESS_MS },
+  );
 
   const showToast = useCallback((message: string) => {
     setToast(message);
@@ -224,8 +239,12 @@ export function PlayScreen({
         </div>
         <button
           type="button"
-          onClick={() => router.push(`/session/${sessionId}/code`)}
-          className="ml-auto mr-2 rounded-full bg-white/10 px-3 py-1 font-display text-xs font-bold tracking-widest text-white/80 transition hover:bg-white/15"
+          {...longPressHandlers}
+          onClick={() => {
+            if (didLongPress()) return;
+            router.push(`/session/${sessionId}/code`);
+          }}
+          className="ml-auto mr-2 rounded-full bg-white/10 px-3 py-1 font-display text-xs font-bold tracking-widest text-white/80 transition hover:bg-white/15 select-none"
         >
           {sessionCode}
         </button>
@@ -360,6 +379,15 @@ export function PlayScreen({
         open={exitOpen}
         onOpenChange={setExitOpen}
         onConfirm={() => router.push("/session")}
+      />
+
+      <PrioritySheet
+        open={priorityOpen}
+        players={players}
+        sessionId={sessionId}
+        weights={weights}
+        onOpenChange={setPriorityOpen}
+        onWeightsChange={setWeights}
       />
 
       <AnimatePresence>

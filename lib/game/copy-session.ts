@@ -51,6 +51,27 @@ export async function copySessionFromCode(
         playerIdBySource.set(player.id, created.id);
       }
 
+      const sourcePriority = source.priorityConfig as {
+        weights?: Record<string, number>;
+      } | null;
+
+      const remappedWeights: Record<string, number> = {};
+      if (sourcePriority?.weights) {
+        for (const [oldId, weight] of Object.entries(sourcePriority.weights)) {
+          const newId = playerIdBySource.get(oldId);
+          if (newId) {
+            remappedWeights[newId] = weight;
+          }
+        }
+      }
+
+      if (Object.keys(remappedWeights).length > 0) {
+        await tx.gameSession.update({
+          where: { id: session.id },
+          data: { priorityConfig: { weights: remappedWeights } },
+        });
+      }
+
       if (source.answers.length > 0) {
         await tx.sessionAnswer.createMany({
           data: source.answers.flatMap((answer) => {

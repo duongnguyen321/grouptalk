@@ -1,8 +1,12 @@
 "use server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { SPIN_BUSY_ERROR } from "@/lib/constants";
 import { prisma } from "@/lib/db";
-import { pickRandomItem, shouldSoftDeleteQuestion } from "@/lib/game/eligibility";
+import {
+  pickWeightedRandom,
+  shouldSoftDeleteQuestion,
+} from "@/lib/game/eligibility";
 import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
 import { loadRevealedCard, pickThreeQuestions } from "@/lib/game/select-question";
 import { getCurrentUser } from "@/lib/identity";
@@ -11,16 +15,51 @@ import { LockContentionError, withSessionLock } from "@/lib/redis-lock";
 type ActionFail = { ok: false; error: string };
 type DeviceInput = { deviceId?: string };
 
+export async function setPriorityAction(
+  sessionId: string,
+  weights: Record<string, number>,
+): Promise<{ ok: true } | ActionFail> {
+  try {
+    const players = await prisma.sessionPlayer.findMany({
+      where: { sessionId },
+      select: { id: true },
+    });
+    const validIds = new Set(players.map((p) => p.id));
+    const cleaned = Object.fromEntries(
+      Object.entries(weights).filter(([id, w]) => validIds.has(id) && w > 1),
+    );
+    const hasBoost = Object.keys(cleaned).length > 0;
+    await prisma.gameSession.update({
+      where: { id: sessionId },
+      data: { priorityConfig: hasBoost ? { weights: cleaned } : Prisma.DbNull },
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Không lưu được cấu hình ưu tiên." };
+  }
+}
+
 export async function spinAction(
   sessionId: string,
 ): Promise<{ ok: true; player: PlayPlayer } | ActionFail> {
   try {
     return await withSessionLock(sessionId, async () => {
-      const players = await prisma.sessionPlayer.findMany({
-        where: { sessionId },
-        select: { id: true, displayName: true },
-      });
-      const player = pickRandomItem(players);
+      const [players, session] = await Promise.all([
+        prisma.sessionPlayer.findMany({
+          where: { sessionId },
+          select: { id: true, displayName: true },
+        }),
+        prisma.gameSession.findUnique({
+          where: { id: sessionId },
+          select: { priorityConfig: true },
+        }),
+      ]);
+
+      const weights =
+        (session?.priorityConfig as { weights?: Record<string, number> } | null)
+          ?.weights ?? {};
+
+      const player = pickWeightedRandom(players, weights);
 
       if (!player) {
         return { ok: false as const, error: "Phiên này chưa có người chơi." };

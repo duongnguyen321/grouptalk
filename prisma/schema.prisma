@@ -86,6 +86,7 @@ model GameSession {
   copiedFromSessionId  String?
   categories           Category[]
   crushQuestionEnabled Boolean    @default(false)
+  priorityConfig       Json?
   createdAt            DateTime   @default(now())
   lastActiveAt         DateTime   @default(now())
 

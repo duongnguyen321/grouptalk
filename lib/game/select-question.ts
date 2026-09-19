@@ -110,7 +110,9 @@ export async function pickThreeQuestions(
     });
   }
 
-  return takeTeaserQuestions(pool).flatMap((item) => {
+  return takeTeaserQuestions(pool, {
+    crushQuestionEnabled: session.crushQuestionEnabled,
+  }).flatMap((item) => {
     const question = byId.get(item.id);
     if (!question) {
       return [];

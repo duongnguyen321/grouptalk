@@ -57,6 +57,7 @@ const fakeRedis = {
 
     return 0;
   },
+  incr: async () => Math.floor(10000000 + Math.random() * 90000000),
 };
 
 mock.module("@/lib/redis", () => ({ redis: fakeRedis }));

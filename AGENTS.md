@@ -121,3 +121,20 @@ Every screen and every user action must animate. A flow is not done when it mere
 - `startGameSession` action returns `{ ok: true, sessionId, sessionCode }` so clients can persist the shareable code immediately.
 - Strict Lucide icon rule: NO emojis anywhere in UI code. Category icons (`categoryIcon()`, `CATEGORY_OPTIONS`) return Lucide components (`Heart`, `User`, `Users`, `UsersRound`).
 - Interactive controls must have `whileTap={{ scale: TAP_SCALE }}` and ≥44px touch targets.
+
+## Technical rules (PLAN-008)
+
+- Priority configuration lives on `GameSession.priorityConfig` as `Json?` (shape: `{ weights: Record<sessionPlayerId, number> }`). Players with weight 1 or missing from `weights` default to 1x multiplier.
+- When all weights are reset to 1x, `setPriorityAction` writes `Prisma.DbNull` to keep the DB field clean.
+- `useLongPress` (`lib/hooks/use-long-press.ts`) tracks 700ms long-press via Pointer Events and exposes `didLongPress()` to prevent `onClick` from navigating to `/code` upon releasing after a long-press.
+- Server decides winner via `pickWeightedRandom` (`lib/game/eligibility.ts`) inside the Redis-locked `spinAction`. Wheel animation on the client remains completely natural and unchanged.
+- `copySessionFromCode` (`lib/game/copy-session.ts`) remaps `priorityConfig.weights` keys from source `SessionPlayer.id` to new `SessionPlayer.id` atomically within the session copy transaction.
+
+## Technical rules (PLAN-009)
+
+- Crush boost teaser selection in `lib/game/eligibility.ts` implements **1 Guaranteed + 2 Weighted** when `crushQuestionEnabled = true`.
+- `CRUSH_GUARANTEED_TOPICS` (`Thích thầm`, `Tình cảm`) reserves 1 guaranteed teaser card with fallback chain: `["Thích thầm", "Tình cảm"]` -> `["Kỷ niệm"]` -> general pool.
+- `CRUSH_TOPIC_WEIGHT_MAP` boosts remaining teaser slots with topic weights (Thích thầm: 3x, Tình cảm: 3x, Kỷ niệm: 2x, other: 1x) using `pickTopicWeightedRandom`.
+- Deduplication is guaranteed by object reference tracking (`Set<T>`) across draws, followed by `shuffleInPlace` so the guaranteed card position is masked.
+- Zero regression when `crushQuestionEnabled = false`: maintains pure uniform random selection via fast-path.
+

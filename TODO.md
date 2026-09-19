@@ -156,6 +156,25 @@ Based on §4:
 - [x] Custom topic pills & question type pill cards in Contribute form with inline validation hints
 - [x] Safe-area inset handling on bottom buttons & mobile input `enterKeyHint="done"`
 
+## Phase 17 — Priority Spin (PLAN-008)
+
+- [x] Schema migration: `priorityConfig Json?` on `GameSession`
+- [x] Weighted random selection utility `pickWeightedRandom` in `lib/game/eligibility.ts`
+- [x] Server Actions: `setPriorityAction` & updated `spinAction` in `app/session/[sessionId]/play/actions.ts`
+- [x] Long-press custom hook `useLongPress` in `lib/hooks/use-long-press.ts` (700ms threshold, click guard)
+- [x] Host priority sheet drawer `PrioritySheet` in `components/play/priority-sheet.tsx` (3-dot boost UI: 1x, 2x, 3x, 5x)
+- [x] Integration with `PlayScreen` and `PlayPage` (initial weights query, long-press on session code chip)
+- [x] Session copy priority remapping in `lib/game/copy-session.ts`
+- [x] Unit & integration tests in `eligibility.test.ts` and `priority-spin.test.ts`
+
+## Phase 18 — Crush Boost Questions (PLAN-009)
+
+- [x] Topic boost constants in `lib/constants.ts` (`CRUSH_GUARANTEED_TOPICS`, `CRUSH_TOPIC_WEIGHT_MAP`)
+- [x] Topic weighted random utility `pickTopicWeightedRandom` in `lib/game/eligibility.ts`
+- [x] Refactored `takeTeaserQuestions` supporting `crushQuestionEnabled` with 1 Guaranteed + 2 Weighted algorithm
+- [x] Integration with `pickThreeQuestions` in `lib/game/select-question.ts`
+- [x] Full unit tests in `lib/game/eligibility.test.ts` (guaranteed inclusion, emotional weighting, fallback chain, tiny pool handling, zero regression)
+
 ---
 
 ## Explicitly Out of Scope for v1 (per PRD §1.2)

@@ -14,6 +14,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
       id: true,
       sessionCode: true,
       categories: true,
+      priorityConfig: true,
       players: {
         select: { id: true, displayName: true },
         orderBy: { id: "asc" },
@@ -25,12 +26,18 @@ export default async function PlayPage({ params }: PlayPageProps) {
     notFound();
   }
 
+  const priorityConfig = session.priorityConfig as {
+    weights?: Record<string, number>;
+  } | null;
+  const initialWeights = priorityConfig?.weights ?? {};
+
   return (
     <PlayScreen
       sessionId={session.id}
       sessionCode={session.sessionCode}
       categories={session.categories}
       players={session.players}
+      initialWeights={initialWeights}
     />
   );
 }

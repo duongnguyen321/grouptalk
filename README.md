@@ -6,7 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-007 are implemented: identity, Splash, Session Home (with recent sessions list), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, and full UX overhaul (top-level `/contribute`, `BackHeader` navigation, exit confirmation modal, collapsible player chips, pure Lucide icons, digit grouping, and mobile safe-area insets).
+PLAN-001 through PLAN-009 are implemented: identity, Splash, Session Home (with recent sessions list), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, and crush boost teaser cards (1 guaranteed romantic card + 2 topic-weighted slots when crush mode is active).
 
 ## Stack
 
@@ -78,6 +78,8 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Mobile pass: cards sized to ~84vw on small screens, ≥44px tap targets, and `env(safe-area-inset-bottom)` on the toast, play footer, menu drawer and setup buttons
 - No audio anywhere (explicit non-goal) — `navigator.vibrate` haptics on the winner reveal is the only feedback
 - UX overhaul (PLAN-007): top-level `/contribute` route with optional `?back=<sessionId>`, `BackHeader` navigation bar across all sub-screens, exit session confirmation dialog, recent sessions quick-rejoin on Home, collapsible player chip list mid-game, Lucide icons across UI (zero emojis), and OTP-style digit grouping
+- Priority spin (PLAN-008): hidden host configuration via 700ms long-press on the session code chip, 3-dot weight selector (1x, 2x, 3x, 5x) in a bottom drawer, server-side weighted random selection, DB persistence on `GameSession.priorityConfig`, and remapping on session copy
+- Crush boost questions (PLAN-009): when 'Thích thầm' is enabled, teaser card selection guarantees 1 emotional question ('Thích thầm' / 'Tình cảm' with fallback to 'Kỷ niệm') plus 2 topic-weighted questions (3x for romantic topics, 2x for memories), with random disguise shuffling and zero regression when disabled
 
 ## Production deploy
 

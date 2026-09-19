@@ -8,6 +8,12 @@ export const SESSION_CODE_PATTERN = /^\d{8}$/;
 export const MIN_SESSION_PLAYERS = 2;
 export const PLAYER_NAME_MAX_LENGTH = 24;
 export const CRUSH_TOPIC_NAME = "Thích thầm";
+export const CRUSH_GUARANTEED_TOPICS = ["Thích thầm", "Tình cảm"] as const;
+export const CRUSH_TOPIC_WEIGHT_MAP: Readonly<Record<string, number>> = {
+  "Thích thầm": 3,
+  "Tình cảm": 3,
+  "Kỷ niệm": 2,
+} as const;
 export const TEASER_CARD_COUNT = 3;
 export const SESSION_LOCK_KEY_PREFIX = "lock:session:";
 export const SESSION_LOCK_TTL_MS = 5000;
@@ -26,3 +32,6 @@ export const QUESTION_TITLE_MIN_LENGTH = 4;
 export const QUESTION_TITLE_MAX_LENGTH = 280;
 export const HISTORY_DELETED_LABEL = "câu hỏi này đã được gỡ khỏi hệ thống";
 export const CONTRIBUTE_THANKS_TOAST = "Cảm ơn bạn đã đóng góp!";
+export const PRIORITY_WEIGHT_STEPS = [1, 2, 3, 5] as const;
+export const PRIORITY_DOT_COUNT = 3;
+export const PRIORITY_LONG_PRESS_MS = 700;
