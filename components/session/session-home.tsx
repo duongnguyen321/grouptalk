@@ -1,12 +1,103 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { Clock, Play } from "lucide-react";
 import { joinSessionByCode } from "@/app/session/actions";
+import { Button } from "@/components/ui/button";
 import { SESSION_CODE_LENGTH } from "@/lib/constants";
 import { getOrCreateDeviceId } from "@/lib/device";
+import { categoryIcon, categoryLabel } from "@/lib/game/category-tone";
+import {
+  getRecentSessionsServerSnapshot,
+  getRecentSessionsSnapshot,
+  subscribeRecentSessions,
+} from "@/lib/recent-sessions";
 import { PHASE_EASE, screenContainer, screenItem, TAP_SCALE } from "@/lib/motion";
+
+function RecentSessions() {
+  const router = useRouter();
+  const recent = useSyncExternalStore(
+    subscribeRecentSessions,
+    getRecentSessionsSnapshot,
+    getRecentSessionsServerSnapshot,
+  );
+
+  if (recent.length === 0) {
+    return null;
+  }
+
+  function formatRelativeTime(dateStr: string) {
+    try {
+      const date = new Date(dateStr);
+      const diffMs = Date.now() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return "Vừa xong";
+      if (diffMins < 60) return `${diffMins} phút trước`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours} giờ trước`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays} ngày trước`;
+    } catch {
+      return "";
+    }
+  }
+
+  return (
+    <motion.section variants={screenItem} className="mt-8 flex flex-col gap-3">
+      <div className="flex items-center gap-2 px-1 text-sm font-bold text-ink-muted uppercase tracking-wider">
+        <Clock className="size-4" />
+        <span>Phiên gần đây</span>
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+        {recent.map((entry) => (
+          <motion.div
+            key={entry.sessionId}
+            whileTap={{ scale: TAP_SCALE }}
+            className="flex items-center justify-between rounded-2xl border border-ink/10 bg-white p-4 shadow-[0_4px_12px_rgba(28,25,23,0.04)]"
+          >
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <span className="font-display text-lg font-extrabold tracking-wider text-ink">
+                  {entry.sessionCode.slice(0, 4)} {entry.sessionCode.slice(4)}
+                </span>
+                <span className="text-xs text-ink-soft">
+                  {formatRelativeTime(entry.createdAt)}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {entry.categories.map((cat) => {
+                  const Icon = categoryIcon(cat);
+                  return (
+                    <span
+                      key={cat}
+                      className="inline-flex items-center gap-1 rounded-md bg-ink/5 px-2 py-0.5 text-xs font-semibold text-ink-soft"
+                    >
+                      <Icon className="size-3" />
+                      <span>{categoryLabel(cat)}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => router.push(`/session/${entry.sessionId}/play`)}
+              className="ml-3 rounded-xl font-bold"
+            >
+              <Play className="size-3.5 fill-current" />
+              <span>Vào lại</span>
+            </Button>
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
 
 export function SessionHome() {
   const router = useRouter();
@@ -35,7 +126,7 @@ export function SessionHome() {
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col bg-canvas px-6 py-10">
+    <main className="flex min-h-full flex-1 flex-col bg-canvas px-6 py-10 pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
       <motion.div
         variants={screenContainer}
         initial="hidden"
@@ -123,6 +214,8 @@ export function SessionHome() {
               ) : null}
             </AnimatePresence>
           </motion.section>
+
+          <RecentSessions />
         </div>
       </motion.div>
     </main>

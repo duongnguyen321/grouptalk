@@ -2,8 +2,9 @@
 
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Clock, LogOut, Menu, PlusCircle, Share2, X } from "lucide-react";
 import {
   loadTeaserCardsAction,
   revealCardAction,
@@ -13,14 +14,13 @@ import {
 import { CardSelection } from "@/components/cards/card-selection";
 import { QuestionCard } from "@/components/cards/question-card";
 import { VoteHideDialog } from "@/components/cards/vote-hide-dialog";
+import { ExitSessionDialog } from "@/components/play/exit-session-dialog";
+import { PlayerChipRow } from "@/components/play/player-chip-row";
 import { Wheel } from "@/components/wheel/wheel";
 import { WinnerReveal } from "@/components/wheel/winner-reveal";
 import { Button } from "@/components/ui/button";
 import { Category } from "@/generated/prisma/enums";
-import {
-  HIDE_TOAST_MS,
-  SPIN_BUSY_ERROR,
-} from "@/lib/constants";
+import { HIDE_TOAST_MS, SPIN_BUSY_ERROR } from "@/lib/constants";
 import { getOrCreateDeviceId } from "@/lib/device";
 import {
   categoryIcon,
@@ -35,7 +35,11 @@ import {
   phaseExit,
   phaseTransition,
 } from "@/lib/motion";
-import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
+import type {
+  PlayPlayer,
+  RevealedCard,
+  TeaserCard,
+} from "@/lib/game/play-types";
 import {
   nextWheelRotation,
   randomExtraTurns,
@@ -57,6 +61,7 @@ export function PlayScreen({
   categories,
   players,
 }: PlayScreenProps) {
+  const router = useRouter();
   const [phase, setPhase] = useState<PlayPhase>("idle");
   const [rotation, setRotation] = useState(0);
   const [spinMs, setSpinMs] = useState(0);
@@ -64,6 +69,7 @@ export function PlayScreen({
   const [cards, setCards] = useState<TeaserCard[]>([]);
   const [revealed, setRevealed] = useState<RevealedCard | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [exitOpen, setExitOpen] = useState(false);
   const [hideOpen, setHideOpen] = useState(false);
   const [hideBusy, setHideBusy] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -97,7 +103,9 @@ export function PlayScreen({
       return;
     }
 
-    const winnerIndex = players.findIndex((player) => player.id === result.player.id);
+    const winnerIndex = players.findIndex(
+      (player) => player.id === result.player.id,
+    );
     const index = winnerIndex >= 0 ? winnerIndex : 0;
     setWinner(result.player);
     setSpinMs(randomSpinDurationMs());
@@ -194,22 +202,33 @@ export function PlayScreen({
     <main className="relative flex min-h-full flex-1 flex-col bg-play text-white">
       <header className="flex items-center justify-between px-4 pt-5 pb-3">
         <div className="flex flex-wrap gap-2">
-          {categories.map((category, index) => (
-            <motion.span
-              key={category}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: index * 0.06,
-                duration: 0.24,
-                ease: [...PHASE_EASE],
-              }}
-              className="rounded-full bg-white/12 px-3 py-1 text-sm font-bold"
-            >
-              {categoryIcon(category)} {categoryLabel(category)}
-            </motion.span>
-          ))}
+          {categories.map((category, index) => {
+            const Icon = categoryIcon(category);
+            return (
+              <motion.span
+                key={category}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: index * 0.06,
+                  duration: 0.24,
+                  ease: [...PHASE_EASE],
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-3 py-1 text-sm font-bold"
+              >
+                <Icon className="size-3.5" />
+                <span>{categoryLabel(category)}</span>
+              </motion.span>
+            );
+          })}
         </div>
+        <button
+          type="button"
+          onClick={() => router.push(`/session/${sessionId}/code`)}
+          className="ml-auto mr-2 rounded-full bg-white/10 px-3 py-1 font-display text-xs font-bold tracking-widest text-white/80 transition hover:bg-white/15"
+        >
+          {sessionCode}
+        </button>
         <button
           type="button"
           aria-label="Mở menu"
@@ -256,7 +275,9 @@ export function PlayScreen({
               </Button>
             </motion.div>
             {error ? (
-              <p className="mt-4 text-center text-sm text-cat-couple">{error}</p>
+              <p className="mt-4 text-center text-sm text-cat-couple">
+                {error}
+              </p>
             ) : null}
           </motion.section>
         )}
@@ -315,10 +336,10 @@ export function PlayScreen({
             transition={{ duration: 0.2 }}
             className="flex items-center justify-between px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-sm text-white/70"
           >
-            <span>{players.length} người chơi</span>
+            <PlayerChipRow players={players} />
             <Link
               href={`/session/${sessionId}/history`}
-              className="underline underline-offset-4"
+              className="underline underline-offset-4 hover:text-white"
             >
               Xem lịch sử phiên
             </Link>
@@ -331,6 +352,12 @@ export function PlayScreen({
         busy={hideBusy}
         onOpenChange={setHideOpen}
         onConfirm={confirmHide}
+      />
+
+      <ExitSessionDialog
+        open={exitOpen}
+        onOpenChange={setExitOpen}
+        onConfirm={() => router.push("/session")}
       />
 
       <AnimatePresence>
@@ -377,21 +404,39 @@ export function PlayScreen({
                 </button>
               </div>
               <nav className="mt-6 flex flex-col text-lg font-bold">
-                <Link className="py-2.5" href={`/session/${sessionId}/history`}>
-                  Xem lịch sử phiên
+                <Link
+                  className="flex items-center gap-3 py-2.5 transition hover:opacity-80"
+                  href={`/session/${sessionId}/history`}
+                >
+                  <Clock className="size-5 text-ink-muted" />
+                  <span>Xem lịch sử phiên</span>
                 </Link>
-                <Link className="py-2.5" href={`/session/${sessionId}/contribute`}>
-                  Đóng góp câu hỏi
+                <Link
+                  className="flex items-center gap-3 py-2.5 transition hover:opacity-80"
+                  href={`/contribute?back=${sessionId}`}
+                >
+                  <PlusCircle className="size-5 text-ink-muted" />
+                  <span>Đóng góp câu hỏi</span>
                 </Link>
-                <Link className="py-2.5" href={`/session/${sessionId}/code`}>
-                  Xem mã phiên
+                <Link
+                  className="flex items-center gap-3 py-2.5 transition hover:opacity-80"
+                  href={`/session/${sessionId}/code`}
+                >
+                  <Share2 className="size-5 text-ink-muted" />
+                  <span>Xem mã phiên</span>
                 </Link>
-                <p className="py-2 text-sm font-medium text-ink-muted">
-                  Mã: {sessionCode}
-                </p>
-                <Link className="py-2.5 text-cat-couple-deep" href="/session">
-                  Thoát phiên
-                </Link>
+                <div className="my-2 h-px bg-ink/10" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setExitOpen(true);
+                  }}
+                  className="flex items-center gap-3 py-2.5 text-left text-cat-couple-deep transition hover:opacity-80"
+                >
+                  <LogOut className="size-5" />
+                  <span>Thoát phiên</span>
+                </button>
               </nav>
             </motion.aside>
           </motion.div>

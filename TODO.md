@@ -46,7 +46,7 @@ Based on §4:
 - [x] "Tạo phiên mới" → Phase 5 (category select)
 - [x] "Nhập mã để tiếp tục phiên" → 8-digit input → validate → Phase 9 (copy session logic) → Phase 7 (main game)
 - [x] Inline error state for invalid/nonexistent code
-- [ ] Optional: "Phiên gần đây trên máy này" list from local history
+- [x] "Phiên gần đây trên máy này" list from local history (PLAN-007)
 
 ## Phase 5 — Screen: Category Selection (§5.3, §7.5)
 
@@ -142,6 +142,19 @@ Based on §4:
 - [ ] Basic monitoring/logging for Server Actions/API routes
 - [ ] First real deploy to the VPS (standalone build + PM2 verified locally only)
 - [ ] Smoke test full flow end-to-end in staging
+
+## Phase 16 — UX Overhaul (PLAN-007)
+
+- [x] Move `/contribute` out of `[sessionId]` into top-level route with `?back=<sessionId>` support
+- [x] `BackHeader` navigation bar across all sub-screens
+- [x] Exit session confirmation dialog (`ExitSessionDialog`)
+- [x] Recent sessions list ("Phiên gần đây") in Session Home backed by localStorage
+- [x] Player chip row mid-game (`PlayerChipRow`) with expand/collapse
+- [x] Replace all emoji icons with Lucide icons (Heart, User, Users, UsersRound, etc.)
+- [x] Session code digit grouping (`XXXX · XXXX`)
+- [x] CategorySelect `whileTap={{ scale: TAP_SCALE }}` motion
+- [x] Custom topic pills & question type pill cards in Contribute form with inline validation hints
+- [x] Safe-area inset handling on bottom buttons & mobile input `enterKeyHint="done"`
 
 ---
 

@@ -1,5 +1,6 @@
 import { Category } from "@/generated/prisma/enums";
 import { CATEGORY_OPTIONS } from "@/lib/categories";
+import { Heart, User, Users, UsersRound, type LucideIcon } from "lucide-react";
 
 const TONE: Record<
   Category,
@@ -42,10 +43,17 @@ export function categoryLabel(category: Category) {
   );
 }
 
-export function categoryIcon(category: Category) {
-  return (
-    CATEGORY_OPTIONS.find((option) => option.value === category)?.icon ?? "🎉"
-  );
+export function categoryIcon(category: Category): LucideIcon {
+  switch (category) {
+    case Category.COUPLE:
+      return Heart;
+    case Category.GIRLS:
+      return User;
+    case Category.BOYS:
+      return Users;
+    case Category.FRIENDS:
+      return UsersRound;
+  }
 }
 
 const WHEEL_GRADIENT_VARIANTS = 2;

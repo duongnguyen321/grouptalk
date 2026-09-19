@@ -9,24 +9,31 @@ import { Category, QuestionType } from "../generated/prisma/enums";
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 
-const TOPICS = [
-  "Gia đình",
-  "Tình cảm",
-  "Bạn bè",
-  "Kỷ niệm",
-  "Thử thách",
-  "Thích thầm",
-] as const;
-
 interface SeedQuestion {
   title: string;
   type: QuestionType;
-  topic: (typeof TOPICS)[number];
+  topic: string;
   categories: Category[];
 }
 
 async function main() {
-  for (const name of TOPICS) {
+  const filePath = path.resolve(__dirname, "../output_questions.json");
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Không tìm thấy file câu hỏi: ${filePath}`);
+  }
+
+  const rawData = fs.readFileSync(filePath, "utf-8");
+  const questions: SeedQuestion[] = JSON.parse(rawData);
+
+  const detectedTopics = Array.from(
+    new Set(
+      questions
+        .map((q) => q.topic?.trim())
+        .filter((topic): topic is string => Boolean(topic)),
+    ),
+  );
+
+  for (const name of detectedTopics) {
     await prisma.topic.upsert({
       where: { name },
       update: {},
@@ -36,14 +43,6 @@ async function main() {
 
   const topics = await prisma.topic.findMany();
   const topicByName = new Map(topics.map((topic) => [topic.name, topic.id]));
-
-  const filePath = path.resolve(__dirname, "../output_questions.json");
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Không tìm thấy file câu hỏi: ${filePath}`);
-  }
-
-  const rawData = fs.readFileSync(filePath, "utf-8");
-  const questions: SeedQuestion[] = JSON.parse(rawData);
 
   const existingQuestions = await prisma.question.findMany({
     select: { title: true },
@@ -69,7 +68,8 @@ async function main() {
     }
 
     seenInBatch.add(key);
-    const topicId = topicByName.get(question.topic);
+    const topicName = question.topic?.trim();
+    const topicId = topicName ? topicByName.get(topicName) : undefined;
     if (!topicId) {
       throw new Error(`Missing topic: ${question.topic}`);
     }

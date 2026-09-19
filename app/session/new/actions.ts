@@ -18,7 +18,10 @@ type StartGameSessionInput = {
 
 export async function startGameSession(
   input: StartGameSessionInput,
-): Promise<{ ok: true; sessionId: string } | { ok: false; error: string }> {
+): Promise<
+  | { ok: true; sessionId: string; sessionCode: string }
+  | { ok: false; error: string }
+> {
   const categories = parseSessionCategories(input.categories);
   if (!categories) {
     return { ok: false, error: "Chọn ít nhất một thể loại." };
@@ -57,7 +60,7 @@ export async function startGameSession(
       return created;
     });
 
-    return { ok: true, sessionId: session.id };
+    return { ok: true, sessionId: session.id, sessionCode };
   } catch {
     return { ok: false, error: "Không tạo được phiên. Thử lại nhé." };
   }

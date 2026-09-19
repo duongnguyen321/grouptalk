@@ -111,3 +111,13 @@ Every screen and every user action must animate. A flow is not done when it mere
 - `bun install --production` **cannot** be used before `next build`: `typescript`, `tailwindcss` and `@tailwindcss/postcss` are devDependencies and the build needs them. Install in full; the standalone bundle is self-contained so nothing needs pruning.
 - Next's standalone output omits `public/` and `.next/static`. `scripts/deploy.sh` copies their **contents** (not the directories) so re-running the release stays idempotent.
 - Prisma runs through the `@prisma/adapter-pg` driver adapter, so no Rust query-engine binary ships with the build. `prisma migrate deploy` + `prisma generate` must still run on the server before `next build`.
+
+## Technical rules (PLAN-007)
+
+- `/contribute` is a top-level route (`app/contribute/page.tsx` + `app/contribute/actions.ts`), not nested under `[sessionId]`. It accepts optional `?back=<sessionId>` query param to preserve the back-to-play flow without coupling the page to session DB lookups.
+- `BackHeader` (`components/ui/back-header.tsx`) is the standard back-navigation bar for sub-screens (`session-history`, `session-code-view`, `contribute-form`, `category-select`, `player-entry`).
+- Exit session flow in `PlayScreen` prompts with `ExitSessionDialog` (`components/play/exit-session-dialog.tsx`) before navigating away to `/session` to avoid losing in-flight round state.
+- `saveRecentSession` / `getRecentSessions` in `lib/recent-sessions.ts` stores recently started sessions (max 5) in localStorage, safely consumed in `SessionHome` via `useSyncExternalStore` to prevent hydration mismatch.
+- `startGameSession` action returns `{ ok: true, sessionId, sessionCode }` so clients can persist the shareable code immediately.
+- Strict Lucide icon rule: NO emojis anywhere in UI code. Category icons (`categoryIcon()`, `CATEGORY_OPTIONS`) return Lucide components (`Heart`, `User`, `Users`, `UsersRound`).
+- Interactive controls must have `whileTap={{ scale: TAP_SCALE }}` and ≥44px touch targets.

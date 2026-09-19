@@ -3,11 +3,13 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { Category, QuestionType } from "@/generated/prisma/enums";
 import {
   loadContributeContext,
   submitQuestion,
-} from "@/app/session/[sessionId]/contribute/actions";
+} from "@/app/contribute/actions";
+import { BackHeader } from "@/components/ui/back-header";
 import { Button } from "@/components/ui/button";
 import { CATEGORY_OPTIONS } from "@/lib/categories";
 import { CONTRIBUTE_THANKS_TOAST, HIDE_TOAST_MS } from "@/lib/constants";
@@ -27,7 +29,7 @@ type TopicOption = {
 };
 
 type ContributeFormProps = {
-  sessionId: string;
+  backSessionId: string | null;
   topics: TopicOption[];
 };
 
@@ -36,7 +38,7 @@ const EMPTY_CATEGORIES: ContributeCategoryState = {
   autoTagged: [],
 };
 
-export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
+export function ContributeForm({ backSessionId, topics }: ContributeFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [categoryState, setCategoryState] =
@@ -51,6 +53,8 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const { categories, autoTagged } = categoryState;
+
+  const backHref = backSessionId ? `/session/${backSessionId}/play` : "/session";
 
   useEffect(() => {
     void loadContributeContext(getOrCreateDeviceId()).then((context) => {
@@ -94,15 +98,16 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
 
     setToast(CONTRIBUTE_THANKS_TOAST);
     window.setTimeout(() => {
-      router.push(`/session/${sessionId}/play`);
+      router.push(backHref);
     }, HIDE_TOAST_MS);
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col bg-canvas px-6 py-10">
+    <main className="flex min-h-full flex-1 flex-col bg-canvas">
+      <BackHeader backHref={backHref} title="Đóng góp câu hỏi" />
       <form
         onSubmit={onSubmit}
-        className="mx-auto flex w-full max-w-md flex-1 flex-col"
+        className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-10"
       >
         <motion.div variants={screenContainer} initial="hidden" animate="show">
           <motion.p
@@ -128,6 +133,7 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
               onChange={(event) => setTitle(event.target.value)}
               rows={4}
               required
+              placeholder="Nhập nội dung câu hỏi..."
               className="mt-2 w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 text-base text-ink outline-none transition focus:border-cat-friends-deep"
             />
           </motion.label>
@@ -138,6 +144,7 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
               {CATEGORY_OPTIONS.map((option) => {
                 const selected = categories.includes(option.value);
                 const auto = isFriendsAutoTagged(autoTagged, option.value);
+                const Icon = option.icon;
 
                 return (
                   <motion.button
@@ -149,15 +156,18 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
                     transition={{ duration: 0.2, ease: [...PHASE_EASE] }}
                     onClick={() => toggleCategory(option.value, !selected)}
                     className={cn(
-                      "relative overflow-hidden rounded-2xl border-2 px-3 py-3 text-left",
+                      "relative overflow-hidden rounded-2xl border-2 px-3 py-3 text-left transition",
                       selected
                         ? `${option.selectedClass} border-white/80`
                         : "border-ink/10 bg-white text-ink",
                     )}
                   >
-                    <span className="block text-lg font-extrabold">
-                      {option.icon} {option.label}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <Icon className="size-5" />
+                      <span className="block text-base font-extrabold">
+                        {option.label}
+                      </span>
+                    </div>
                     <AnimatePresence initial={false}>
                       {auto ? (
                         <motion.span
@@ -166,7 +176,7 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -6, scale: 0.9 }}
                           transition={{ duration: 0.2, ease: [...PHASE_EASE] }}
-                          className="mt-1 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[0.7rem] font-bold text-ink"
+                          className="mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[0.7rem] font-bold text-ink"
                         >
                           tự động
                         </motion.span>
@@ -178,23 +188,30 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
             </div>
           </motion.fieldset>
 
-          <motion.label
-            variants={screenItem}
-            className="mt-6 block text-sm font-bold text-ink"
-          >
-            Chủ đề
-            <select
-              value={topicId}
-              onChange={(event) => setTopicId(event.target.value)}
-              className="mt-2 h-12 w-full rounded-2xl border border-ink/10 bg-white px-4 text-base text-ink transition focus:border-cat-friends-deep"
-            >
-              {topics.map((topic) => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.name}
-                </option>
-              ))}
-            </select>
-          </motion.label>
+          <motion.div variants={screenItem} className="mt-6">
+            <p className="text-sm font-bold text-ink">Chủ đề</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {topics.map((topic) => {
+                const selected = topicId === topic.id;
+                return (
+                  <motion.button
+                    key={topic.id}
+                    type="button"
+                    whileTap={{ scale: TAP_SCALE }}
+                    onClick={() => setTopicId(topic.id)}
+                    className={cn(
+                      "rounded-xl border px-3 py-2 text-center text-sm font-bold transition",
+                      selected
+                        ? "border-cat-friends-deep bg-cat-friends-deep text-white shadow-sm"
+                        : "border-ink/10 bg-white text-ink hover:border-ink/20",
+                    )}
+                  >
+                    {topic.name}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
 
           <motion.fieldset variants={screenItem} className="mt-6">
             <legend className="text-sm font-bold text-ink">Loại câu hỏi</legend>
@@ -209,10 +226,10 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
                     animate={{ scale: selected ? 1.01 : 1 }}
                     transition={{ duration: 0.18, ease: [...PHASE_EASE] }}
                     className={cn(
-                      "flex items-center gap-3 rounded-2xl border-2 px-4 py-3",
+                      "flex cursor-pointer items-center justify-between rounded-2xl border-2 px-4 py-3 transition",
                       selected
-                        ? "border-cat-friends-deep bg-white"
-                        : "border-transparent bg-white",
+                        ? "border-cat-friends-deep bg-white shadow-sm"
+                        : "border-transparent bg-white hover:border-ink/10",
                     )}
                   >
                     <input
@@ -221,8 +238,16 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
                       value={option.value}
                       checked={selected}
                       onChange={() => setType(option.value)}
+                      className="sr-only"
                     />
-                    <span className="font-bold">{option.label}</span>
+                    <span className="font-bold text-ink">{option.label}</span>
+                    {selected ? (
+                      <span className="grid size-6 place-items-center rounded-full bg-cat-friends-deep text-white">
+                        <Check className="size-3.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="size-6 rounded-full border-2 border-ink/20" />
+                    )}
                   </motion.label>
                 );
               })}
@@ -274,7 +299,7 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18, duration: 0.28, ease: [...PHASE_EASE] }}
           whileTap={{ scale: TAP_SCALE }}
-          className="mt-8"
+          className="mt-8 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
         >
           <Button
             type="submit"
@@ -293,16 +318,19 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
               </motion.span>
             </AnimatePresence>
           </Button>
-        </motion.div>
 
-        <motion.button
-          type="button"
-          whileTap={{ scale: TAP_SCALE }}
-          onClick={() => router.push(`/session/${sessionId}/play`)}
-          className="mt-4 text-center text-sm font-bold text-ink-muted underline underline-offset-4"
-        >
-          Quay lại chơi
-        </motion.button>
+          {!canSubmit && (
+            <p className="mt-2 text-center text-xs text-ink-muted">
+              {!title.trim() || title.trim().length < 4
+                ? "Nhập câu hỏi ít nhất 4 ký tự"
+                : categories.length === 0
+                ? "Chọn ít nhất 1 thể loại"
+                : !topicId
+                ? "Chọn chủ đề"
+                : ""}
+            </p>
+          )}
+        </motion.div>
       </form>
 
       <AnimatePresence>
@@ -313,7 +341,7 @@ export function ContributeForm({ sessionId, topics }: ContributeFormProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.24, ease: [...PHASE_EASE] }}
-            className="fixed inset-x-4 bottom-6 z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg"
+            className="fixed inset-x-4 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg"
           >
             {toast}
           </motion.p>

@@ -2,12 +2,15 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { startGameSession } from "@/app/session/new/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BackHeader } from "@/components/ui/back-header";
 import { MIN_SESSION_PLAYERS, PLAYER_NAME_MAX_LENGTH } from "@/lib/constants";
 import { getOrCreateDeviceId } from "@/lib/device";
+import { saveRecentSession } from "@/lib/recent-sessions";
 import { useSessionDraftStore } from "@/lib/store/session-draft";
 
 export function PlayerEntry() {
@@ -72,13 +75,20 @@ export function PlayerEntry() {
       return;
     }
 
+    saveRecentSession({
+      sessionId: result.sessionId,
+      sessionCode: result.sessionCode,
+      categories,
+    });
+
     reset();
     router.push(`/session/${result.sessionId}/play`);
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col bg-canvas px-6 py-10">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+    <main className="flex min-h-full flex-1 flex-col bg-canvas">
+      <BackHeader backHref="/session/new/categories" />
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-10">
         <header>
           <p className="text-sm font-medium tracking-[0.22em] text-ink-muted uppercase">
             Bước 2 / 2
@@ -99,6 +109,7 @@ export function PlayerEntry() {
             id="player-name"
             value={name}
             maxLength={PLAYER_NAME_MAX_LENGTH}
+            enterKeyHint="done"
             onChange={(event) => {
               setName(event.target.value);
               setError(null);
@@ -125,10 +136,10 @@ export function PlayerEntry() {
               <button
                 type="button"
                 onClick={() => removePlayer(player)}
-                className="relative grid size-6 place-items-center rounded-full text-ink-muted before:absolute before:-inset-2 before:content-['']"
+                className="relative grid size-6 place-items-center rounded-full text-ink-muted hover:text-ink before:absolute before:-inset-2 before:content-['']"
                 aria-label={`Xoá ${player}`}
               >
-                ×
+                <X className="size-3.5" />
               </button>
             </Badge>
           ))}
@@ -140,7 +151,7 @@ export function PlayerEntry() {
           </p>
         ) : null}
 
-        <div className="mt-auto pt-8">
+        <div className="mt-auto pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))]">
           <Button
             type="button"
             disabled={!canStart}

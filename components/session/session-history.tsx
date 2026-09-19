@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { BackHeader } from "@/components/ui/back-header";
 import { HISTORY_DELETED_LABEL } from "@/lib/constants";
 import {
   LIST_STAGGER_S,
@@ -25,12 +25,16 @@ type SessionHistoryProps = {
 
 export function SessionHistory({ sessionId, rows }: SessionHistoryProps) {
   return (
-    <main className="flex min-h-full flex-1 flex-col bg-canvas px-6 py-10">
+    <main className="flex min-h-full flex-1 flex-col bg-canvas">
+      <BackHeader
+        backHref={`/session/${sessionId}/play`}
+        title="Lịch sử phiên"
+      />
       <motion.div
         variants={screenContainer}
         initial="hidden"
         animate="show"
-        className="mx-auto flex w-full max-w-md flex-1 flex-col"
+        className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-10"
       >
         <motion.p
           variants={screenItem}
@@ -91,15 +95,6 @@ export function SessionHistory({ sessionId, rows }: SessionHistoryProps) {
             ))}
           </ol>
         )}
-
-        <motion.div variants={screenItem} className="mt-auto pt-8">
-          <Link
-            href={`/session/${sessionId}/play`}
-            className="block text-center text-sm font-bold text-ink-muted underline underline-offset-4"
-          >
-            Quay lại chơi
-          </Link>
-        </motion.div>
       </motion.div>
     </main>
   );

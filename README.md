@@ -6,9 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-006 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), and the §7 design system (category gradients, typography scale, mobile pass) plus a bare-process production deploy.
-
-Next: [plans/PLAN-006-polish-qa-deploy.md](plans/PLAN-006-polish-qa-deploy.md) — the outstanding items are the manual QA checklists and the first real VPS deploy.
+PLAN-001 through PLAN-007 are implemented: identity, Splash, Session Home (with recent sessions list), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, and full UX overhaul (top-level `/contribute`, `BackHeader` navigation, exit confirmation modal, collapsible player chips, pure Lucide icons, digit grouping, and mobile safe-area insets).
 
 ## Stack
 
@@ -77,8 +75,9 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Session history list of every answered card, flagging questions that were globally removed
 - Concurrency: `withSessionLock` guards the spin per `sessionId` (`SET NX PX 5000` + owner token, released by one atomic Lua compare-and-delete). Contention fails fast as `error: "busy"` and the play screen toasts "Đang xử lý, vui lòng thử lại" instead of blocking. Vote/reveal rely on DB unique constraints rather than a lock
 - §7.6 design system: one definition per category colour/gradient/glow in `app/globals.css` (`--cat-*`, `--grad-*`, `--cat-*-glow`), surfaced as `bg-grad-*` utilities and the `text-name` / `text-question` / `text-note` / `text-credit` scale. Gradients render on the category-select cards, the wheel's SVG segments (via `<linearGradient>` defs) and the card backs
-- Mobile pass: cards sized to ~84vw on small screens, ≥44px tap targets, and `env(safe-area-inset-bottom)` on the toast, play footer and menu drawer
+- Mobile pass: cards sized to ~84vw on small screens, ≥44px tap targets, and `env(safe-area-inset-bottom)` on the toast, play footer, menu drawer and setup buttons
 - No audio anywhere (explicit non-goal) — `navigator.vibrate` haptics on the winner reveal is the only feedback
+- UX overhaul (PLAN-007): top-level `/contribute` route with optional `?back=<sessionId>`, `BackHeader` navigation bar across all sub-screens, exit session confirmation dialog, recent sessions quick-rejoin on Home, collapsible player chip list mid-game, Lucide icons across UI (zero emojis), and OTP-style digit grouping
 
 ## Production deploy
 
