@@ -9,6 +9,14 @@
  * connection pools on the process, and the spin lock is per-session Redis state rather
  * than in-process state.
  */
+const path = require("path");
+const fs = require("fs");
+
+const envProdPath = path.join(__dirname, ".env.production");
+if (fs.existsSync(envProdPath)) {
+  require("dotenv").config({ path: envProdPath });
+}
+
 module.exports = {
   apps: [
     {
@@ -19,7 +27,7 @@ module.exports = {
       exec_mode: "fork",
       env: {
         NODE_ENV: "production",
-        PORT: 3000,
+        PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 30300,
         // Next's standalone server binds to HOSTNAME; without this it stays on loopback.
         HOSTNAME: "0.0.0.0",
       },

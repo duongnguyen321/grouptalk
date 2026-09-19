@@ -88,5 +88,5 @@ Bare Node process under PM2; Postgres and Redis services are managed via Docker 
 2. `cp .env.production.example .env.production` and fill it in.
 3. Run `./scripts/deploy.sh`. It pulls, starts and verifies health of Postgres and Redis containers via Docker Compose, runs `prisma migrate deploy` + `generate`, builds the standalone output, copies `public/` and `.next/static` in beside `server.js`, then `pm2 reload`s.
 
-The PM2 app listens on port **3000**; put a reverse proxy (nginx/Caddy) in front for TLS. `pm2 startup && pm2 save` once, so the app survives a reboot.
+The PM2 app listens on port **30300** (configurable via `PORT` in `.env.production`); put a reverse proxy (nginx/Caddy) in front for TLS. `pm2 startup && pm2 save` once, so the app survives a reboot.
 
