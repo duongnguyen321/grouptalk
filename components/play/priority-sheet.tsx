@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import { setPriorityAction } from "@/app/session/[sessionId]/play/actions";
 import { PRIORITY_DOT_COUNT, PRIORITY_WEIGHT_STEPS } from "@/lib/constants";
+import { getOrCreateDeviceId } from "@/lib/device";
 import type { PlayPlayer } from "@/lib/game/play-types";
 import { MENU_DURATION_S, PHASE_EASE, TAP_SCALE } from "@/lib/motion";
 
@@ -27,8 +28,11 @@ export function PrioritySheet({
 }: PrioritySheetProps) {
   const handleClose = useCallback(async () => {
     onOpenChange(false);
-    await setPriorityAction(sessionId, weights);
+    await setPriorityAction(sessionId, weights, {
+      deviceId: getOrCreateDeviceId(),
+    });
   }, [onOpenChange, sessionId, weights]);
+
 
   function handleDotClick(playerId: string, dotIndex: number) {
     const currentWeight = weights[playerId] ?? PRIORITY_WEIGHT_STEPS[0];

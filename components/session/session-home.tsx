@@ -9,10 +9,15 @@ import {
   FolderKanban,
   Play,
   PlusCircle,
+  ShieldAlert,
   Trash2,
 } from "lucide-react";
 import { joinSessionByCode } from "@/app/session/actions";
-import { fetchMyGameSessions } from "@/app/session/server-actions";
+import {
+  deleteAllMyGameSessions,
+  deleteGameSession,
+  fetchMyGameSessions,
+} from "@/app/session/server-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -88,12 +93,18 @@ function RecentSessions() {
 
   function handleDelete(sessionId: string) {
     removeRecentSession(sessionId);
+    setServerSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
     setSessionToDelete(null);
+    // Best-effort server delete (no-op for guests)
+    deleteGameSession(sessionId).catch(() => {});
   }
 
   function handleClearAll() {
     clearRecentSessions();
+    setServerSessions([]);
     setShowClearAll(false);
+    // Best-effort server delete-all (no-op for guests)
+    deleteAllMyGameSessions().catch(() => {});
   }
 
   return (
@@ -234,7 +245,7 @@ function RecentSessions() {
   );
 }
 
-export function SessionHome() {
+export function SessionHome({ unauthorized }: { unauthorized?: boolean } = {}) {
   const router = useRouter();
   const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
@@ -315,6 +326,24 @@ export function SessionHome() {
               <span>Đóng góp</span>
             </motion.a>
           </motion.header>
+
+          {unauthorized ? (
+            <motion.div
+              variants={screenItem}
+              className="mt-6 flex items-start gap-3 rounded-2xl border border-cat-couple-deep/20 bg-cat-couple-light/40 p-4 text-ink"
+            >
+              <ShieldAlert className="mt-0.5 size-5 shrink-0 text-cat-couple-deep" />
+              <div className="flex flex-col gap-1">
+                <p className="text-sm font-bold text-ink">
+                  Bạn không phải chủ phiên này
+                </p>
+                <p className="text-xs leading-relaxed text-ink-soft">
+                  Vì mỗi phiên gắn với một thiết bị, hãy nhập mã 8 chữ số bên dưới để sao chép phiên sang máy của bạn.
+                </p>
+              </div>
+            </motion.div>
+          ) : null}
+
 
           <div className="mt-8 flex flex-col gap-4">
             <motion.a

@@ -175,6 +175,17 @@ Based on §4:
 - [x] Integration with `pickThreeQuestions` in `lib/game/select-question.ts`
 - [x] Full unit tests in `lib/game/eligibility.test.ts` (guaranteed inclusion, emotional weighting, fallback chain, tiny pool handling, zero regression)
 
+## Phase 19 — Author Access Control (PLAN-010)
+
+- [x] Guest `deviceId` cookie synchronization in `lib/device.ts` and `components/providers/session-provider.tsx`
+- [x] Server-side identity resolution with cookie fallback in `lib/identity.ts` (`getCurrentUserOrNull`)
+- [x] Author access control on `/session/[sessionId]/play/page.tsx` (`ownerUserId === currentUser.id`)
+- [x] Author access control on sub-pages `/code/page.tsx` and `/history/page.tsx`
+- [x] Unauthorized redirect to `/session?unauthorized=1` with informative banner in `SessionHome`
+- [x] Server Actions author verification in `app/session/[sessionId]/play/actions.ts` (`spinAction`, `setPriorityAction`, `loadTeaserCardsAction`, `revealCardAction`, `voteHideAction`)
+- [x] Unit tests in `lib/author-check.test.ts`
+
+
 ---
 
 ## Explicitly Out of Scope for v1 (per PRD §1.2)

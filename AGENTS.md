@@ -138,3 +138,11 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Deduplication is guaranteed by object reference tracking (`Set<T>`) across draws, followed by `shuffleInPlace` so the guaranteed card position is masked.
 - Zero regression when `crushQuestionEnabled = false`: maintains pure uniform random selection via fast-path.
 
+## Technical rules (PLAN-010)
+
+- Session access control is strictly enforced on all `[sessionId]` sub-routes (`/play`, `/code`, `/history`). Only the author/owner (`session.ownerUserId === currentUser.id`) is authorized to view or play.
+- Unauthorized visitors to `/session/:sessionId/play` (or `/code`, `/history`) are redirected to `/session?unauthorized=1`. Sharing is exclusively done via 8-digit code copying (`joinSessionByCode`).
+- `SessionHome` handles `unauthorized` by displaying an explanatory alert banner prompting the user to enter the 8-digit session code to create their independent copy.
+- Guest `deviceId` is synced from `localStorage` to `document.cookie` (`grouptalk-device-id`, 1-year expiry, `SameSite=Lax`) to allow Server Components (`page.tsx`) to resolve guest identity seamlessly on request.
+- All play-related Server Actions (`spinAction`, `setPriorityAction`, `loadTeaserCardsAction`, `revealCardAction`, `voteHideAction`) enforce author verification via `verifySessionAuthor`.
+

@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PlayScreen } from "@/components/play/play-screen";
 import { prisma } from "@/lib/db";
+import { getCurrentUserOrNull } from "@/lib/identity";
 
 type PlayPageProps = {
   params: Promise<{ sessionId: string }>;
@@ -12,6 +13,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
     where: { id: sessionId },
     select: {
       id: true,
+      ownerUserId: true,
       sessionCode: true,
       categories: true,
       priorityConfig: true,
@@ -24,6 +26,11 @@ export default async function PlayPage({ params }: PlayPageProps) {
 
   if (!session || session.players.length === 0) {
     notFound();
+  }
+
+  const currentUser = await getCurrentUserOrNull();
+  if (!currentUser || currentUser.id !== session.ownerUserId) {
+    redirect("/session?unauthorized=1");
   }
 
   const priorityConfig = session.priorityConfig as {

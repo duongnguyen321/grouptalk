@@ -1,7 +1,8 @@
+import { cookies } from "next/headers";
 import { AuthType } from "@/generated/prisma/enums";
 import type { User } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
-import { ANONYMOUS_DISPLAY_NAME } from "@/lib/constants";
+import { ANONYMOUS_DISPLAY_NAME, DEVICE_ID_STORAGE_KEY } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 
 export async function resolveGuestUser(deviceId: string): Promise<User> {
@@ -51,7 +52,7 @@ export async function resolveGoogleUser(
 
 export async function getCurrentUser(input: {
   deviceId?: string;
-}): Promise<User> {
+} = {}): Promise<User> {
   const session = await auth();
 
   if (session?.user?.id) {
@@ -63,9 +64,30 @@ export async function getCurrentUser(input: {
     }
   }
 
-  if (!input.deviceId) {
+  let deviceId = input.deviceId;
+  if (!deviceId) {
+    try {
+      const cookieStore = await cookies();
+      deviceId = cookieStore.get(DEVICE_ID_STORAGE_KEY)?.value;
+    } catch {
+      // cookies() might not be available if called outside request context (e.g. tests)
+    }
+  }
+
+  if (!deviceId) {
     throw new Error("Missing deviceId for guest identity");
   }
 
-  return resolveGuestUser(input.deviceId);
+  return resolveGuestUser(deviceId);
 }
+
+export async function getCurrentUserOrNull(input: {
+  deviceId?: string;
+} = {}): Promise<User | null> {
+  try {
+    return await getCurrentUser(input);
+  } catch {
+    return null;
+  }
+}
+

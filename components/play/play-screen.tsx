@@ -106,7 +106,9 @@ export function PlayScreen({
 
     setBusy(true);
     setError(null);
-    const result = await spinAction(sessionId);
+    const result = await spinAction(sessionId, {
+      deviceId: getOrCreateDeviceId(),
+    });
 
     if (!result.ok) {
       setBusy(false);
@@ -172,8 +174,11 @@ export function PlayScreen({
     }
 
     setBusy(true);
-    const result = await revealCardAction(sessionId, winner.id, questionId);
+    const result = await revealCardAction(sessionId, winner.id, questionId, {
+      deviceId: getOrCreateDeviceId(),
+    });
     setBusy(false);
+
 
     if (!result.ok) {
       setError(result.error);

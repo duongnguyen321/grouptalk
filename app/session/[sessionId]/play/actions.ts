@@ -9,16 +9,43 @@ import {
 } from "@/lib/game/eligibility";
 import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
 import { loadRevealedCard, pickThreeQuestions } from "@/lib/game/select-question";
-import { getCurrentUser } from "@/lib/identity";
+import { getCurrentUser, getCurrentUserOrNull } from "@/lib/identity";
 import { LockContentionError, withSessionLock } from "@/lib/redis-lock";
 
 type ActionFail = { ok: false; error: string };
 type DeviceInput = { deviceId?: string };
 
+async function verifySessionAuthor(
+  sessionId: string,
+  input?: DeviceInput,
+): Promise<{ ok: true; userId: string } | ActionFail> {
+  const user = await getCurrentUserOrNull({ deviceId: input?.deviceId });
+  if (!user) {
+    return { ok: false, error: "Bạn không có quyền thao tác trên phiên này." };
+  }
+
+  const session = await prisma.gameSession.findUnique({
+    where: { id: sessionId },
+    select: { ownerUserId: true },
+  });
+
+  if (!session || session.ownerUserId !== user.id) {
+    return { ok: false, error: "Bạn không có quyền thao tác trên phiên này." };
+  }
+
+  return { ok: true, userId: user.id };
+}
+
 export async function setPriorityAction(
   sessionId: string,
   weights: Record<string, number>,
+  input?: DeviceInput,
 ): Promise<{ ok: true } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
   try {
     const players = await prisma.sessionPlayer.findMany({
       where: { sessionId },
@@ -41,9 +68,16 @@ export async function setPriorityAction(
 
 export async function spinAction(
   sessionId: string,
+  input?: DeviceInput,
 ): Promise<{ ok: true; player: PlayPlayer } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
   try {
     return await withSessionLock(sessionId, async () => {
+
       const [players, session] = await Promise.all([
         prisma.sessionPlayer.findMany({
           where: { sessionId },
@@ -86,12 +120,16 @@ export async function loadTeaserCardsAction(
   sessionPlayerId: string,
   input: DeviceInput,
 ): Promise<{ ok: true; cards: TeaserCard[] } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
   try {
-    const user = await getCurrentUser({ deviceId: input.deviceId });
     const cards = await pickThreeQuestions(
       sessionId,
       sessionPlayerId,
-      user.id,
+      auth.userId,
     );
 
     if (cards.length === 0) {
@@ -108,7 +146,13 @@ export async function revealCardAction(
   sessionId: string,
   sessionPlayerId: string,
   questionId: string,
+  input?: DeviceInput,
 ): Promise<{ ok: true; card: RevealedCard } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
   try {
     const [session, player] = await Promise.all([
       prisma.gameSession.findUnique({
@@ -176,18 +220,21 @@ export async function voteHideAction(
   questionId: string,
   input: DeviceInput,
 ): Promise<{ ok: true } | ActionFail> {
-  try {
-    const user = await getCurrentUser({ deviceId: input.deviceId });
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
 
+  try {
     await prisma.questionVote.upsert({
       where: {
         userId_questionId: {
-          userId: user.id,
+          userId: auth.userId,
           questionId,
         },
       },
       create: {
-        userId: user.id,
+        userId: auth.userId,
         questionId,
       },
       update: {},
@@ -215,3 +262,4 @@ export async function voteHideAction(
     return { ok: false, error: "Không ẩn được câu hỏi." };
   }
 }
+

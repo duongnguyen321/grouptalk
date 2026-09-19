@@ -12,7 +12,11 @@ import {
   Trash2,
 } from "lucide-react";
 import { BackHeader } from "@/components/ui/back-header";
-import { fetchMyGameSessions } from "@/app/session/server-actions";
+import {
+  deleteAllMyGameSessions,
+  deleteGameSession,
+  fetchMyGameSessions,
+} from "@/app/session/server-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -75,12 +79,18 @@ export function SessionManager() {
 
   function handleDelete(sessionId: string) {
     removeRecentSession(sessionId);
+    setServerSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
     setSessionToDelete(null);
+    // Best-effort server delete (no-op for guests)
+    deleteGameSession(sessionId).catch(() => {});
   }
 
   function handleClearAll() {
     clearRecentSessions();
+    setServerSessions([]);
     setShowClearAll(false);
+    // Best-effort server delete-all (no-op for guests)
+    deleteAllMyGameSessions().catch(() => {});
   }
 
   return (
