@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { BackHeader } from "@/components/ui/back-header";
+import { fetchMyGameSessions } from "@/app/session/server-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,13 +34,28 @@ import { PHASE_EASE, screenContainer, screenItem, TAP_SCALE } from "@/lib/motion
 
 export function SessionManager() {
   const router = useRouter();
-  const recent = useSyncExternalStore(
+  const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
     getRecentSessionsSnapshot,
     getRecentSessionsServerSnapshot,
   );
+  const [serverSessions, setServerSessions] = useState<typeof localRecent>([]);
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
   const [showClearAll, setShowClearAll] = useState(false);
+
+  useEffect(() => {
+    fetchMyGameSessions().then(setServerSessions).catch(() => {});
+  }, []);
+
+  // Merge: server is authoritative, deduplicate by sessionId, sort by createdAt desc
+  const seen = new Set<string>();
+  const recent = [...serverSessions, ...localRecent]
+    .filter((entry) => {
+      if (seen.has(entry.sessionId)) return false;
+      seen.add(entry.sessionId);
+      return true;
+    })
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   function formatRelativeTime(dateStr: string) {
     try {

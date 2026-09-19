@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { joinSessionByCode } from "@/app/session/actions";
+import { fetchMyGameSessions } from "@/app/session/server-actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,6 +30,7 @@ import {
   getRecentSessionsServerSnapshot,
   getRecentSessionsSnapshot,
   removeRecentSession,
+  saveRecentSession,
   subscribeRecentSessions,
 } from "@/lib/recent-sessions";
 import {
@@ -40,13 +42,29 @@ import {
 
 function RecentSessions() {
   const router = useRouter();
-  const recent = useSyncExternalStore(
+  const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
     getRecentSessionsSnapshot,
     getRecentSessionsServerSnapshot,
   );
+  const [serverSessions, setServerSessions] = useState<typeof localRecent>([]);
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
   const [showClearAll, setShowClearAll] = useState(false);
+
+  useEffect(() => {
+    fetchMyGameSessions().then(setServerSessions).catch(() => {});
+  }, []);
+
+  // Merge: server is authoritative, deduplicate by sessionId, sort by createdAt desc
+  const seen = new Set<string>();
+  const recent = [...serverSessions, ...localRecent]
+    .filter((entry) => {
+      if (seen.has(entry.sessionId)) return false;
+      seen.add(entry.sessionId);
+      return true;
+    })
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
 
   if (recent.length === 0) {
     return null;
@@ -218,14 +236,28 @@ function RecentSessions() {
 
 export function SessionHome() {
   const router = useRouter();
-  const recent = useSyncExternalStore(
+  const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
     getRecentSessionsSnapshot,
     getRecentSessionsServerSnapshot,
   );
+  const [serverSessions, setServerSessions] = useState<typeof localRecent>([]);
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
+
+  useEffect(() => {
+    fetchMyGameSessions().then(setServerSessions).catch(() => {});
+  }, []);
+
+  // Merge for badge count on the 'Quản lý phiên' card
+  const seenHome = new Set<string>();
+  const recent = [...serverSessions, ...localRecent].filter((entry) => {
+    if (seenHome.has(entry.sessionId)) return false;
+    seenHome.add(entry.sessionId);
+    return true;
+  });
+
 
   async function submitCode(value: string) {
     const nextCode = value.replace(/\D/g, "").slice(0, SESSION_CODE_LENGTH);
@@ -243,6 +275,12 @@ export function SessionHome() {
       setIsJoining(false);
       return;
     }
+
+    saveRecentSession({
+      sessionId: result.sessionId,
+      sessionCode: result.sessionCode,
+      categories: result.categories,
+    });
 
     router.push(`/session/${result.sessionId}/play`);
   }

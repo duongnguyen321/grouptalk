@@ -4,7 +4,10 @@ import { nextSessionCode } from "@/lib/session-code";
 export async function copySessionFromCode(
   sessionCode: string,
   ownerUserId: string,
-): Promise<{ ok: true; sessionId: string } | { ok: false; error: string }> {
+): Promise<
+  | { ok: true; sessionId: string; sessionCode: string; categories: import("@/generated/prisma/enums").Category[] }
+  | { ok: false; error: string }
+> {
   const source = await prisma.gameSession.findUnique({
     where: { sessionCode },
     include: {
@@ -95,7 +98,7 @@ export async function copySessionFromCode(
       return session;
     });
 
-    return { ok: true, sessionId: copied.id };
+    return { ok: true, sessionId: copied.id, sessionCode: newCode, categories: source.categories };
   } catch {
     return { ok: false, error: "Không copy được phiên. Thử lại nhé." };
   }
