@@ -141,3 +141,13 @@ function Wheel({ players }: { players: SessionPlayer[] }) {
 - [x] Technical todos listed sequentially?
 - [x] Source code files referenced accurately?
 - [x] Manual test checklist defined?
+
+## Implementation notes (2026-09-19)
+
+- Play loop lives in `components/play/play-screen.tsx` (client) driven by `app/session/[sessionId]/play/page.tsx`.
+- Extra helpers: `lib/game/eligibility.ts`, `lib/game/wheel-math.ts`, `lib/game/question-notes.ts`, `lib/game/category-tone.ts`.
+- `spinAction` uses `withSessionLock`; contention returns `{ ok: false, error: "busy" }` and the wheel toasts "Đang xử lý, vui lòng thử lại". Owner-token compare-and-delete is already in the minimal lock (PLAN-005 can still harden Lua/TTL docs).
+- Crush-topic questions (`Topic.name === "Thích thầm"`) stay out of the pool unless `crushQuestionEnabled`.
+- Duplicate reveal/vote uses Prisma `upsert` on the unique keys instead of catching `P2002`.
+- Menu links (`history` / `contribute` / `code`) are PLAN-004 placeholders so the drawer does not 404.
+- No audio on spin, confetti, or flip.

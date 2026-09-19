@@ -49,3 +49,11 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for system structure, data model, and the
 - shadcn/ui (radix-nova) lives in `components/ui/*`. Keep Baloo + warm canvas tokens in `app/globals.css` if regenerating shadcn theme.
 - `startGameSession` validates via `lib/session-setup.ts`, then Prisma-transactions `GameSession` + `SessionPlayer[]`. Crush flag is stored only when `FRIENDS` is selected.
 - Do not import `lib/store/session-draft.ts` from Server Actions; name helpers are in `lib/player-name.ts`.
+
+## Technical rules (PLAN-003)
+
+- Play loop: `spinAction` → wheel animation → `WinnerReveal` → `pickThreeQuestions` teasers → `revealCardAction` (writes `SessionAnswer` immediately) → optional `voteHideAction`.
+- Question pool is `lib/game/select-question.ts` + `lib/game/eligibility.ts`. Exclude answered/hidden/deleted first; if empty, drop only the answered exclusion. Crush topic `Thích thầm` requires `crushQuestionEnabled`.
+- `withSessionLock` keys `lock:session:${sessionId}` via `SET NX PX 5000`. Spin contention returns `error: "busy"` — do not block/retry. PLAN-005 may still harden Lua release.
+- No audio on wheel, confetti, or card flip. Menu history/contribute/code routes stay stubs until PLAN-004.
+- Do not import client play components from Server Actions; keep eligibility helpers in `lib/game/`.

@@ -1,19 +1,36 @@
+import { notFound } from "next/navigation";
+import { PlayScreen } from "@/components/play/play-screen";
+import { prisma } from "@/lib/db";
+
 type PlayPageProps = {
   params: Promise<{ sessionId: string }>;
 };
 
-export default async function PlayPlaceholderPage({ params }: PlayPageProps) {
+export default async function PlayPage({ params }: PlayPageProps) {
   const { sessionId } = await params;
+  const session = await prisma.gameSession.findUnique({
+    where: { id: sessionId },
+    select: {
+      id: true,
+      sessionCode: true,
+      categories: true,
+      players: {
+        select: { id: true, displayName: true },
+        orderBy: { id: "asc" },
+      },
+    },
+  });
+
+  if (!session || session.players.length === 0) {
+    notFound();
+  }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col items-center justify-center bg-canvas px-6 text-center">
-      <p className="text-sm tracking-[0.22em] text-ink-muted uppercase">
-        Phiên đã tìm thấy
-      </p>
-      <h1 className="mt-3 font-display text-3xl font-extrabold text-ink">
-        Màn chơi chính sẽ có ở bước sau.
-      </h1>
-      <p className="mt-3 font-mono text-sm text-ink-muted">{sessionId}</p>
-    </main>
+    <PlayScreen
+      sessionId={session.id}
+      sessionCode={session.sessionCode}
+      categories={session.categories}
+      players={session.players}
+    />
   );
 }

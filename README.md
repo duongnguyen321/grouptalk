@@ -6,13 +6,13 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 and PLAN-002 are implemented: identity, Splash, Session Home, category select, player chips, and `startGameSession` (creates `GameSession` + `SessionPlayer[]`). Join-by-code is still a lookup stub (full copy is PLAN-004). Play screen is a placeholder until PLAN-003.
+PLAN-001 through PLAN-003 are implemented: identity, Splash, Session Home, session setup, and the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide). Join-by-code is still a lookup stub; history / contribute / session-code screens are placeholders until PLAN-004.
 
-Next: [plans/PLAN-003-game-loop.md](plans/PLAN-003-game-loop.md).
+Next: [plans/PLAN-004-community-continuity.md](plans/PLAN-004-community-continuity.md).
 
 ## Stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui · zustand · Prisma 7 + PostgreSQL · Redis · Auth.js v5 (Google, optional) · bun
+Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui · zustand · framer-motion · canvas-confetti · Prisma 7 + PostgreSQL · Redis · Auth.js v5 (Google, optional) · bun
 
 ## Setup
 
@@ -71,4 +71,5 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Session Home: "Tạo phiên mới" → category select; 8-digit join lookup
 - Session setup wizard: multi-select categories, optional "thích thầm" for Nhóm bạn, player chips (min 2), persisted draft in localStorage until start
 - `startGameSession` writes one `GameSession` and its `SessionPlayer` rows, then clears the draft
+- Play loop: Redis-locked spin, silent ease-out wheel, confetti winner toast, 3 contributor teasers, immediate `SessionAnswer` on reveal, personal vote-hide + 30% global soft-delete
 

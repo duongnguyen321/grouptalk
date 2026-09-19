@@ -27,17 +27,110 @@ const TARGET_URLS: string[] = [
   "https://mytour.vn/vi/blog/bai-viet/280-cau-hoi-su-that-hoac-thu-thach-tot-nhat-de-lam-nong-dem-choi-tiep-theo-cua-ban.html",
 ];
 
-// Từ khóa giao diện hoặc nội dung mô tả bài viết cần loại trừ
 const BLACKLIST_KEYWORDS = [
-  "wikihow", "đăng nhập", "đăng ký", "chuyên mục", "sơ đồ trang web",
-  "điều khoản", "quyền riêng tư", "liên hệ", "not selling info",
-  "bình chọn", "quiz", "đám mây", "báo cáo", "tính năng", "bài viết liên quan",
-  "khuyên", "nguyên tắc", "luật chơi", "hướng dẫn", "mẹo", "bước ",
-  "tạo sự hấp dẫn", "câu hỏi sự thật", "câu hỏi thật hay", "làm nóng đêm chơi",
-  "thảo luận về các chủ đề"
+  "wikihow",
+  "đăng nhập",
+  "đăng ký",
+  "chuyên mục",
+  "sơ đồ trang web",
+  "điều khoản",
+  "quyền riêng tư",
+  "liên hệ",
+  "not selling info",
+  "bình chọn",
+  "quiz",
+  "đám mây",
+  "báo cáo",
+  "tính năng",
+  "bài viết liên quan",
+  "khuyên",
+  "nguyên tắc",
+  "luật chơi",
+  "hướng dẫn",
+  "mẹo",
+  "bước ",
+  "tạo sự hấp dẫn",
+  "câu hỏi sự thật",
+  "câu hỏi thật hay",
+  "làm nóng đêm chơi",
+  "thảo luận về các chủ đề",
 ];
 
-// Helper kiểm tra từ nguyên vẹn với boundary tiếng Việt thay vì substring thông thường
+// Danh sách động từ mệnh lệnh/hành động mở đầu của một CHALLENGE
+const IMPERATIVE_VERBS = [
+  "hãy",
+  "hôn",
+  "gọi",
+  "khoe",
+  "chỉ",
+  "ăn",
+  "uống",
+  "nhảy",
+  "đăng",
+  "bắt chước",
+  "cho người",
+  "cho phép",
+  "đọc",
+  "làm",
+  "gửi",
+  "viết",
+  "bật mí",
+  "kể",
+  "diễn",
+  "cắn",
+  "liếm",
+  "ngửi",
+  "chụp",
+  "tải",
+  "xoay",
+  "múa",
+  "đập",
+  "bịt mắt",
+  "đổi",
+  "nhại",
+  "thực hiện",
+  "nói bằng",
+  "vẽ",
+  "tỏ tình",
+  "chống đẩy",
+  "khen",
+  "mặc",
+  "cởi",
+  "chạy",
+  "ngồi",
+  "bò",
+  "đứng",
+  "hát",
+  "chia sẻ",
+  "nhắn",
+  "chọn",
+  "tạo",
+  "quay",
+  "đóng vai",
+  "thử dập",
+  "trộn",
+  "phủ",
+  "dạy",
+];
+
+// Danh sách từ để hỏi chuẩn tiếng Việt
+const QUESTION_WORDS = [
+  "là gì",
+  "ở đâu",
+  "bao giờ",
+  "khi nào",
+  "bao nhiêu",
+  "tại sao",
+  "như thế nào",
+  "mấy lần",
+  "ai là",
+  "điều gì",
+  "cái gì",
+  "nơi nào",
+  "thế nào",
+  "vì sao",
+];
+
 function hasWord(text: string, phrase: string): boolean {
   const escaped = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(`(^|[^a-zà-ỹ0-9])${escaped}([^a-zà-ỹ0-9]|$)`, "i");
@@ -48,9 +141,15 @@ function hasAnyWord(text: string, phrases: string[]): boolean {
   return phrases.some((phrase) => hasWord(text, phrase));
 }
 
-// Làm sạch toàn bộ prefix, số thứ tự, ngắt dòng
-function cleanText(raw: string): { title: string; isExplicitChallenge: boolean; isExplicitTruth: boolean } {
-  let text = raw.replace(/[\r\n\t]+/g, " ").replace(/\s\s+/g, " ").trim();
+function cleanText(raw: string): {
+  title: string;
+  isExplicitChallenge: boolean;
+  isExplicitTruth: boolean;
+} {
+  let text = raw
+    .replace(/[\r\n\t]+/g, " ")
+    .replace(/\s\s+/g, " ")
+    .trim();
 
   let isExplicitChallenge = false;
   let isExplicitTruth = false;
@@ -58,16 +157,20 @@ function cleanText(raw: string): { title: string; isExplicitChallenge: boolean; 
   let modified = true;
   while (modified) {
     const prev = text;
-    // Xóa số thứ tự đầu chuỗi ("1.", "15 ", "Câu 1: ", "- ")
-    text = text.replace(/^(câu\s*\d+[\.:\s]*|\d+[\.\)\/\-\:]\s*|\d+\s+|[\-\•\*]\s*)/i, "").trim();
+    text = text
+      .replace(
+        /^(câu\s*\d+[\.:\s]*|\d+[\.\)\/\-\:]\s*|\d+\s+|[\-\•\*]\s*)/i,
+        "",
+      )
+      .trim();
 
-    // Bóc nhãn Thử thách
     if (/^(thử thách|thách thức|thách|dare)\s*[\:\-\.]\s*/i.test(text)) {
       isExplicitChallenge = true;
-      text = text.replace(/^(thử thách|thách thức|thách|dare)\s*[\:\-\.]\s*/i, "").trim();
+      text = text
+        .replace(/^(thử thách|thách thức|thách|dare)\s*[\:\-\.]\s*/i, "")
+        .trim();
     }
 
-    // Bóc nhãn Sự thật
     if (/^(sự thật|thật|truth)\s*[\:\-\.]\s*/i.test(text)) {
       isExplicitTruth = true;
       text = text.replace(/^(sự thật|thật|truth)\s*[\:\-\.]\s*/i, "").trim();
@@ -76,7 +179,6 @@ function cleanText(raw: string): { title: string; isExplicitChallenge: boolean; 
     modified = prev !== text;
   }
 
-  // Viết hoa lại chữ cái đầu
   if (text.length > 0) {
     text = text.charAt(0).toUpperCase() + text.slice(1);
   }
@@ -84,11 +186,10 @@ function cleanText(raw: string): { title: string; isExplicitChallenge: boolean; 
   return { title: text, isExplicitChallenge, isExplicitTruth };
 }
 
-// Kiểm tra câu có hợp lệ về mặt ngữ pháp / cấu trúc trò chơi
 function isValidEntry(text: string): boolean {
   const lower = text.toLowerCase();
 
-  if (text.length < 10 || text.length > 200) return false;
+  if (text.length < 8 || text.length > 220) return false;
   if (BLACKLIST_KEYWORDS.some((kw) => lower.includes(kw))) return false;
 
   const isQuestion =
@@ -98,46 +199,43 @@ function isValidEntry(text: string): boolean {
     lower.startsWith("cái gì") ||
     lower.startsWith("nơi nào") ||
     lower.startsWith("nếu ") ||
-    lower.startsWith("lần cuối") ||
-    lower.startsWith("lần gần nhất") ||
-    hasAnyWord(lower, ["là gì", "ở đâu", "bao giờ", "khi nào", "bao nhiêu", "tại sao", "như thế nào", "mấy lần"]);
+    hasAnyWord(lower, QUESTION_WORDS);
 
-  const challengePrefixes = [
-    "hãy", "hôn", "gọi", "khoe", "chỉ", "ăn", "uống", "nhảy", "đăng", 
-    "bắt chước", "cho người", "cho phép", "đọc", "làm", "uống", "gửi",
-    "bật mí", "kể", "diễn", "cắn", "liếm", "ngửi", "chụp", "tải", "xoay",
-    "múa", "đập", "bịt mắt", "đổi", "nhại", "thực hiện", "nói bằng",
-    "vẽ", "tỏ tình", "chống đẩy", "viết", "khen"
-  ];
+  const isImperative = IMPERATIVE_VERBS.some((verb) => lower.startsWith(verb));
 
-  const isChallenge = challengePrefixes.some((p) => lower.startsWith(p));
-
-  return isQuestion || isChallenge;
+  return isQuestion || isImperative;
 }
 
-function inferType(text: string, isChallenge: boolean): QuestionType {
-  if (isChallenge) return QuestionType.CHALLENGE;
+// 1. Phân loại TYPE
+function inferType(
+  text: string,
+  isExplicitChallenge: boolean,
+  isExplicitTruth: boolean,
+): QuestionType {
+  if (isExplicitChallenge) return QuestionType.CHALLENGE;
+  if (isExplicitTruth) {
+    const lower = text.toLowerCase();
+    const isYesNo =
+      lower.startsWith("bạn có") ||
+      lower.startsWith("có bao giờ") ||
+      lower.startsWith("bạn từng") ||
+      lower.startsWith("đã từng") ||
+      lower.endsWith("không?") ||
+      lower.endsWith("chưa?");
+    return isYesNo ? QuestionType.YESNO : QuestionType.OPEN_ENDED;
+  }
 
   const lower = text.toLowerCase();
 
-  // Động từ mệnh lệnh đầu câu
-  const actionPrefixes = [
-    "hãy", "hôn", "gọi", "khoe", "uống", "nhảy", "đăng", "bắt chước",
-    "gửi tin nhắn", "cởi", "thực hiện", "múa", "diễn lại", "nhại lại",
-    "ăn", "liếm", "ngửi", "chụp", "cắn", "xoa bóp", "mở", "khen ngợi"
-  ];
-  if (actionPrefixes.some((w) => lower.startsWith(w))) {
-    return QuestionType.CHALLENGE;
-  }
-
-  // Nhận diện câu Yes/No
+  // Kiểm tra nếu là câu hỏi Yes/No
   const isYesNoStart =
     lower.startsWith("bạn có") ||
     lower.startsWith("có bao giờ") ||
     lower.startsWith("bạn từng") ||
     lower.startsWith("đã từng") ||
     lower.startsWith("đã bao giờ") ||
-    lower.startsWith("có khi nào");
+    lower.startsWith("có khi nào") ||
+    lower.startsWith("bạn có muốn");
 
   const isYesNoEnd =
     lower.endsWith("không?") ||
@@ -145,85 +243,187 @@ function inferType(text: string, isChallenge: boolean): QuestionType {
     lower.endsWith("phải không?") ||
     lower.endsWith("đúng không?");
 
+  // Nếu là câu hỏi Yes/No nhưng có chứa từ nghi vấn lựa chọn/mô tả -> OPEN_ENDED
   if (isYesNoStart || isYesNoEnd) {
-    // Nếu chứa các từ nghi vấn hỏi lựa chọn cụ thể -> chuyển thành câu hỏi mở
-    if (hasAnyWord(lower, ["bao nhiêu", "ai", "gì", "như thế nào", "tại sao", "về chuyện gì"])) {
+    if (
+      hasAnyWord(lower, [
+        "bao nhiêu",
+        "ai là",
+        "điều gì",
+        "tại sao",
+        "về chuyện gì",
+        "như thế nào",
+      ])
+    ) {
       return QuestionType.OPEN_ENDED;
     }
     return QuestionType.YESNO;
   }
 
+  // Nếu câu bắt đầu bằng động từ hành động hoặc không có dấu hỏi chấm -> CHALLENGE
+  const startsWithAction = IMPERATIVE_VERBS.some((verb) =>
+    lower.startsWith(verb),
+  );
+  const hasQuestionIntent =
+    text.endsWith("?") || hasAnyWord(lower, QUESTION_WORDS);
+
+  if (startsWithAction || !hasQuestionIntent) {
+    return QuestionType.CHALLENGE;
+  }
+
   return QuestionType.OPEN_ENDED;
 }
 
+// 2. Phân loại TOPIC
 function inferTopic(text: string, type: QuestionType): Topic {
-  if (type === QuestionType.CHALLENGE) return "Thử thách";
+  // QUY TẮC BẮT BUỘC: Nếu là CHALLENGE -> Topic mặc định là "Thử thách"
+  // Ngoại lệ: Chỉ đổi sang "Thích thầm" nếu là thử thách tỏ tình/crush rõ rệt
+  if (type === QuestionType.CHALLENGE) {
+    const lower = text.toLowerCase();
+    if (hasAnyWord(lower, ["crush", "yêu thầm", "thích thầm"])) {
+      return "Thích thầm";
+    }
+    return "Thử thách";
+  }
 
   const lower = text.toLowerCase();
 
-  // 1. Gia đình
-  if (hasAnyWord(lower, ["bố", "mẹ", "ba", "má", "phụ huynh", "gia đình", "anh trai", "em trai", "chị gái", "em gái", "anh chị em"])) {
+  // Gia đình
+  if (
+    hasAnyWord(lower, [
+      "bố",
+      "mẹ",
+      "ba",
+      "má",
+      "phụ huynh",
+      "gia đình",
+      "anh trai",
+      "em trai",
+      "chị gái",
+      "em gái",
+      "anh chị em",
+    ])
+  ) {
     return "Gia đình";
   }
 
-  // 2. Thích thầm (Crush)
-  if (hasAnyWord(lower, ["crush", "thích thầm", "yêu thầm", "phải lòng", "say nắng"])) {
+  // Thích thầm
+  if (
+    hasAnyWord(lower, [
+      "crush",
+      "thích thầm",
+      "yêu thầm",
+      "phải lòng",
+      "say nắng",
+    ])
+  ) {
     return "Thích thầm";
   }
 
-  // 3. Tình cảm (Couple, hẹn hò, lãng mạn)
-  if (hasAnyWord(lower, [
-    "người yêu", "tình yêu", "hẹn hò", "bạn trai", "bạn gái",
-    "người yêu cũ", "tình cũ", "nụ hôn", "hôn", "lãng mạn", "chia tay",
-    "đính hôn", "bạn đời", "tỏ tình", "tán tỉnh"
-  ])) {
-    return "Tình cảm";
-  }
-
-  // 4. Kỷ niệm (Quá khứ, lần đầu, hồi nhỏ)
-  if (hasAnyWord(lower, [
-    "kỷ niệm", "lần đầu tiên", "hồi bé", "tuổi thơ", "hồi nhỏ",
-    "quá khứ", "ngày xưa", "thời đi học", "ấn tượng đầu tiên"
-  ])) {
+  // Kỷ niệm
+  if (
+    hasAnyWord(lower, [
+      "kỷ niệm",
+      "lần đầu tiên",
+      "hồi bé",
+      "tuổi thơ",
+      "hồi nhỏ",
+      "quá khứ",
+      "ngày xưa",
+      "thời đi học",
+      "ấn tượng đầu tiên",
+    ])
+  ) {
     return "Kỷ niệm";
   }
 
-  // Mặc định các câu hỏi còn lại là chủ đề bạn bè / giao lưu nhóm
+  // Tình cảm (chỉ xét cho câu hỏi tâm sự, không áp dụng cho challenge troll)
+  if (
+    hasAnyWord(lower, [
+      "người yêu",
+      "tình yêu",
+      "hẹn hò",
+      "bạn trai",
+      "bạn gái",
+      "người yêu cũ",
+      "tình cũ",
+      "nụ hôn đầu",
+      "lãng mạn",
+      "đính hôn",
+      "bạn đời",
+      "người ấy",
+    ])
+  ) {
+    return "Tình cảm";
+  }
+
   return "Bạn bè";
 }
 
-function inferCategories(text: string, topic: Topic): Category[] {
+// 3. Phân loại CATEGORIES
+function inferCategories(
+  text: string,
+  type: QuestionType,
+  topic: Topic,
+): Category[] {
   const lower = text.toLowerCase();
   const categories = new Set<Category>();
 
-  // 1. Phân loại theo giới tính cụ thể
-  if (hasAnyWord(lower, ["bạn nam", "con trai", "anh em", "nam giới", "đàn ông"])) {
+  // 1. Giới tính cụ thể
+  if (hasAnyWord(lower, ["bạn nam", "con trai", "nam giới", "đàn ông"])) {
     categories.add(Category.BOYS);
   }
-  if (hasAnyWord(lower, ["bạn nữ", "con gái", "chị em", "nữ giới", "phụ nữ"])) {
+  if (hasAnyWord(lower, ["bạn nữ", "con gái", "nữ giới", "phụ nữ"])) {
     categories.add(Category.GIRLS);
   }
 
-  // 2. Cặp đôi: CHỈ gán khi câu hướng trực tiếp vào mối quan hệ 2 người yêu nhau
-  const coupleSignals = [
-    "hai đứa", "người yêu", "bạn đời", "đối phương", "người ấy",
-    "mối quan hệ của chúng ta", "mối quan hệ của bạn", "chúng mình",
-    "hẹn hò lại từ đầu", "nụ hôn đầu", "yêu nhau", "chia tay"
-  ];
-  if (hasAnyWord(lower, coupleSignals)) {
-    categories.add(Category.COUPLE);
+  // 2. COUPLE:
+  // CHỈ gán cho COUPLE khi câu hỏi/thử thách là tương tác TRỰC TIẾP giữa hai người yêu nhau
+  // Tuyệt đối không gán COUPLE cho các thử thách gửi tin nhắn ngẫu nhiên/troll người lạ
+  const isRandomNumberPrank =
+    lower.includes("số ngẫu nhiên") ||
+    lower.includes("người lạ") ||
+    lower.includes("cho ai đó");
+
+  if (!isRandomNumberPrank) {
+    const coupleSignals = [
+      "hai đứa",
+      "đối phương",
+      "người yêu của bạn",
+      "bạn đời của bạn",
+      "mối quan hệ của chúng ta",
+      "buổi hẹn hò của chúng ta",
+      "chúng mình",
+      "hẹn hò lại từ đầu",
+      "nụ hôn của hai bạn",
+      "người yêu bạn",
+    ];
+
+    if (hasAnyWord(lower, coupleSignals)) {
+      categories.add(Category.COUPLE);
+    }
   }
 
-  // 3. Nhóm bạn bè chung:
-  // Nếu đề cập rõ đến không gian nhóm, tiệc tùng HOẶC không phải câu hỏi dành riêng cho couple
-  const isGroupContext = hasAnyWord(lower, [
-    "ở đây", "trong phòng này", "nhóm", "ai trong số", "bạn bè",
-    "mọi người", "cùng chơi", "bạn thân", "chúng ta"
-  ]);
-
-  if (categories.size === 0 || isGroupContext || topic === "Bạn bè" || topic === "Kỷ niệm") {
-    // Nếu câu hỏi về tập thể trong phòng, đảm bảo luôn có FRIENDS
-    categories.add(Category.FRIENDS);
+  // 3. FRIENDS: Mặc định tất cả thử thách tiệc tùng, câu hỏi nhóm, hoặc không thuộc couple riêng tư
+  if (
+    categories.size === 0 ||
+    type === QuestionType.CHALLENGE ||
+    topic === "Bạn bè" ||
+    topic === "Kỷ niệm" ||
+    topic === "Thử thách" ||
+    hasAnyWord(lower, [
+      "ở đây",
+      "trong phòng này",
+      "nhóm",
+      "bạn bè",
+      "mọi người",
+      "cùng chơi",
+    ])
+  ) {
+    // Nếu là thử thách troll (như "gửi tin nhắn chia tay cho số ngẫu nhiên"), bắt buộc phải là FRIENDS
+    if (!categories.has(Category.COUPLE)) {
+      categories.add(Category.FRIENDS);
+    }
   }
 
   return Array.from(categories);
@@ -243,21 +443,25 @@ async function scrapeUrl(url: string): Promise<Question[]> {
     });
 
     const $ = cheerio.load(html);
+    $(
+      "nav, footer, header, aside, .sidebar, .menu, script, style, noscript, form",
+    ).remove();
 
-    // Xóa bỏ tất cả các thành phần điều hướng, footer, bảng quảng cáo
-    $("nav, footer, header, aside, .sidebar, .menu, script, style, noscript, form").remove();
-
-    $("article li, .entry-content li, .post-content li, .content-detail li, ol li").each((_, el) => {
+    $(
+      "article li, .entry-content li, .post-content li, .content-detail li, ol li",
+    ).each((_, el) => {
       const rawText = $(el).text();
-      const { title, isExplicitChallenge } = cleanText(rawText);
+      const { title, isExplicitChallenge, isExplicitTruth } =
+        cleanText(rawText);
 
       if (!isValidEntry(title)) return;
 
-      const type = inferType(title, isExplicitChallenge);
+      const type = inferType(title, isExplicitChallenge, isExplicitTruth);
       const topic = inferTopic(title, type);
-      const categories = inferCategories(title, topic);
-
-      questions.push({ title, type, topic, categories });
+      const categories = inferCategories(title, type, topic);
+      if (type !== QuestionType.CHALLENGE) {
+        questions.push({ title, type, topic, categories });
+      }
     });
   } catch (error) {
     console.error(`Lỗi cào URL [${url}]:`, (error as Error).message);
@@ -283,8 +487,14 @@ async function main() {
     }
   }
 
-  fs.writeFileSync("output_questions.json", JSON.stringify(allQuestions, null, 2), "utf-8");
-  console.log(`Đã làm sạch và xuất ${allQuestions.length} câu hỏi hợp lệ vào output_questions.json`);
+  fs.writeFileSync(
+    "output_questions.json",
+    JSON.stringify(allQuestions, null, 2),
+    "utf-8",
+  );
+  console.log(
+    `Đã làm sạch và xuất ${allQuestions.length} câu hỏi hợp lệ vào output_questions.json`,
+  );
 }
 
 main();

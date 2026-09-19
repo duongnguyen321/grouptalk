@@ -63,27 +63,27 @@ Based on §4:
 
 ## Phase 7 — Main Game Screen: Wheel (§5.5 State A/B, §7.1)
 
-- [ ] Wheel UI: segments per active players, alternating category-tone colors, readable names
-- [ ] Header: category badge (left), menu icon (right, 3-dot/hamburger)
-- [ ] "QUAY" button — large, prominent, disabled while spinning
-- [ ] Spin animation: ease-out, randomized 2–4s duration, no sound
-- [ ] Random player selection logic (equal weight) + disable double-submit (Redis lock by sessionId)
-- [ ] Winner reveal: full-width name toast + confetti ~1–1.5s → auto-transition to card selection
-- [ ] Footer: player count + "Xem lịch sử phiên" link
-- [ ] Menu drawer: Xem lịch sử phiên / Đóng góp câu hỏi / Xem mã phiên / Thoát phiên
+- [x] Wheel UI: segments per active players, alternating category-tone colors, readable names
+- [x] Header: category badge (left), menu icon (right, 3-dot/hamburger)
+- [x] "QUAY" button — large, prominent, disabled while spinning
+- [x] Spin animation: ease-out, randomized 2–4s duration, no sound
+- [x] Random player selection logic (equal weight) + disable double-submit (Redis lock by sessionId)
+- [x] Winner reveal: full-width name toast + confetti ~1–1.5s → auto-transition to card selection
+- [x] Footer: player count + "Xem lịch sử phiên" link
+- [x] Menu drawer: Xem lịch sử phiên / Đóng góp câu hỏi / Xem mã phiên / Thoát phiên
 
 ## Phase 8 — Card Selection & Reveal (§5.5 State C/D/E, §7.2–7.4)
 
-- [ ] Question selection logic (§6.1): eligible pool = active categories' questions − already-answered-by-this-player (`SessionAnswer`) − vote-hidden-by-current-user (`QuestionVote`) − `isDeleted`; fallback to allow repeats when pool empty (still excluding hidden/deleted)
-- [ ] Pick 3 random questions from eligible pool for the teaser cards
-- [ ] Card-back UI: category-colored, "?" icon, small "Đóng góp bởi: {name}" (resolve `contributedByUserId` → displayName, else "Ẩn danh")
-- [ ] Fan-out/overlap layout, tap-to-select interaction
-- [ ] Flip animation (3D Y-axis, ~0.4–0.6s), other 2 cards fade+scale out
-- [ ] Card-front layout (§7.3): player name+avatar, question text (auto-shrink), type-specific note text, hidden-vote icon button, "Quay tiếp" button
-- [ ] On reveal: immediately create `SessionAnswer` record
-- [ ] Vote-hide modal (§7.4): confirm dialog → create `QuestionVote` → toast "Đã ẩn câu hỏi này"
-- [ ] Global auto-delete check (§6.4): after vote insert, compute vote ratio vs total users; if ≥30% → set `Question.isDeleted = true`
-- [ ] "Quay tiếp" → back to Phase 7 State A
+- [x] Question selection logic (§6.1): eligible pool = active categories' questions − already-answered-by-this-player (`SessionAnswer`) − vote-hidden-by-current-user (`QuestionVote`) − `isDeleted`; fallback to allow repeats when pool empty (still excluding hidden/deleted)
+- [x] Pick 3 random questions from eligible pool for the teaser cards
+- [x] Card-back UI: category-colored, "?" icon, small "Đóng góp bởi: {name}" (resolve `contributedByUserId` → displayName, else "Ẩn danh")
+- [x] Fan-out/overlap layout, tap-to-select interaction
+- [x] Flip animation (3D Y-axis, ~0.4–0.6s), other 2 cards fade+scale out
+- [x] Card-front layout (§7.3): player name+avatar, question text (auto-shrink), type-specific note text, hidden-vote icon button, "Quay tiếp" button
+- [x] On reveal: immediately create `SessionAnswer` record
+- [x] Vote-hide modal (§7.4): confirm dialog → create `QuestionVote` → toast "Đã ẩn câu hỏi này"
+- [x] Global auto-delete check (§6.4): after vote insert, compute vote ratio vs total users; if ≥30% → set `Question.isDeleted = true`
+- [x] "Quay tiếp" → back to Phase 7 State A
 
 ## Phase 9 — Session Copy (§5.7, §6.5)
 

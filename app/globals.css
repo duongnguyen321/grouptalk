@@ -15,6 +15,7 @@
   --cat-boys-deep: #0984e3;
   --cat-friends: #fdcb6e;
   --cat-friends-deep: #e17055;
+  --play: #2b211c;
   --background: #f6f1ea;
   --foreground: #1c1917;
   --card: oklch(1 0 0);
@@ -64,6 +65,7 @@
   --color-cat-boys-deep: var(--cat-boys-deep);
   --color-cat-friends: var(--cat-friends);
   --color-cat-friends-deep: var(--cat-friends-deep);
+  --color-play: var(--play);
   --font-sans: var(--font-baloo);
   --font-display: var(--font-baloo);
   --font-heading: var(--font-baloo);
