@@ -146,3 +146,12 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Guest `deviceId` is synced from `localStorage` to `document.cookie` (`grouptalk-device-id`, 1-year expiry, `SameSite=Lax`) to allow Server Components (`page.tsx`) to resolve guest identity seamlessly on request.
 - All play-related Server Actions (`spinAction`, `setPriorityAction`, `loadTeaserCardsAction`, `revealCardAction`, `voteHideAction`) enforce author verification via `verifySessionAuthor`.
 
+## Technical rules (PLAN-011)
+
+- Overview statistics (`getOverviewStats`) calculate active question count (`isDeleted: false`) and total player participation (`SessionPlayer` count).
+- `StatsOverviewCard` (`components/ui/stats-overview-card.tsx`) renders on both `/` and `/session` and links directly to `/questions`.
+- `/questions` is a dynamic server-rendered page (`dynamic = "force-dynamic"`) rendering `BackHeader` and client component `QuestionsExplorer`.
+- `QuestionsExplorer` provides horizontal topic filter chips and infinite scrolling (20 items/page via `fetchQuestionsBatch` and `IntersectionObserver`).
+- Question items display topic badges, question type pills (`YESNO`, `CHALLENGE`, `OPEN_ENDED`), category tags with Lucide icons (`Heart`, `User`, `Users`, `UsersRound`), and contributor credit.
+- Zero emoji policy strictly maintained across all components, actions, and tests.
+

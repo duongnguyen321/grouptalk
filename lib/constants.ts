@@ -35,3 +35,4 @@ export const CONTRIBUTE_THANKS_TOAST = "Cảm ơn bạn đã đóng góp!";
 export const PRIORITY_WEIGHT_STEPS = [1, 2, 3, 5] as const;
 export const PRIORITY_DOT_COUNT = 3;
 export const PRIORITY_LONG_PRESS_MS = 700;
+export const QUESTIONS_PAGE_SIZE = 20;

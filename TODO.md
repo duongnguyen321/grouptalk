@@ -185,6 +185,16 @@ Based on §4:
 - [x] Server Actions author verification in `app/session/[sessionId]/play/actions.ts` (`spinAction`, `setPriorityAction`, `loadTeaserCardsAction`, `revealCardAction`, `voteHideAction`)
 - [x] Unit tests in `lib/author-check.test.ts`
 
+## Phase 20 — Question Stats & Explorer (PLAN-011)
+
+- [x] Pagination constant `QUESTIONS_PAGE_SIZE = 20` in `lib/constants.ts`
+- [x] Server Actions: `getOverviewStats()`, `getTopicsWithCounts()`, and `fetchQuestionsBatch()` in `app/questions/actions.ts`
+- [x] Reusable `StatsOverviewCard` component with Lucide icons in `components/ui/stats-overview-card.tsx`
+- [x] Overview stats widget integration into Splash (`app/page.tsx`, `components/splash/splash-screen.tsx`)
+- [x] Overview stats widget integration into Session Home (`app/session/page.tsx`, `components/session/session-home.tsx`)
+- [x] Full-featured `/questions` explorer page with `BackHeader`, horizontal topic chips filter, question type & category badges, and infinite scroll (`app/questions/page.tsx`, `components/questions/questions-explorer.tsx`)
+- [x] Unit test suite in `lib/questions-pagination.test.ts`
+
 
 ---
 

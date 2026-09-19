@@ -6,10 +6,13 @@ import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "@/app/auth/actions";
 import { getDeviceId, getOrCreateDeviceId } from "@/lib/device";
 import { createSessionDraft } from "@/app/session/actions";
+import { StatsOverviewCard } from "@/components/ui/stats-overview-card";
+import type { OverviewStats } from "@/app/questions/actions";
 
 type SplashScreenProps = {
   hasGoogleSession: boolean;
   googleSignInAvailable: boolean;
+  stats?: OverviewStats;
 };
 
 function subscribeNoop() {
@@ -19,6 +22,7 @@ function subscribeNoop() {
 export function SplashScreen({
   hasGoogleSession,
   googleSignInAvailable,
+  stats,
 }: SplashScreenProps) {
   const router = useRouter();
   const storedDeviceId = useSyncExternalStore(
@@ -72,15 +76,24 @@ export function SplashScreen({
       <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col justify-between">
         <header className="pt-10">
           <p className="text-sm font-medium tracking-[0.28em] text-ink-muted uppercase">
-            Trò chơi truyền tay
+            Trò chơi nhóm
           </p>
           <h1 className="mt-4 font-display text-6xl leading-none font-extrabold text-ink">
             GroupTalk
           </h1>
           <p className="mt-5 max-w-[16rem] text-lg leading-snug text-ink-soft">
-            Quay. Rút thẻ. Nói thật với nhau.
+            Quay. Rút thẻ. Deeptalking.
           </p>
         </header>
+
+        {stats && (stats.questionCount > 0 || stats.playerCount > 0) ? (
+          <div className="my-auto py-4">
+            <StatsOverviewCard
+              questionCount={stats.questionCount}
+              playerCount={stats.playerCount}
+            />
+          </div>
+        ) : null}
 
         <div className="flex flex-col gap-3 pb-6">
           {error ? (
@@ -112,7 +125,7 @@ export function SplashScreen({
             </form>
           ) : (
             <p className="text-center text-sm text-ink-muted">
-              Google chưa cấu hình — chơi ngay vẫn được.
+              Tài khoản ẩn danh.
             </p>
           )}
 

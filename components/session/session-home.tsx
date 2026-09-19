@@ -18,6 +18,8 @@ import {
   deleteGameSession,
   fetchMyGameSessions,
 } from "@/app/session/server-actions";
+import { StatsOverviewCard } from "@/components/ui/stats-overview-card";
+import type { OverviewStats } from "@/app/questions/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -245,7 +247,13 @@ function RecentSessions() {
   );
 }
 
-export function SessionHome({ unauthorized }: { unauthorized?: boolean } = {}) {
+export function SessionHome({
+  unauthorized,
+  stats,
+}: {
+  unauthorized?: boolean;
+  stats?: OverviewStats;
+} = {}) {
   const router = useRouter();
   const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
@@ -344,8 +352,15 @@ export function SessionHome({ unauthorized }: { unauthorized?: boolean } = {}) {
             </motion.div>
           ) : null}
 
+          {stats && (stats.questionCount > 0 || stats.playerCount > 0) ? (
+            <StatsOverviewCard
+              questionCount={stats.questionCount}
+              playerCount={stats.playerCount}
+              className="mt-6"
+            />
+          ) : null}
 
-          <div className="mt-8 flex flex-col gap-4">
+          <div className="mt-6 flex flex-col gap-4">
             <motion.a
               variants={screenItem}
               whileTap={{ scale: TAP_SCALE }}
