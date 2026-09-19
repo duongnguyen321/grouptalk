@@ -1,0 +1,3741 @@
+[
+  {
+    "title": "Ai là người bạn đang yêu thầm?",
+    "type": "OPEN_ENDED",
+    "topic": "Thích thầm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có bao giờ bạn đi bơi mà khỏa thân chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi điện chơi khăm một người bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khoảnh khắc xấu hổ nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho người khác vẽ một hình xăm bằng bút lông Sharpie trên cánh tay.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc ngu ngốc nhất bạn đã từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chụp một bức ảnh selfie làm mặt xấu.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ đem ai đi cùng đến đảo hoang?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy một điệu nhảy trên TikTok.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nỗi sợ lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ngửi giày của người khác.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng gian lận khi làm bài tập nộp cho giáo viên chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có từng yêu thầm ai trong phòng này không?",
+    "type": "OPEN_ENDED",
+    "topic": "Thích thầm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Diễn lại một cảnh trong bộ phim yêu thích của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng nói dối điều gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm một bài thơ về người mà bạn thích.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bí mật gì mà không ai biết?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn mong chờ điều gì ở người yêu?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Cậu nghĩ gì về tớ vào lần đầu gặp mặt?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã lừa dối ai bao giờ chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đọc cho mọi người nghe tin nhắn mới nhất mà bạn đã gửi.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có nụ hôn đầu tiên vào lúc nào?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Kể một câu chuyện bằng giọng của địa phương khác.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có bao giờ bạn “tè” trong hồ bơi không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hôn một người cùng chơi có đôi môi hấp dẫn nhất.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích mặc kiểu đồ lót nào nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bức ảnh selfie xấu hổ nhất của bạn trong 1 tiếng đồng hồ.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cái gì đáng xấu hổ nhất có trong phòng ngủ của bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn thứ gì đó mà không dùng tay.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ mời ai khiêu vũ hoặc đi dự dạ hội cuối năm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã hôn ai trong một sự kiện của trường chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ làm gì nếu thế giới đến ngày tận thế?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn làm con vật nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Liếm sạch nước sốt nóng trên thìa.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có dám dùng bàn chải đánh răng của người khác không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ làm gì nếu bạn có giới tính khác trong một ngày?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thứ mà bạn tìm kiếm trên Google mới đây nhất là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Xoay chai và hôn người được chỉ.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Biệt hiệu hồi bé của bạn là gì và lý do vì sao?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đổi quần áo với người khác.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng dùng nhà vệ sinh ở nơi nào kỳ quặc nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đã bao giờ bạn vi phạm luật lệ chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chống đẩy 10 lần.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có bao giờ bạn giả ốm để thoát khỏi chuyện gì đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nói bằng giọng địa phương khác trong 3 lượt chơi.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn làm nhân vật hư cấu nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đập một quả trứng lên đầu.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khuyết điểm lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho người khác bỏ nước đá vào áo.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nỗi ân hận lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ ai có vòng ba đẹp nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Buổi hẹn hò lúng túng nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chuyện gây ồn ào nhất mà bạn đã từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần cuối cùng bạn khóc là bao giờ?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cắn một miếng vào quả chanh.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thành tích lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn xăm hình gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người ta hay đồn điều gì về bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bao giờ lan truyền tin đồn về ai trong số những người ở đây không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tin vào ma quỷ không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thế giới ảo mộng của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỳ nghỉ trong mơ của bạn là ở đâu?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ngửi nách của một người chơi.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nghề nghiệp mà bạn mơ ước là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi phản hồi trái tim cho bài đăng trên mạng xã hội của người mà bạn yêu thầm.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn mặc đồ lót màu gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bài hát yêu thích nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần cuối cùng bạn tè dầm là lúc nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một video bắt chước tiếng chó sủa hoặc mèo kêu.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có ôm thú nhồi bông đi ngủ không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bộ phim thiếu nhi nào mà bạn vẫn còn xem?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm động tác con gà ngoài sân trước.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì làm bạn ghét nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai ở đây hiểu rõ bạn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần gần đây nhất bạn xem Instagram của ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Món kỳ dị nhất mà bạn đã từng ăn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Tài năng ẩn giấu của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Rào cản lớn nhất trong mối quan hệ của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "COUPLE",
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khen ngợi tất cả những người chơi.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ gì về việc yêu nhiều người cùng lúc?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chương trình truyền hình thực tế nào mà bạn muốn tham gia?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hôn đắm đuối một chiếc gối.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thói xấu của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn bánh hot dog sao cho quyến rũ.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bao giờ đi tiểu khi đứng dưới vòi sen chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều tồi tệ nhất mà bạn từng nói với người khác là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn ghen tỵ với ai nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bức ảnh chụp bàn chân của bạn và mô tả mùi của nó.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Quan niệm sai lầm nhất của mọi người về bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng hẹn hò với bao nhiêu người?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi cho người nối tiếng mà bạn yêu thích một bức ảnh ngớ ngẩn trên Twitter.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ bị đuổi việc chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng cho người khác món quà mà bạn được tặng chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đồ lót của bạn có màu gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn hưng phấn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều mà bạn khoe khoang lần gần đây nhất là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một thìa mù tạt.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hành động gây sốc nhất của bạn trong một buổi tiệc là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy khiêu gợi xung quanh ai đó.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chỗ nào trên người bạn dễ bị nhột nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nhắn tin cho ai nhiều nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn tin vào điều dị đoan nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bộ phim đáng xấu hổ nhất mà bạn thích là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi điện cho tiệm bánh pizza hỏi họ có bán bánh xèo không.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đã bao giờ bạn khỏa thân ở nơi công cộng chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có mặc pyjama đi ngủ không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho phép một người hắt ly nước vào mặt.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Mùi kỳ lạ nào mà bạn thích?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Buổi hòa nhạc đầu tiên là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ngửi chân của mọi người.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chuyến phiêu lưu mạo hiểm nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bộ phận nào trên cơ thể mà bạn muốn người yêu hôn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Giáo viên nóng bỏng nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có bao giờ bạn nhắn tin sex với một người mà bạn không nên làm vậy không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy dang tay chân 25 lần.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tin vào sự sống ngoài trái đất không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kể một câu chuyện kinh dị.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ làm gì khi có khả năng tàng hình?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thứ gì quan trọng hơn: tình yêu hay tiền bạc?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ở đây ai có mông đẹp nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Liếm khuỷu tay của mình.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn hối hận sau khi hôn ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai là người mà bạn yêu quý trong số anh chị em ruột?",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "GIRLS"
+    ]
+  },
+  {
+    "title": "Trò trẻ con nào mà bạn vẫn còn làm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy lò cò trên một chân trong 30 giây.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn làm gì trong ngày sinh nhật của mình?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Niềm vui tội lỗi nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần bị nôn làm bạn ngượng ngùng nhất là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đã bao giờ bạn để người khác nhận lỗi thay bạn chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều tồi tệ nhất bạn đã làm ở trường là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi cho một số điện thoại ngẫu nhiên trong danh sách liên lạc và hát.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng làm điều gì ngu ngốc nhất cho người mà bạn thầm yêu?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Múa điệu con gà trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có khi nào bạn bĩnh ra quần không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có dám vi phạm pháp luật không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Múa kiểu ba lê trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc mua sắm đáng xấu hổ nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng “xì hơi” trong thang máy bao giờ chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai là người làm phiền bạn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng ăn trộm thứ gì chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có sẵn sàng chia tay người yêu vì 1 triệu đô la không?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Làm động tác squat 25 lần.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ đụng đầu vào cửa kính hoặc tường chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Vẽ một bức tranh và post lên mạng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có còn lưu luyến tình cũ không?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ phớt lờ ai đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Công việc nào mà bạn không bao giờ làm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích thể loại phim nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điện thoại bạn có ứng dụng chỉnh sửa ảnh nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện một tư thế yoga trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có hát hoặc nhảy múa dưới vòi sen không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Múa cột với cái cột tưởng tượng trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cách tệ nhất mà bạn bỏ rơi ai đó là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Vẽ một bức tranh hai bàn chân của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có quần lót kiểu bà già/quần lót nam màu trắng bó sát không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần cuối cùng mà bạn làm cho ai đó khóc là bao giờ?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng hẹn hò với người thấp hơn mình chưa?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đã bao giờ bạn hẹn hò nhiều người cùng một lúc chưa?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng nói dối vì một người bạn bao giờ chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đọc một bài rap tự do.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng hôn bao nhiêu người rồi?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì mà một người bạn đã làm khiến bạn tức giận?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có ngáy không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sợ nhất điều gì khi già đi?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bức ảnh trông như bạn đang ngồi trên bồn cầu.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Tài sản quý giá nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bán thú cưng của mình với giá 1 triệu đô la không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thời trang của thập niên nào đẹp nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ bỏ rơi ai chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Liếm một bánh xà phòng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có sợ bóng tối không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người mà bạn yêu quý là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bịt mắt và cho người khác đút cho bạn ăn thứ gì đó.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Từ ngữ nào khiến bạn sợ rúm người?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai là biểu tượng phong cách của bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có bí mật nào mà bạn chưa từng kể với bất kỳ ai trong phòng này không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn vui mừng vì mẹ bạn không biết về bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nơi kỳ lạ nhất mà bạn từng đi vệ sinh là ở đâu?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ làm gì nếu bạn là người khác giới trong một tuần?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc xấu hổ nhất bạn từng làm trên phương tiện giao thông công cộng là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn hôn ai trong căn phòng này?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn gặp một thần đèn, ba điều ước của bạn sẽ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Trong số tất cả mọi người ở đây, bạn sẽ đồng ý hẹn hò với ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ giả vờ ốm để tránh gặp gỡ ai đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi tên một người mà bạn hối hận vì đã hôn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lời nói dối lớn nhất bạn từng nói là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ gian lận trong trò chơi hoặc cuộc thi chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỷ niệm tuổi thơ đáng xấu hổ nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai là người hẹn hò tệ nhất với bạn và tại sao?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều trẻ con nhất mà bạn vẫn làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện 50 lần squat trong khi đếm to.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy nói hai điều trung thực (nhưng tử tế) về mọi người trong phòng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy không nhạc trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy để người bên phải bạn vẽ lên mặt bạn bằng bút dạ có thể giặt được.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nói bằng giọng do nhóm lựa chọn trong ba vòng tiếp theo.",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi tin nhắn thoại hát một bài hát của Billie Eilish đến nhóm trò chuyện gia đình của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bức ảnh cũ đáng xấu hổ lên story Instagram của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho phép người khác đăng trạng thái lên mạng xã hội của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chỉ nói theo vần điệu trong 10 phút tiếp theo.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy cố gắng bắt chước người chơi khác một cách tốt nhất.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi đến tiệm pizza gần nhất và hỏi xem họ có bán bánh tacos không.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một thìa gia vị do nhóm lựa chọn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy để người khác tạo kiểu tóc cho bạn theo ý họ muốn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn xấu hổ nhất từng xảy ra trong một cuộc họp công việc?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể đổi việc với bất kỳ ai trong công ty trong một ngày, bạn sẽ chọn ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn khó chịu nhất khi tham gia các cuộc họp?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ nhận công cho ý tưởng của người khác chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Công việc tệ nhất mà bạn từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể thay đổi một điều ở nơi làm việc của chúng tôi, đó sẽ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ý kiến ​​trung thực của bạn về các hoạt động xây dựng nhóm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ ngủ quên trong khi thuyết trình chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lỗi tự động sửa lỗi buồn cười nhất mà bạn từng gặp phải trong email công việc là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn không làm việc ở đây, công việc mơ ước của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi tin nhắn trong nhóm trò chuyện chỉ bằng biểu tượng cảm xúc và xem mọi người có đoán được bạn đang nói gì không.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy bắt chước người quản lý của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy mô tả công việc của bạn chỉ bằng tên bài hát.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khen ngợi chân thành ba người trong phòng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện thói quen buổi sáng của bạn theo chế độ tua nhanh.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ai là người bạn thích đầu tiên?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc làm đáng xấu hổ nhất mà bố mẹ bạn từng làm trước mặt bạn bè bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ gian lận trong một bài kiểm tra?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ thay đổi điều gì về bản thân nếu bạn có thể?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người cuối cùng bạn theo dõi trên mạng xã hội là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ nói dối về tuổi của mình chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khoảnh khắc nào khiến bạn xấu hổ nhất ở trường?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ giả vờ bị bệnh để nghỉ học ở nhà chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điểm tệ nhất mà bạn từng nhận được là bao nhiêu và vì sao vậy?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể hẹn hò với bất kỳ ai (người nổi tiếng hoặc không), bạn sẽ chọn ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện 20 cú nhảy ngôi sao trong khi hát bảng chữ cái.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bức ảnh thời thơ ấu đáng xấu hổ lên trang cá nhân của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nói bằng giọng Anh trong 10 phút tiếp theo.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy cố gắng thể hiện hết khả năng của bạn với một giáo viên (không cần tên!).",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một thìa gia vị theo sự lựa chọn của nhóm.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có điều gì bạn luôn muốn thử trong mối quan hệ của chúng ta nhưng chưa đề cập đến không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "COUPLE",
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Anh đã bao giờ nói dối em để em không phải buồn chưa? Về chuyện gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỷ niệm đáng nhớ nhất của bạn về chúng tôi là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Có điều gì về tôi vẫn khiến bạn ngạc nhiên không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ấn tượng đầu tiên của bạn về tôi là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bao giờ ghen tị với tình bạn của tôi không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc lãng mạn nhất anh từng làm cho em là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn tôi làm điều gì thường xuyên hơn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nỗi sợ lớn nhất của bạn trong mối quan hệ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu chúng ta có thể cùng nhau đi du lịch bất cứ nơi nào ngay bây giờ, bạn sẽ chọn đi đâu?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy để đối tác của bạn chọn trang phục cho bạn vào ngày mai.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy viết ngay cho người yêu của bạn một lời nhắn tình yêu ngắn và đọc to lên.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Cho phép đối tác của bạn đăng bất cứ điều gì họ muốn lên mạng xã hội của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy dành cho đối tác của bạn ba lời khen chân thành.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bắt chước người bạn đời của bạn (một cách trìu mến).",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ thực hành hôn trước gương chưa?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Món lạ nhất bạn từng ăn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn phải xóa một ứng dụng khỏi điện thoại, ứng dụng nào sẽ khiến bạn đau đầu nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Giấc mơ kỳ lạ nhất mà bạn từng có là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ ai là người ăn mặc xấu nhất trong căn phòng này?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu phải quay lại với người yêu cũ, bạn sẽ chọn ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Thú vui tội lỗi đáng xấu hổ nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã không tắm trong bao lâu rồi?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ vẫy tay chào ai đó trong khi thực tế họ không vẫy tay chào bạn chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn xấu hổ nhất trong lịch sử tìm kiếm của bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Xoay 10 vòng và cố gắng đi theo đường thẳng.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy để người khác sơn móng tay cho bạn theo ý họ muốn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bắt chước người nổi tiếng theo cách tốt nhất của bạn trong 1 phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc xấu hổ nhất mà bạn từng làm để thu hút sự chú ý của ai đó là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng phải lòng ai đó trong căn phòng này chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Thích thầm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Trải nghiệm lãng mạn đáng xấu hổ nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ nói dối về tình trạng mối quan hệ của mình chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Câu tán tỉnh tệ nhất mà bạn từng sử dụng hoặc nghe là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều mạo hiểm nhất bạn từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã bao giờ gửi tin nhắn nhầm người chưa? Chuyện gì đã xảy ra?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì là rào cản lớn nhất trong mối quan hệ của bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "COUPLE",
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Việc táo bạo nhất bạn từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Khen ngợi chân thành về ngoại hình của một người nào đó trong phòng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện 20 lần chống đẩy ngay bây giờ.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hãy để ai đó tạo cho bạn một kiểu tóc mới bằng gel vuốt tóc.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho phép nhóm đọc cuộc trò chuyện văn bản gần đây nhất của bạn (bạn có thể chặn một người).",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng \"Cảm thấy dễ thương, có thể xóa sau\" kèm theo diện mạo hiện tại của bạn trên mạng xã hội.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một miếng hành.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm trò giả vờ tôi.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có bất đồng ý kiến với ai không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một video bạn hót lên mạng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tật xấu nào không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn ghen tị nhất với ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng ăn cắp cái gì chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng bỏ mặc ai đó?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn còn cảm thấy với một người yêu cũ không?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Bạn đã từng tắm chung không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng hút thuốc lá hoặc thử rượu chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều tồi tệ nhất mà bạn đã làm tại trường là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng lan truyền tin đồn về ai đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều tồi tệ nhất mà bạn đã từ chối ai đó?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ ai là người nóng bỏng nhất trong trường?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều xấu hổ nhất trong phòng của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng thích em trai hoặc em gái của bạn không?",
+    "type": "YESNO",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng gửi tin nhắn dơ bẩn cho người sai không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gây sốc nhất mà bạn đã từng làm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đánh giá ngoại hình của mình như thế nào từ 1 đến 10?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu không có hậu quả, bạn sẽ phạm tội gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã để ai đó chịu trách nhiệm cho điều gì bạn làm chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều ngu ngốc nhất mà bạn đã làm để thu hút sự chú ý của ai đó?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Công việc mơ ước của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có thu thập cái gì không?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tin vào người ngoài hành tinh không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích mèo hay chó?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lễ hội yêu thích của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nỗi khó chịu lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có những tài năng bí mật nào?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn là người sáng sớm hay tối?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích ở nhà hay đi ra ngoài hơn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều đầu tiên trong danh sách việc cần làm của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Những người mơ ước bạn sẽ mời dự tiệc tối của bạn là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn trúng số, bạn sẽ mua gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn trở thành vô hình, bạn sẽ ngắm ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thích xem chương trình TV hay phim ảnh?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Các món ăn kết hợp ít được chú ý nhất là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Diễn viên nào sẽ đóng vai bạn trong một bộ phim về cuộc đời bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lời khen tốt nhất mà bạn từng nhận được là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn là phái đối diện trong một ngày, bạn sẽ làm gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể giải quyết một vấn đề trong thế giới, đó sẽ là vấn đề gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể sống trong một thế giới hư cấu, bạn sẽ chọn thế giới nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có đào mũi không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cái gì làm bạn ghê tởm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lời mắng tốt nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỹ năng không có ích nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có từng bị đi tiểu vào quần không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nỗi sợ vô lý lớn nhất của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn từng tặng quà lại cho ai đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Trò chơi khăm tốt nhất bạn từng chơi là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Giấc mơ hài hước nhất mà bạn từng có là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cái gì kinh tởm nhất mà bạn từng làm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cái gì kỳ quặc nhất mà bạn từng ăn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Con nhân vật hoạt hình nào mà bạn cho là hấp dẫn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn từng dùng bàn chải đánh răng của người khác chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bộ phim ngượng ngùng mà bạn thích thầm là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Thích thầm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lâu nhất mà bạn đã từng không tắm?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thứ hài hước nhất mà bạn tin khi còn là trẻ nhỏ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần tồi nhất mà bạn đã cười vì điều gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu động vật có thể nói chuyện, con vật nào sẽ là thô lỗ nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể chiến đấu với một nhân vật lịch sử nào đó, bạn sẽ chọn ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Một lời nói dối vô ích nhất mà bạn từng nói là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người yêu thường xuyên của bạn là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Khi nào là lần hôn đầu tiên của bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ngôn ngữ yêu thích của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã từng yêu chưa?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn hứng thú nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tin vào định mệnh không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có hối hận về việc hôn ai đó chưa?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Màu sắc của quần lót của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bài hát nào khiến bạn cảm thấy hứng thú?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn sẽ hỏi ai đi dự đại học?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỷ niệm yêu thích của chúng ta là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn đã hẹn hò bao nhiêu người?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì bạn thích nhất ở tôi?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người nào bạn nghĩ có mông đẹp nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bí mật mà bạn chưa bao giờ nói với ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cái gì khiến bạn nhớ đến tôi?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều đầu tiên mà bạn để ý đến tôi là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều cảnh báo lớn nhất của bạn trong mối quan hệ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người đẹp nhất trong nhóm bạn của chúng ta là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn ngắn hơn 3 feet hay cao hơn 3 feet?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn hói đầu hay không có lông mày?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn mang dép Crocs hay giày Big Red Boots?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn luôn hét lên hay luôn nói thì thầm?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn ăn hành tây sống hay một quả chanh nguyên trái?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn luôn cảm thấy dính dính hay luôn cảm thấy ngứa ngáy?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn dị ứng với ánh nắng mặt trời hay mồ hôi của riêng bạn?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn nói chuyện như Yoda hay hít thở như Darth Vader?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn đổi cơ thể với người yêu cũ hay bà của bạn?",
+    "type": "YESNO",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Bạn có muốn tìm thấy một xác hay 1000 con gián trong phòng trên tầng?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn ngủ trên một chiếc đệm làm từ thạch hoặc súp nóng?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn có đầu là quả bóng chày hay quả dưa hấu?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn đánh ra mỗi khi bạn cười hay rên ra mỗi khi bạn khóc?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn sống thiếu wifi một tuần hay giấy vệ sinh một tuần?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn uống một cốc keo dán hoặc ăn một cái bánh mì chứa cát?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn có ngón chân là kẹo dẻo hay ngón tay là khoai tây chiên?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn luôn cảm thấy như bạn phải hắt hơi hay hắt hơi 500 lần mỗi ngày?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn liếm sàn nhà tàu điện ngầm hay tay nắm cửa nhà vệ sinh công cộng?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn nói chuyện như Donald Duck khi bạn tức giận hay biến thành Hulk khi bạn bị kích thích?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có muốn mọi người đọc được suy nghĩ của bạn hay mọi người bạn biết có quyền truy cập vào lịch sử tìm kiếm của bạn?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn là một nhà khoa học điên, bạn sẽ phát minh cái gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể có bất kỳ siêu năng lực nào, bạn sẽ chọn gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể dừng thời gian trong một năm, bạn sẽ làm gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể thay đổi tên của mình, bạn sẽ chọn tên gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể thống trị một kỹ năng ngay lập tức, bạn sẽ chọn kỹ năng gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể du hành thời gian, bạn sẽ đi đến thập kỷ nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể chơi bất kỳ nhạc cụ nào, bạn sẽ chọn nhạc cụ gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể sống mãi mãi ở một tuổi, bạn sẽ chọn tuổi nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể loại bỏ một sự kiện lịch sử, bạn sẽ loại bỏ sự kiện nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu sàn nhà là nham thạch, bạn sẽ di chuyển từ đâu đến đâu?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể tạo ra bất kỳ chương trình truyền hình nào dành cho trẻ em, chương trình đó sẽ là về điều gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn chỉ có thể nhìn thấy một màu sắc, bạn sẽ chọn màu gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn là một vận động viên Olympic, bạn sẽ tham gia môn thể thao nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn bị kết án tử hình, bữa ăn cuối cùng của bạn sẽ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu chúng ta tạo ra một ngôn ngữ riêng của chúng ta, chúng ta sẽ chào hỏi nhau như thế nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn sinh ra cách đây 100 năm, nghề nghiệp của bạn sẽ là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn chỉ có thể xem một bộ phim suốt đời, bạn sẽ chọn bộ phim của ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể tạo ra ban nhạc mơ ước với 5 nghệ sĩ, sống hay đã mất, ai sẽ tham gia?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu ai đó theo bạn và tường thuật cuộc sống của bạn, bạn muốn đó là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn có thể có một nguồn cung cấp không giới hạn của một thứ cho cuộc đời còn lại, bạn sẽ chọn thứ gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Người hùng của bạn là ai?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có gần gũi với gia đình không?",
+    "type": "YESNO",
+    "topic": "Gia đình",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Lần khóc cuối cùng của bạn là khi nào?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn cảm thấy biết ơn nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì khiến bạn tự hào nhất?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì bạn hối tiếc nhất cho đến nay?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn có tin vào số phận hay tự ý quyết định?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn quan tâm những gì người khác nghĩ về bạn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thấy mình ở đâu trong 5 năm tới?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kỷ niệm tuổi thơ yêu thích của bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Kỷ niệm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ tiền có thể mua được hạnh phúc không?",
+    "type": "YESNO",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều gì làm bạn thiếu tự tin?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Điều bạn yêu thích về chính mình là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thông tin sai lệch lớn nhất về bạn là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn nghĩ đau đớn vật lý hay đau đớn tâm lý nghiêm trọng hơn?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn thà tìm được tình yêu đích thực hay nhận được một triệu đô la?",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Bạn muốn được xem như là người xinh đẹp, thông minh hay hài hước?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu bạn biết mình sẽ không thất bại, bạn sẽ làm điều gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nếu cuộc đời bạn là một cuốn sách, tựa đề của chương bạn đang ở là gì?",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm con trùng nổi mòn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cắn vào một củ hành.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm 100 lần nhảy dây.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Múa breakdance trong một phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm màn trình diễn bắt chước tốt nhất của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Viết tên của bạn bằng ngón chân của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy vào bồn tắm với quần áo trên người.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đọc bảng chữ cái với miệng kín lại.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đọc 5 tin nhắn cuối cùng trên điện thoại của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nói bằng giọng Anh trong phần còn lại của trò chơi.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một muỗng đồ ăn cay nhất trong nhà bếp của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi người bạn vừa nhắn tin cuối cùng và hét như một con sói.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy twerk trong một phút.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đập trứng lên đầu của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Kể một câu chuyện bằng giọng cowboy.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Chỉ trả lời “có” trong một giờ tới.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nhảy múa trong 2 phút mà không có bất kỳ âm nhạc nào.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện một bài rap tự do về bữa tối của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi điện thoại đến một cửa hàng pizza và hỏi xem họ có bán xúc xích nóng không.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đọc email cuối cùng của bạn bằng giọng quyến rũ nhất của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi mẹ của bạn và thú nhận về một lời nói dối trong tuổi thơ.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi cho người bạn thích của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một quả chuối một cách gợi tình.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm tình với một đối tượng trong phòng.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi một tin nhắn bẩn cho ai đó ngay bây giờ.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi mẹ của bạn và nói với cô ấy rằng bạn đang mang thai.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hôn người đẹp nhất trong phòng.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi điện thoại cho ai đó và rên rỉ giữa cuộc trò chuyện.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Liếm tường.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một mảnh giấy.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ăn một muỗng nước tương.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Ngửi nách của người chơi khác.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Làm giọng điệu Shrek tốt nhất của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Hôn đáy chân của ai đó.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Vẽ cơ bụng giả lên cơ thể của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi cho một số điện thoại ngẫu nhiên và bắt đầu hát.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Nói bằng vần câu suốt trò chơi.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Cho phép ai đó vẽ hình xăm bằng bút chì trên cánh tay bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Thực hiện càng nhiều động tác chống như bạn có thể trên bãi cỏ trước sân.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi mẹ tôi và cảm ơn bà đã nuôi dưỡng một đứa trẻ tuyệt vời.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gọi một số ngẫu nhiên và cố gắng tán tỉnh người nào đó nhấc máy.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng video của bạn sủa.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Vẽ một cái gì đó và đăng lên mạng.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Đăng một bản quét siêu âm ngẫu nhiên trên mạng xã hội.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Viết tên tôi lên ngực của bạn và gửi cho tôi một bức ảnh.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi tin nhắn cho anh em của bạn và nói rằng bạn có một người bạn trai / bạn gái.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "BOYS"
+    ]
+  },
+  {
+    "title": "Gửi một số ngẫu nhiên và yêu cầu họ gửi tiền cho bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Gửi cho tôi bức ảnh hài hước nhất trong cuộc cuộc chụp ảnh của bạn.",
+    "type": "OPEN_ENDED",
+    "topic": "Bạn bè",
+    "categories": [
+      "FRIENDS"
+    ]
+  },
+  {
+    "title": "Viết một tin nhắn chia tay và gửi cho một số ngẫu nhiên.",
+    "type": "OPEN_ENDED",
+    "topic": "Tình cảm",
+    "categories": [
+      "COUPLE"
+    ]
+  },
+  {
+    "title": "Đăng một bản chụp màn hình của một bài viết hài hước trên câu chuyện của bạn.",
+    "type": "CHALLENGE",
+    "topic": "Thử thách",
+    "categories": [
+      "FRIENDS"
+    ]
+  }
+]

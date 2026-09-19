@@ -19,8 +19,8 @@ GroupTalk is a single-device, pass-the-phone party game: spin a wheel to pick a 
 | Animation | framer-motion, canvas-confetti | Wheel spin, card flip, winner confetti |
 | Auth | NextAuth.js (Auth.js) v5 + Google provider | Optional login for cross-device history |
 | ORM | Prisma (driver adapters, `@prisma/adapter-pg`) | Source-of-truth data access |
-| Database | PostgreSQL | Users, sessions, players, questions, votes, answers |
-| Cache/Lock | Redis (`ioredis`) | Per-`sessionId` distributed lock (spin race protection) |
+| Database | PostgreSQL | Users, sessions, players, questions, votes, answers. Dev Docker maps host **5433** (local Homebrew already owns 5432). |
+| Cache/Lock | Redis (`ioredis`) | Per-`sessionId` distributed lock (spin race protection). Dev Docker maps host **6380** (local Homebrew already owns 6379). |
 | Deployment | Bare Node process (PM2/systemd) on a self-hosted VPS | Postgres/Redis managed independently |
 
 ## 3. Identity model

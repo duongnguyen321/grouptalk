@@ -50,16 +50,16 @@ Based on §4:
 
 ## Phase 5 — Screen: Category Selection (§5.3, §7.5)
 
-- [ ] 2x2 grid, multi-select cards (Cặp đôi / Nhóm nữ / Nhóm nam / Nhóm bạn) with category color styling
-- [ ] Conditional "thích thầm" checkbox when "Nhóm bạn" selected (large, prominent per §7.5)
-- [ ] "Tiếp tục" disabled until ≥1 category selected
-- [ ] Persist selections into pending session draft state (client) until Phase 6 completes
+- [x] 2x2 grid, multi-select cards (Cặp đôi / Nhóm nữ / Nhóm nam / Nhóm bạn) with category color styling
+- [x] Conditional "thích thầm" checkbox when "Nhóm bạn" selected (large, prominent per §7.5)
+- [x] "Tiếp tục" disabled until ≥1 category selected
+- [x] Persist selections into pending session draft state (client) until Phase 6 completes
 
 ## Phase 6 — Screen: Player List Entry (§5.4)
 
-- [ ] Chip/tag input: add name on Enter, removable chips
-- [ ] Player count display + validation (min 2 players) gating "Bắt đầu chơi"
-- [ ] On submit: create `GameSession` + `SessionPlayer[]` records (Server Action), navigate to Phase 7
+- [x] Chip/tag input: add name on Enter, removable chips
+- [x] Player count display + validation (min 2 players) gating "Bắt đầu chơi"
+- [x] On submit: create `GameSession` + `SessionPlayer[]` records (Server Action), navigate to Phase 7
 
 ## Phase 7 — Main Game Screen: Wheel (§5.5 State A/B, §7.1)
 

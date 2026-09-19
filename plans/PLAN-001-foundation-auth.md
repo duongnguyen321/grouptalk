@@ -182,11 +182,19 @@ export async function joinSessionByCode(sessionCode: string, deviceId?: string) 
 
 ---
 
+## Implementation notes (2026-09-19)
+
+- Prisma 7 uses `prisma.config.ts` + generated client at `generated/prisma` (not `@prisma/client` default output).
+- Auth.js is `next-auth@5.0.0-beta.32` (v5 is still on the beta tag).
+- Host ports are **5433 / 6380** so Docker does not collide with local Homebrew Postgres/Redis on 5432/6379.
+- `joinSessionByCode` is a lookup stub (full snapshot copy is PLAN-004).
+- Guest nickname capture stays deferred to PLAN-004 contribute form.
+
 ## Manual Test Checklist
 
-- [ ] `docker compose up -d` starts Postgres + Redis without port conflicts
-- [ ] `npx prisma migrate dev` applies cleanly on a fresh DB
-- [ ] `npx prisma db seed` populates `Topic` + system `Question` rows
+- [x] `docker compose up -d` starts Postgres + Redis without port conflicts
+- [x] `npx prisma migrate dev` applies cleanly on a fresh DB
+- [x] `npx prisma db seed` populates `Topic` + system `Question` rows
 - [ ] Fresh browser (no localStorage/cookies): visiting `/` shows Splash screen with both CTAs
 - [ ] Click "Chơi ngay" → deviceId written to `localStorage`, `User(authType=device)` row created, redirected to `/session`
 - [ ] Reload `/` after guest play → auto-skips Splash, lands on `/session`

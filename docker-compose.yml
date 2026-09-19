@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: grouptalk
+      POSTGRES_USER: grouptalk
+      POSTGRES_PASSWORD: grouptalk
+    ports:
+      # Host 5433: local Homebrew Postgres already owns 5432.
+      - "5433:5432"
+    volumes:
+      - grouptalk_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U grouptalk -d grouptalk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      # Host 6380: local Homebrew Redis already owns 6379.
+      - "6380:6379"
+    volumes:
+      - grouptalk_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  grouptalk_pg_data:
+  grouptalk_redis_data:

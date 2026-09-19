@@ -118,6 +118,15 @@ function PlayersPage() {
 
 ---
 
+## Implementation notes (2026-09-19)
+
+- shadcn init used `--preset nova` + radix; helper is the `cn` package re-exported from `lib/utils.ts`.
+- shadcn overwrote canvas tokens; restored warm `#f6f1ea` / `#1c1917` and Baloo as `--font-sans`.
+- Name helpers live in `lib/player-name.ts` so Server Actions do not import the client zustand store.
+- Draft validation is shared in `lib/session-setup.ts`. `startGameSession` wraps `GameSession` + `SessionPlayer` in one Prisma transaction.
+- Session Home already linked to `/session/new/categories` in PLAN-001.
+- Wheel/play screen remains a placeholder until PLAN-003.
+
 ## Verification Checklist
 
 - [x] Business logic clearly written?

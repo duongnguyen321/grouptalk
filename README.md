@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GroupTalk
 
-## Getting Started
+Pass-the-phone party game: spin a wheel, draw a question card, answer out loud. Vietnamese only for v1.
 
-First, run the development server:
+Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE.md](ARCHITECTURE.md). Work tracking: [TODO.md](TODO.md).
+
+## Current status
+
+PLAN-001 and PLAN-002 are implemented: identity, Splash, Session Home, category select, player chips, and `startGameSession` (creates `GameSession` + `SessionPlayer[]`). Join-by-code is still a lookup stub (full copy is PLAN-004). Play screen is a placeholder until PLAN-003.
+
+Next: [plans/PLAN-003-game-loop.md](plans/PLAN-003-game-loop.md).
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui · zustand · Prisma 7 + PostgreSQL · Redis · Auth.js v5 (Google, optional) · bun
+
+## Setup
+
+1. Copy env and fill Google keys only if you want OAuth:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Postgres (`127.0.0.1:5433` against Docker) |
+| `REDIS_URL` | Redis (`127.0.0.1:6380` against Docker) |
+| `AUTH_SECRET` | Auth.js secret |
+| `AUTH_URL` | App origin (`http://localhost:3000`) |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Optional Google OAuth |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Google OAuth: use `http://localhost:3000` (not `127.0.0.1`). Authorized redirect URI in Google Cloud must be `http://localhost:3000/api/auth/callback/google`.
 
-## Learn More
+Host ports **5433 / 6380** avoid colliding with Homebrew Postgres/Redis on 5432/6379.
 
-To learn more about Next.js, take a look at the following resources:
+2. Start Docker services, migrate, seed:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose up -d
+bunx prisma migrate dev
+bunx prisma db seed
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Seed loads 6 topics and 16 system questions.
 
-## Deploy on Vercel
+3. Run the app:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+bun run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a guest `User` and stores `deviceId` in localStorage. Returning guests skip Splash.
+
+## Scripts
+
+| Script | What it does |
+|---|---|
+| `bun run dev` | Next.js dev server |
+| `bun run lint` | ESLint |
+| `bun run db:generate` | Prisma client |
+| `bun run db:migrate` | Prisma migrate |
+| `bun run db:seed` | Topics + system questions |
+
+## Features in this slice
+
+- Guest play via `deviceId` (spoofable by design; accepted for v1)
+- Optional Google sign-in (hidden until OAuth env is set)
+- Session Home: "Tạo phiên mới" → category select; 8-digit join lookup
+- Session setup wizard: multi-select categories, optional "thích thầm" for Nhóm bạn, player chips (min 2), persisted draft in localStorage until start
+- `startGameSession` writes one `GameSession` and its `SessionPlayer` rows, then clears the draft
+

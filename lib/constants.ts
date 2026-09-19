@@ -1,0 +1,9 @@
+export const DEVICE_ID_STORAGE_KEY = "grouptalk_device_id";
+export const SESSION_DRAFT_STORAGE_KEY = "grouptalk-session-draft";
+export const SESSION_CODE_LENGTH = 8;
+export const SESSION_CODE_SEQ_KEY = "session:code:seq";
+export const SESSION_CODE_MODULO = 100_000_000;
+export const ANONYMOUS_DISPLAY_NAME = "Ẩn danh";
+export const SESSION_CODE_PATTERN = /^\d{8}$/;
+export const MIN_SESSION_PLAYERS = 2;
+export const PLAYER_NAME_MAX_LENGTH = 24;

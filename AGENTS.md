@@ -34,3 +34,18 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for system structure, data model, and the
 2. Search the service and shared libraries for an existing helper/utility/API with equivalent behavior.
 3. If suitable functionality already exists, **reuse it** — do not introduce a new helper/utility.
 4. Only add a new helper after confirming neither dependencies nor the existing codebase already solve it.
+
+## Technical rules (PLAN-001)
+
+- Prisma 7: schema in `prisma/schema.prisma`, config in `prisma.config.ts`, client output in `generated/prisma`. Import from `@/generated/prisma/client` and `@/generated/prisma/enums`.
+- Local Docker Compose is required for app data. Host ports are `5433` (Postgres) and `6380` (Redis) because Homebrew already binds `5432`/`6379`. Connection strings live in `.env.example`.
+- Auth.js v5 (`next-auth@5.0.0-beta.32`) + `@auth/prisma-adapter`. Google is optional; Splash hides the Google CTA when `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` are empty.
+- Guest `deviceId` is localStorage-only and spoofable — accepted v1 limitation. Do not add cookie verification in later phases unless the PRD changes.
+- `joinSessionByCode` looks up an existing session only. Snapshot copy belongs in PLAN-004.
+
+## Technical rules (PLAN-002)
+
+- Session setup draft is zustand + `persist` (`grouptalk-session-draft`). No `GameSession` row until "Bắt đầu chơi".
+- shadcn/ui (radix-nova) lives in `components/ui/*`. Keep Baloo + warm canvas tokens in `app/globals.css` if regenerating shadcn theme.
+- `startGameSession` validates via `lib/session-setup.ts`, then Prisma-transactions `GameSession` + `SessionPlayer[]`. Crush flag is stored only when `FRIENDS` is selected.
+- Do not import `lib/store/session-draft.ts` from Server Actions; name helpers are in `lib/player-name.ts`.
