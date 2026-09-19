@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: grouptalk
       POSTGRES_PASSWORD: grouptalk
     ports:
-      # Host 5433: local Homebrew Postgres already owns 5432.
-      - "5433:5432"
+      # Host port configurable via POSTGRES_PORT (default 25432 to avoid conflicts)
+      - "127.0.0.1:${POSTGRES_PORT:-25432}:5432"
     volumes:
       - grouptalk_pg_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,8 +21,8 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      # Host 6380: local Homebrew Redis already owns 6379.
-      - "6380:6379"
+      # Host port configurable via REDIS_PORT (default 26379 to avoid conflicts)
+      - "127.0.0.1:${REDIS_PORT:-26379}:6379"
     volumes:
       - grouptalk_redis_data:/data
     healthcheck:
