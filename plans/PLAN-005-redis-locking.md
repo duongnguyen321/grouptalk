@@ -28,7 +28,9 @@ Source: [GroupTalk.md](../GroupTalk.md) §2, §6.5 (locking scope) · Tracks: [T
 |---|---|---|
 | 1 | [lib/redis-lock.ts](../lib/redis-lock.ts) | modify (harden from PLAN-003) |
 | 2 | [app/session/[sessionId]/play/actions.ts](../app/session/%5BsessionId%5D/play/actions.ts) | modify (wrap `spinAction`) |
-| 3 | [components/wheel/wheel.tsx](../components/wheel/wheel.tsx) | modify (catch `LockContentionError` → toast) |
+| 3 | [components/play/play-screen.tsx](../components/play/play-screen.tsx) | modify (catch `LockContentionError` → toast) |
+
+> Correction during `/create`: the spin handler lives in `components/play/play-screen.tsx`, not `components/wheel/wheel.tsx`. `Wheel` is a pure SVG renderer that receives `onSpinComplete` and never calls Server Actions, so the contention toast belongs to the component that owns `spinAction`.
 
 ---
 
@@ -48,16 +50,25 @@ export async function withSessionLock<T>(sessionId: string, fn: () => Promise<T>
   try {
     return await fn();
   } finally {
-    // release only if we still own it (compare-and-delete via Lua or GET+DEL check)
-    const current = await redis.get(key);
-    if (current === token) await redis.del(key);
+    // Compare-and-delete in one round trip (SESSION_LOCK_RELEASE_SCRIPT in lib/constants.ts)
+    await redis.eval(SESSION_LOCK_RELEASE_SCRIPT, 1, key, token);
   }
 }
 ```
 
 **`app/session/[sessionId]/play/actions.ts`** — `spinAction` body now runs entirely inside `withSessionLock(sessionId, ...)`; on `LockContentionError`, the Server Action returns `{ ok: false, error: "busy" }` instead of throwing to the client boundary.
 
-**`components/wheel/wheel.tsx`** — on `{ ok: false, error: "busy" }`, re-enable the "QUAY" button and show a toast rather than treating it as a hard failure.
+**`components/play/play-screen.tsx`** — on `{ ok: false, error: "busy" }`, re-enable the "QUAY" button and show the toast "Đang xử lý, vui lòng thử lại" rather than treating it as a hard failure.
+
+---
+
+## Implementation notes (PLAN-005)
+
+- **Already landed in PLAN-003, verified here:** explicit `SESSION_LOCK_TTL_MS` constant, unique owner token (`crypto.randomUUID()`), typed `LockContentionError`, `spinAction` fully wrapped in `withSessionLock`, contention returned as `{ ok: false, error: SPIN_BUSY_ERROR }`, and the busy toast in `play-screen.tsx`.
+- **Hardened in this pass:** lock release moved from the racy `GET` + `DEL` pair to a single `EVAL` compare-and-delete (`SESSION_LOCK_RELEASE_SCRIPT`). The old release could observe its own still-held token, then — after the key expired and a new holder acquired it — issue a `DEL` that freed the *new* holder's lock. Now the script deletes only if the stored value still equals our token, atomically.
+- **New:** `lib/redis-lock.test.ts` (6 tests) mocks `@/lib/redis` and pins the contract: acquire with `PX <ttl> NX`, release on success, release on throw, fail-fast `LockContentionError` without running the work, do not touch a lock taken over by a newer holder, and release must be exactly one `EVAL` with **zero** `GET`/`DEL` calls.
+- **Not locked (decision upheld):** `voteHideAction` and `revealCardAction`. Their correctness is DB-enforced — `QuestionVote @@unique([userId, questionId])` (schema.prisma:154) and `SessionAnswer @@unique([sessionId, sessionPlayerId, questionId])` (schema.prisma:142) — and both write through `upsert`, so a concurrent double-submit is idempotent. The 30%-ratio soft-delete goes through `question.update({ isDeleted: true })`, which is monotonic and idempotent.
+- **Not locked:** `copySessionFromCode` — copy reads the source and writes an independent session, so it never touches the source's `lock:session:` key.
 
 ---
 

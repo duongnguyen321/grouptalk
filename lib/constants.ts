@@ -11,6 +11,7 @@ export const CRUSH_TOPIC_NAME = "Thích thầm";
 export const TEASER_CARD_COUNT = 3;
 export const SESSION_LOCK_KEY_PREFIX = "lock:session:";
 export const SESSION_LOCK_TTL_MS = 5000;
+export const SESSION_LOCK_RELEASE_SCRIPT = `if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) end return 0`;
 export const VOTE_HIDE_DELETE_RATIO = 0.3;
 export const WHEEL_SPIN_MIN_MS = 2000;
 export const WHEEL_SPIN_MAX_MS = 4000;

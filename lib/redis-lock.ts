@@ -1,5 +1,6 @@
 import {
   SESSION_LOCK_KEY_PREFIX,
+  SESSION_LOCK_RELEASE_SCRIPT,
   SESSION_LOCK_TTL_MS,
 } from "@/lib/constants";
 import { redis } from "@/lib/redis";
@@ -26,9 +27,8 @@ export async function withSessionLock<T>(
   try {
     return await fn();
   } finally {
-    const current = await redis.get(key);
-    if (current === token) {
-      await redis.del(key);
-    }
+    // Compare-and-delete in one round trip: a separate GET + DEL can lose the key to a
+    // new holder between the two calls and delete a lock we no longer own.
+    await redis.eval(SESSION_LOCK_RELEASE_SCRIPT, 1, key, token);
   }
 }

@@ -6,9 +6,9 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-004 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), and community continuity (session-code copy, question contribution, session history).
+PLAN-001 through PLAN-005 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), and concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release).
 
-Next: [plans/PLAN-005-redis-locking.md](plans/PLAN-005-redis-locking.md).
+Next: [plans/PLAN-006-polish-qa-deploy.md](plans/PLAN-006-polish-qa-deploy.md).
 
 ## Stack
 
@@ -75,4 +75,5 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Session copy by 8-digit code: entering a code snapshots players + answer history into a brand-new `GameSession` (`copiedFromSessionId`); the source session keeps working and the code can be reused
 - Contribute questions (title, categories with "Nhóm bạn" → automatic Nhóm nam/nữ tagging, topic, type, one-time guest nickname) — inserted straight into the pool, no moderation
 - Session history list of every answered card, flagging questions that were globally removed
+- Concurrency: `withSessionLock` guards the spin per `sessionId` (`SET NX PX 5000` + owner token, released by one atomic Lua compare-and-delete). Contention fails fast as `error: "busy"` and the play screen toasts "Đang xử lý, vui lòng thử lại" instead of blocking. Vote/reveal rely on DB unique constraints rather than a lock
 

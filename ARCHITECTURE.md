@@ -62,7 +62,7 @@ Question eligibility per spin (PRD §6.1): active-category questions, minus alre
 
 ## 6. Concurrency
 
-Redis lock keyed **per `sessionId` only** (never cross-session) guards the spin action against double-resolution from double-taps or multi-tab races. Short TTL (3–5s) + fail-fast (no blocking retry) — matches the casual, single-device nature of the game. `QuestionVote`'s DB-level unique constraint is the real guard against duplicate votes, not the lock. See PLAN-005.
+Redis lock keyed **per `sessionId` only** (never cross-session) guards the spin action against double-resolution from double-taps or multi-tab races. Acquisition is `SET key <token> PX 5000 NX`; release is a single `EVAL` compare-and-delete so an expired holder can never free a newer holder's lock. TTL (3–5s) + fail-fast (no blocking retry) — matches the casual, single-device nature of the game. `QuestionVote`'s DB-level unique constraint is the real guard against duplicate votes, not the lock. See PLAN-005.
 
 ## 7. Session copy (§6.5)
 

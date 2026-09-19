@@ -1,4 +1,6 @@
 import "dotenv/config";
+import * as fs from "fs";
+import * as path from "path";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { PrismaClient } from "../generated/prisma/client";
@@ -16,109 +18,12 @@ const TOPICS = [
   "Thích thầm",
 ] as const;
 
-const QUESTIONS: Array<{
+interface SeedQuestion {
   title: string;
   type: QuestionType;
   topic: (typeof TOPICS)[number];
   categories: Category[];
-}> = [
-  {
-    title: "Điều gì ở đối phương khiến bạn muốn kể cho mẹ nghe?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Tình cảm",
-    categories: [Category.COUPLE],
-  },
-  {
-    title: "Lần gần nhất bạn dỗi nhau, chuyện gì đã hóa giải?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Tình cảm",
-    categories: [Category.COUPLE],
-  },
-  {
-    title: "Bạn có muốn hẹn hò lại từ đầu với nhau không?",
-    type: QuestionType.YESNO,
-    topic: "Tình cảm",
-    categories: [Category.COUPLE],
-  },
-  {
-    title: "Hôn đối phương ngay bây giờ, không giải thích.",
-    type: QuestionType.CHALLENGE,
-    topic: "Thử thách",
-    categories: [Category.COUPLE],
-  },
-  {
-    title: "Ai trong nhóm từng khóc vì chuyện nhỏ mà không dám nói?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Bạn bè",
-    categories: [Category.GIRLS],
-  },
-  {
-    title: "Bạn có đang giữ bí mật của một người trong nhóm không?",
-    type: QuestionType.YESNO,
-    topic: "Bạn bè",
-    categories: [Category.GIRLS],
-  },
-  {
-    title: "Khoe một tin nhắn gần đây khiến bạn cười một mình.",
-    type: QuestionType.CHALLENGE,
-    topic: "Thử thách",
-    categories: [Category.GIRLS],
-  },
-  {
-    title: "Ai trong nhóm từng thích thầm crush của bạn thân?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Tình cảm",
-    categories: [Category.GIRLS, Category.FRIENDS],
-  },
-  {
-    title: "Lần cuối bạn xin lỗi một người bạn nam là vì chuyện gì?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Bạn bè",
-    categories: [Category.BOYS],
-  },
-  {
-    title: "Bạn có từng giả vờ mạnh mẽ trước nhóm không?",
-    type: QuestionType.YESNO,
-    topic: "Bạn bè",
-    categories: [Category.BOYS],
-  },
-  {
-    title: "Gọi một người trong nhóm bằng biệt danh xấu hổ nhất.",
-    type: QuestionType.CHALLENGE,
-    topic: "Thử thách",
-    categories: [Category.BOYS],
-  },
-  {
-    title: "Ai trong nhóm là người bạn sẽ gọi lúc 3 giờ sáng?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Bạn bè",
-    categories: [Category.BOYS, Category.FRIENDS],
-  },
-  {
-    title: "Kỷ niệm nhóm nào bạn vẫn kể đi kể lại?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Kỷ niệm",
-    categories: [Category.FRIENDS],
-  },
-  {
-    title: "Trong nhóm có ai đang thích thầm người khác không?",
-    type: QuestionType.YESNO,
-    topic: "Thích thầm",
-    categories: [Category.FRIENDS],
-  },
-  {
-    title: "Chỉ người bạn nghĩ đang thích thầm ai đó, không nói tên.",
-    type: QuestionType.CHALLENGE,
-    topic: "Thích thầm",
-    categories: [Category.FRIENDS],
-  },
-  {
-    title: "Ai trong nhóm từng suýt nói ra điều không nên nói?",
-    type: QuestionType.OPEN_ENDED,
-    topic: "Bạn bè",
-    categories: [Category.FRIENDS, Category.GIRLS, Category.BOYS],
-  },
-];
+}
 
 async function main() {
   for (const name of TOPICS) {
@@ -132,26 +37,67 @@ async function main() {
   const topics = await prisma.topic.findMany();
   const topicByName = new Map(topics.map((topic) => [topic.name, topic.id]));
 
-  const existingCount = await prisma.question.count();
-  if (existingCount > 0) {
-    return;
+  const filePath = path.resolve(__dirname, "../output_questions.json");
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Không tìm thấy file câu hỏi: ${filePath}`);
   }
 
-  await prisma.question.createMany({
-    data: QUESTIONS.map((question) => {
-      const topicId = topicByName.get(question.topic);
-      if (!topicId) {
-        throw new Error(`Missing topic: ${question.topic}`);
-      }
+  const rawData = fs.readFileSync(filePath, "utf-8");
+  const questions: SeedQuestion[] = JSON.parse(rawData);
 
-      return {
-        title: question.title,
-        type: question.type,
-        topicId,
-        categories: question.categories,
-      };
-    }),
+  const existingQuestions = await prisma.question.findMany({
+    select: { title: true },
   });
+  const existingTitles = new Set(
+    existingQuestions.map((q) => q.title.trim().toLowerCase()),
+  );
+
+  const seenInBatch = new Set<string>();
+  const toInsert: Array<{
+    title: string;
+    type: QuestionType;
+    topicId: string;
+    categories: Category[];
+  }> = [];
+
+  for (const question of questions) {
+    const normalizedTitle = question.title.trim();
+    const key = normalizedTitle.toLowerCase();
+
+    if (existingTitles.has(key) || seenInBatch.has(key)) {
+      continue;
+    }
+
+    seenInBatch.add(key);
+    const topicId = topicByName.get(question.topic);
+    if (!topicId) {
+      throw new Error(`Missing topic: ${question.topic}`);
+    }
+
+    toInsert.push({
+      title: normalizedTitle,
+      type: question.type,
+      topicId,
+      categories: question.categories,
+    });
+  }
+
+  if (toInsert.length > 0) {
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < toInsert.length; i += CHUNK_SIZE) {
+      const chunk = toInsert.slice(i, i + CHUNK_SIZE);
+      await prisma.question.createMany({
+        data: chunk,
+      });
+    }
+    console.log(
+      `Đã seed thành công ${toInsert.length} câu hỏi mới từ output_questions.json.`,
+    );
+  } else {
+    console.log(
+      `Tất cả ${questions.length} câu hỏi trong output_questions.json đã tồn tại trong cơ sở dữ liệu.`,
+    );
+  }
 }
 
 main()

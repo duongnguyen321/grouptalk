@@ -73,7 +73,7 @@ Every screen and every user action must animate. A flow is not done when it mere
 
 - Play loop: `spinAction` → wheel animation → `WinnerReveal` → `pickThreeQuestions` teasers → `revealCardAction` (writes `SessionAnswer` immediately) → optional `voteHideAction`.
 - Question pool is `lib/game/select-question.ts` + `lib/game/eligibility.ts`. Exclude answered/hidden/deleted first; if empty, drop only the answered exclusion. Crush topic `Thích thầm` requires `crushQuestionEnabled`.
-- `withSessionLock` keys `lock:session:${sessionId}` via `SET NX PX 5000`. Spin contention returns `error: "busy"` — do not block/retry. PLAN-005 may still harden Lua release.
+- `withSessionLock` keys `lock:session:${sessionId}` via `SET NX PX 5000`, owner token `crypto.randomUUID()`, released with the atomic Lua compare-and-delete in `SESSION_LOCK_RELEASE_SCRIPT`. Spin contention returns `error: "busy"` — do not block/retry.
 - No audio on wheel, confetti, or card flip. Menu history/contribute/code routes stay stubs until PLAN-004.
 - Do not import client play components from Server Actions; keep eligibility helpers in `lib/game/`.
 
@@ -86,3 +86,11 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Nickname is written only while `User.displayName` is null; extract copy/UI strings to `lib/constants.ts` (see `HISTORY_DELETED_LABEL`, `CONTRIBUTE_THANKS_TOAST`).
 - Motion tokens moved from `lib/game/play-motion.ts` to `lib/motion.ts` (that file is deleted). `lib/motion.ts` also exports the shared `screenContainer` / `screenItem` stagger variants used by every PLAN-004 screen.
 - PLAN-004 screens are animated end to end: code view staggers digits and animates the copy label, contribute form staggers its fields and animates the "tự động" badge / nickname field / error / toast, history rows slide in, and Session Home shakes the input on a bad code.
+
+## Technical rules (PLAN-005)
+
+- Locking scope is `sessionId` only — never global, never cross-session. Copying a session (`copySessionFromCode`) must not acquire a lock; copied sessions are independent.
+- Never release a Redis lock with a separate `GET` + `DEL`: the key can expire between the two commands and the `DEL` would free a newer holder's lock. Always release through `withSessionLock` (single `EVAL` compare-and-delete).
+- Lock contention is a **typed, fail-fast** result, not an exception at the client boundary: `LockContentionError` is caught inside the Server Action and returned as `{ ok: false, error: SPIN_BUSY_ERROR }`.
+- Contention UI lives in `components/play/play-screen.tsx` (the component that owns the spin handler) — it re-enables the button and toasts "Đang xử lý, vui lòng thử lại". `components/wheel/wheel.tsx` is a pure SVG renderer and never calls Server Actions.
+- Vote-hide and reveal are **not** lock-wrapped. Their correctness comes from DB constraints (`QuestionVote @@unique([userId, questionId])`, `SessionAnswer @@unique([sessionId, sessionPlayerId, questionId])`) plus `upsert`, and the 30%-ratio soft-delete is monotonic, so a benign race cannot produce a duplicate row or a stuck question. Keep the locking surface minimal — add a lock only where a genuine race exists.

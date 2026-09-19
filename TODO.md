@@ -109,8 +109,11 @@ Based on §4:
 
 ## Phase 12 — Cross-Cutting: Redis Locking
 
-- [ ] Lock wrapper utility keyed by `sessionId` for: spin action, vote action, contribute-triggered auto-delete check
-- [ ] Prevent double-spin / concurrent vote race conditions (e.g., two tabs on same session)
+- [x] Lock wrapper utility keyed by `sessionId` for the spin action (`withSessionLock`)
+- [x] Prevent double-spin / concurrent vote race conditions (e.g., two tabs on same session)
+- [x] Atomic Lua compare-and-delete release (no separate `GET` + `DEL`) + `lib/redis-lock.test.ts` regression tests
+- [x] Vote/reveal race covered by DB unique constraints instead of a lock (scope locked in PLAN-005)
+- [ ] Manual two-tab / two-device concurrency check (see PLAN-005 checklist)
 
 ## Phase 13 — Visual Polish & Design System (§7)
 
