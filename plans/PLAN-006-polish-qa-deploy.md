@@ -66,7 +66,7 @@ module.exports = {
 };
 ```
 
-**`scripts/deploy.sh`** — `git pull`, `bun install --production`, `bun run build`, copy `public/` + `.next/static` into the standalone output dir (Next.js standalone requirement), `pm2 reload ecosystem.config.js --update-env`.
+**`scripts/deploy.sh`** — `git pull`, `docker compose up -d postgres redis` with health check polling, `bun install --frozen-lockfile`, `prisma migrate deploy` + `generate`, `bun run build`, copy `public/` + `.next/static` into the standalone output dir (Next.js standalone requirement), `pm2 reload ecosystem.config.js --update-env`.
 
 **`.env.production.example`** — same keys as PLAN-001's `.env.example` (`DATABASE_URL`, `REDIS_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`) with production-value placeholders and a comment noting Postgres/Redis are managed independently of the app process.
 

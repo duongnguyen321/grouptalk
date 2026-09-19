@@ -82,11 +82,11 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 
 ## Production deploy
 
-Bare Node process under PM2; Postgres and Redis are managed separately (the app is not containerised alongside them).
+Bare Node process under PM2; Postgres and Redis services are managed via Docker Compose.
 
-1. On the server: install `bun` and `pm2`, then clone the repo.
-2. `cp .env.production.example .env.production` and fill it in (point `DATABASE_URL`/`REDIS_URL` at the managed services — not the dev Docker ports `5433`/`6380`).
-3. Run `./scripts/deploy.sh`. It pulls, installs, runs `prisma migrate deploy` + `generate`, builds the standalone output, copies `public/` and `.next/static` in beside `server.js`, then `pm2 reload`s.
+1. On the server: install `bun`, `pm2`, and `docker` (with Docker Compose), then clone the repo.
+2. `cp .env.production.example .env.production` and fill it in.
+3. Run `./scripts/deploy.sh`. It pulls, starts and verifies health of Postgres and Redis containers via Docker Compose, runs `prisma migrate deploy` + `generate`, builds the standalone output, copies `public/` and `.next/static` in beside `server.js`, then `pm2 reload`s.
 
 The PM2 app listens on port **3000**; put a reverse proxy (nginx/Caddy) in front for TLS. `pm2 startup && pm2 save` once, so the app survives a reboot.
 

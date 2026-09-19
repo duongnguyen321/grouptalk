@@ -5,10 +5,11 @@
 # Prerequisites (installed on the server, not by this script):
 #   - bun            https://bun.sh
 #   - pm2            npm i -g pm2
+#   - docker         https://docs.docker.com/get-docker/ (with Docker Compose)
 #   - a populated .env.production in the app root (copy .env.production.example)
 #
-# Postgres and Redis are managed separately from the app process. Run this from a
-# checkout of the repo on the server.
+# Postgres and Redis containers are managed via Docker Compose. The app itself runs
+# as a bare PM2 process. Run this from a checkout of the repo on the server.
 
 set -euo pipefail
 
@@ -24,7 +25,58 @@ command -v pm2 >/dev/null 2>&1 || {
   exit 1
 }
 
+# Detect Docker Compose CLI
+if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  DOCKER_COMPOSE="docker-compose"
+else
+  echo "docker compose is required: https://docs.docker.com/compose/" >&2
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker daemon is not running. Please start Docker first." >&2
+  exit 1
+fi
+
+wait_for_healthy() {
+  local service="$1"
+  local timeout="${2:-60}"
+  local elapsed=0
+  local interval=2
+
+  echo "Waiting for ${service} to become healthy..."
+  while [ "$elapsed" -lt "$timeout" ]; do
+    local container_id
+    container_id="$($DOCKER_COMPOSE ps -q "$service" 2>/dev/null || true)"
+    if [ -n "$container_id" ]; then
+      local status
+      status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$container_id" 2>/dev/null || true)"
+      if [ "$status" = "healthy" ]; then
+        echo "${service} is healthy."
+        return 0
+      elif [ "$status" = "unhealthy" ]; then
+        echo "Error: ${service} reported unhealthy status." >&2
+        return 1
+      fi
+    fi
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+  done
+
+  echo "Error: Timed out waiting for ${service} to become healthy (${timeout}s)." >&2
+  return 1
+}
+
 git pull --ff-only
+
+# Start database and redis services and wait for health checks
+echo "Ensuring Postgres and Redis containers are running..."
+$DOCKER_COMPOSE up -d postgres redis
+
+wait_for_healthy postgres 60
+wait_for_healthy redis 30
 
 # Full install (not --production): `next build` needs typescript, tailwindcss and the
 # postcss plugin, which are devDependencies. The standalone output is self-contained,

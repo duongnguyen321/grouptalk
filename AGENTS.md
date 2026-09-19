@@ -107,7 +107,7 @@ Every screen and every user action must animate. A flow is not done when it mere
 
 ## Deployment (PLAN-006)
 
-- Deploy shape is a **bare Node process** under PM2 (`ecosystem.config.js` → `.next/standalone/server.js`), with Postgres/Redis as separately managed services. Do not containerise the app alongside them.
+- Deploy shape is a **bare Node process** under PM2 (`ecosystem.config.js` → `.next/standalone/server.js`), with Postgres/Redis managed via Docker Compose (`docker compose up -d postgres redis` + healthcheck polling in `scripts/deploy.sh`). Do not containerise the app alongside them.
 - `bun install --production` **cannot** be used before `next build`: `typescript`, `tailwindcss` and `@tailwindcss/postcss` are devDependencies and the build needs them. Install in full; the standalone bundle is self-contained so nothing needs pruning.
 - Next's standalone output omits `public/` and `.next/static`. `scripts/deploy.sh` copies their **contents** (not the directories) so re-running the release stays idempotent.
 - Prisma runs through the `@prisma/adapter-pg` driver adapter, so no Rust query-engine binary ships with the build. `prisma migrate deploy` + `prisma generate` must still run on the server before `next build`.

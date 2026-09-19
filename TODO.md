@@ -136,7 +136,7 @@ Based on §4:
 ## Phase 15 — Deployment Readiness
 
 - [x] `output: "standalone"` build + PM2 process definition (`ecosystem.config.js`)
-- [x] `scripts/deploy.sh` release script (pull → install → migrate → generate → build → copy assets → reload)
+- [x] `scripts/deploy.sh` release script (pull → docker compose up + health check → install → migrate → generate → build → copy assets → reload)
 - [x] Env var documentation finalized — `.env.production.example` (dev vs managed Postgres/Redis ports called out)
 - [ ] Production Postgres + Redis provisioning
 - [ ] Basic monitoring/logging for Server Actions/API routes
