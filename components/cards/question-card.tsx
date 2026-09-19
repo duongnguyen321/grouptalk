@@ -25,34 +25,34 @@ export function QuestionCard({ card, onHide, onNext }: QuestionCardProps) {
         animate={{ opacity: 1, rotateY: 0, scale: 1 }}
         transition={{ duration: 0.42, ease: [...PHASE_EASE] }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative mx-auto mt-4 flex min-h-[28rem] w-full max-w-md flex-1 flex-col rounded-[2rem] bg-white p-6 shadow-[0_18px_40px_rgba(28,25,23,0.12)]"
+        className="relative mx-auto mt-4 flex min-h-[min(28rem,56vh)] w-full max-w-md flex-1 flex-col rounded-[2rem] bg-white p-6 shadow-[0_18px_40px_rgba(28,25,23,0.12)]"
       >
         <button
           type="button"
           onClick={onHide}
           aria-label="Ẩn câu hỏi này"
-          className="absolute top-3 right-3 flex size-10 items-center justify-center rounded-full text-ink-muted hover:bg-muted"
+          className="absolute top-3 right-3 flex size-11 items-center justify-center rounded-full text-ink-muted hover:bg-muted"
         >
           <Ban className="size-4" />
         </button>
 
-        <div className="flex items-center gap-3 pr-10">
+        <div className="flex items-center gap-3 pr-12">
           <span
             className="flex size-11 items-center justify-center rounded-full text-lg font-extrabold text-white"
-            style={{ backgroundColor: tone.solid }}
+            style={{ backgroundImage: tone.gradient }}
           >
             {initial}
           </span>
-          <p className="font-display text-[1.4rem] leading-tight font-extrabold text-ink">
+          <p className="text-name leading-tight font-bold text-ink">
             {card.playerName}
           </p>
         </div>
 
-        <p className="mt-8 flex flex-1 items-center justify-center text-center font-display text-[clamp(1.35rem,4.6vw,2.15rem)] leading-tight font-extrabold text-ink">
+        <p className="mt-8 flex flex-1 items-center justify-center text-center text-question font-extrabold text-ink">
           {card.title}
         </p>
 
-        <p className="mt-6 text-[0.85rem] leading-snug text-ink-muted">
+        <p className="mt-6 text-note leading-snug font-medium text-ink-muted">
           💬 {QUESTION_TYPE_NOTES[card.type]}
         </p>
       </motion.article>

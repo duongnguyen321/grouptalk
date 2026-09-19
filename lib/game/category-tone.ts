@@ -3,27 +3,27 @@ import { CATEGORY_OPTIONS } from "@/lib/categories";
 
 const TONE: Record<
   Category,
-  { light: string; deep: string; solid: string }
+  { light: string; deep: string; gradient: string }
 > = {
   [Category.COUPLE]: {
     light: "var(--cat-couple)",
     deep: "var(--cat-couple-deep)",
-    solid: "var(--cat-couple-deep)",
+    gradient: "var(--grad-couple)",
   },
   [Category.GIRLS]: {
     light: "var(--cat-girls)",
     deep: "var(--cat-girls-deep)",
-    solid: "var(--cat-girls-deep)",
+    gradient: "var(--grad-girls)",
   },
   [Category.BOYS]: {
     light: "var(--cat-boys)",
     deep: "var(--cat-boys-deep)",
-    solid: "var(--cat-boys)",
+    gradient: "var(--grad-boys)",
   },
   [Category.FRIENDS]: {
     light: "var(--cat-friends)",
     deep: "var(--cat-friends-deep)",
-    solid: "var(--cat-friends-deep)",
+    gradient: "var(--grad-friends)",
   },
 };
 
@@ -48,7 +48,17 @@ export function categoryIcon(category: Category) {
   );
 }
 
+const WHEEL_GRADIENT_VARIANTS = 2;
+
+/** SVG ids must be stable and match between the `<defs>` and each slice's `fill`. */
+export function wheelSliceGradientId(category: Category, variant: number) {
+  return `wheel-slice-${category}-${variant % WHEEL_GRADIENT_VARIANTS}`;
+}
+
+/**
+ * Adjacent slices alternate between the forward and reversed gradient so each slice
+ * still reads as a distinct wedge while both stay true gradients (§7.6).
+ */
 export function wheelSliceFill(category: Category, index: number) {
-  const tone = categoryTone(category);
-  return index % 2 === 0 ? tone.light : tone.deep;
+  return `url(#${wheelSliceGradientId(category, index)})`;
 }

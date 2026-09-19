@@ -6,9 +6,9 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-005 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), and concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release).
+PLAN-001 through PLAN-006 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), and the §7 design system (category gradients, typography scale, mobile pass) plus a bare-process production deploy.
 
-Next: [plans/PLAN-006-polish-qa-deploy.md](plans/PLAN-006-polish-qa-deploy.md).
+Next: [plans/PLAN-006-polish-qa-deploy.md](plans/PLAN-006-polish-qa-deploy.md) — the outstanding items are the manual QA checklists and the first real VPS deploy.
 
 ## Stack
 
@@ -76,4 +76,17 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Contribute questions (title, categories with "Nhóm bạn" → automatic Nhóm nam/nữ tagging, topic, type, one-time guest nickname) — inserted straight into the pool, no moderation
 - Session history list of every answered card, flagging questions that were globally removed
 - Concurrency: `withSessionLock` guards the spin per `sessionId` (`SET NX PX 5000` + owner token, released by one atomic Lua compare-and-delete). Contention fails fast as `error: "busy"` and the play screen toasts "Đang xử lý, vui lòng thử lại" instead of blocking. Vote/reveal rely on DB unique constraints rather than a lock
+- §7.6 design system: one definition per category colour/gradient/glow in `app/globals.css` (`--cat-*`, `--grad-*`, `--cat-*-glow`), surfaced as `bg-grad-*` utilities and the `text-name` / `text-question` / `text-note` / `text-credit` scale. Gradients render on the category-select cards, the wheel's SVG segments (via `<linearGradient>` defs) and the card backs
+- Mobile pass: cards sized to ~84vw on small screens, ≥44px tap targets, and `env(safe-area-inset-bottom)` on the toast, play footer and menu drawer
+- No audio anywhere (explicit non-goal) — `navigator.vibrate` haptics on the winner reveal is the only feedback
+
+## Production deploy
+
+Bare Node process under PM2; Postgres and Redis are managed separately (the app is not containerised alongside them).
+
+1. On the server: install `bun` and `pm2`, then clone the repo.
+2. `cp .env.production.example .env.production` and fill it in (point `DATABASE_URL`/`REDIS_URL` at the managed services — not the dev Docker ports `5433`/`6380`).
+3. Run `./scripts/deploy.sh`. It pulls, installs, runs `prisma migrate deploy` + `generate`, builds the standalone output, copies `public/` and `.next/static` in beside `server.js`, then `pm2 reload`s.
+
+The PM2 app listens on port **3000**; put a reverse proxy (nginx/Caddy) in front for TLS. `pm2 startup && pm2 save` once, so the app survives a reboot.
 

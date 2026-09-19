@@ -15,6 +15,16 @@
   --cat-boys-deep: #0984e3;
   --cat-friends: #fdcb6e;
   --cat-friends-deep: #e17055;
+  /* Category gradients (§7.6) — single source of truth, consumed via lib/game/category-tone.ts */
+  --grad-couple: linear-gradient(135deg, var(--cat-couple), var(--cat-couple-deep));
+  --grad-girls: linear-gradient(135deg, var(--cat-girls), var(--cat-girls-deep));
+  --grad-boys: linear-gradient(135deg, var(--cat-boys), var(--cat-boys-deep));
+  --grad-friends: linear-gradient(135deg, var(--cat-friends), var(--cat-friends-deep));
+  /* Selected-category glow, derived from the palette so the shadow can never drift from the token */
+  --cat-couple-glow: 0 10px 24px color-mix(in srgb, var(--cat-couple-deep) 35%, transparent);
+  --cat-girls-glow: 0 10px 24px color-mix(in srgb, var(--cat-girls-deep) 35%, transparent);
+  --cat-boys-glow: 0 10px 24px color-mix(in srgb, var(--cat-boys-deep) 35%, transparent);
+  --cat-friends-glow: 0 10px 24px color-mix(in srgb, var(--cat-friends-deep) 35%, transparent);
   --play: #2b211c;
   --background: #f6f1ea;
   --foreground: #1c1917;
@@ -66,6 +76,15 @@
   --color-cat-friends: var(--cat-friends);
   --color-cat-friends-deep: var(--cat-friends-deep);
   --color-play: var(--play);
+  /* Typography scale (§7.6) — sizes/weights consumed as text-name / text-question / text-note / text-credit */
+  --text-name: 1.375rem;
+  --text-name--line-height: 1.2;
+  --text-question: clamp(1.75rem, 5.6vw, 2.25rem);
+  --text-question--line-height: 1.12;
+  --text-note: 0.875rem;
+  --text-note--line-height: 1.45;
+  --text-credit: 0.8125rem;
+  --text-credit--line-height: 1.35;
   --font-sans: var(--font-baloo);
   --font-display: var(--font-baloo);
   --font-heading: var(--font-baloo);
@@ -105,6 +124,21 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Category gradient utilities (§7.6) — thin aliases over the --grad-* tokens so each
+   gradient is defined exactly once and reachable from classes and inline styles alike. */
+@utility bg-grad-couple {
+  background-image: var(--grad-couple);
+}
+@utility bg-grad-girls {
+  background-image: var(--grad-girls);
+}
+@utility bg-grad-boys {
+  background-image: var(--grad-boys);
+}
+@utility bg-grad-friends {
+  background-image: var(--grad-friends);
 }
 
 body {

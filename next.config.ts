@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Bare-process (PM2) deploys ship only the traced server bundle. Next does not include
+  // public/ or .next/static in it — scripts/deploy.sh copies those in beside server.js.
+  output: "standalone",
 };
 
 export default nextConfig;

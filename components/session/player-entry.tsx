@@ -125,7 +125,7 @@ export function PlayerEntry() {
               <button
                 type="button"
                 onClick={() => removePlayer(player)}
-                className="grid size-5 place-items-center rounded-full text-ink-muted"
+                className="relative grid size-6 place-items-center rounded-full text-ink-muted before:absolute before:-inset-2 before:content-['']"
                 aria-label={`Xoá ${player}`}
               >
                 ×

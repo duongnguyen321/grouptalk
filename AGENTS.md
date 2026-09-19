@@ -94,3 +94,20 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Lock contention is a **typed, fail-fast** result, not an exception at the client boundary: `LockContentionError` is caught inside the Server Action and returned as `{ ok: false, error: SPIN_BUSY_ERROR }`.
 - Contention UI lives in `components/play/play-screen.tsx` (the component that owns the spin handler) — it re-enables the button and toasts "Đang xử lý, vui lòng thử lại". `components/wheel/wheel.tsx` is a pure SVG renderer and never calls Server Actions.
 - Vote-hide and reveal are **not** lock-wrapped. Their correctness comes from DB constraints (`QuestionVote @@unique([userId, questionId])`, `SessionAnswer @@unique([sessionId, sessionPlayerId, questionId])`) plus `upsert`, and the 30%-ratio soft-delete is monotonic, so a benign race cannot produce a duplicate row or a stuck question. Keep the locking surface minimal — add a lock only where a genuine race exists.
+
+## Design tokens (PLAN-006)
+
+- Category colour has exactly **one** definition per category: `--cat-*` (base colours), `--grad-*` (the §7.6 gradients), `--cat-*-glow` (selected-state shadow) in `app/globals.css`. Never re-type a category hex or `rgba()` glow in a component — read it through `lib/game/category-tone.ts` (`light` / `deep` / `gradient`) or the `bg-grad-*` utility.
+- Tailwind v4 has **no** gradient theme namespace (verified against tailwindcss 4.3.3). Gradients therefore cannot be `@theme` colours; they are exposed as `@utility bg-grad-*` aliases over the `--grad-*` vars. Follow that pattern for any new gradient.
+- SVG cannot consume a CSS `linear-gradient` as a `fill`. The wheel declares `<linearGradient>` defs and references them with `url(#id)`; ids come from `wheelSliceGradientId()` so the `<defs>` and the slice `fill` can never drift. Use `style={{ stopColor: ... }}` (not the `stopColor` attribute) so `var()` resolves.
+- Typography scale is `--text-name` / `--text-question` / `--text-note` / `--text-credit` → `text-name`, `text-question`, `text-note`, `text-credit`. These are the **card display roles** from §7.6; dense list rows and screen headers deliberately keep their own tighter hierarchy — do not apply `text-question` inside a list row.
+- v1 is **light-only**. The `.dark` block is inert shadcn output — no theme switcher is wired, so do not add dark-specific component styling that assumes it activates.
+- No audio anywhere (§7.1). `navigator.vibrate` haptics on the winner reveal is the only sensory feedback and is acceptable; do not add sound.
+- Mobile: keep interactive controls ≥44px, and use `env(safe-area-inset-bottom)` on fixed bottom surfaces (toast, footer, drawer) rather than a bare `bottom-*`.
+
+## Deployment (PLAN-006)
+
+- Deploy shape is a **bare Node process** under PM2 (`ecosystem.config.js` → `.next/standalone/server.js`), with Postgres/Redis as separately managed services. Do not containerise the app alongside them.
+- `bun install --production` **cannot** be used before `next build`: `typescript`, `tailwindcss` and `@tailwindcss/postcss` are devDependencies and the build needs them. Install in full; the standalone bundle is self-contained so nothing needs pruning.
+- Next's standalone output omits `public/` and `.next/static`. `scripts/deploy.sh` copies their **contents** (not the directories) so re-running the release stays idempotent.
+- Prisma runs through the `@prisma/adapter-pg` driver adapter, so no Rust query-engine binary ships with the build. `prisma migrate deploy` + `prisma generate` must still run on the server before `next build`.

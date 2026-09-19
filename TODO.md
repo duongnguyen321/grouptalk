@@ -117,12 +117,12 @@ Based on §4:
 
 ## Phase 13 — Visual Polish & Design System (§7)
 
-- [ ] Implement category gradients (Cặp đôi, Nhóm nữ, Nhóm nam, Nhóm bạn) as reusable Tailwind tokens/classes
+- [x] Implement category gradients (Cặp đôi, Nhóm nữ, Nhóm nam, Nhóm bạn) as reusable Tailwind tokens/classes — `--grad-*` in `app/globals.css`, `bg-grad-*` utilities, consumed by category cards, wheel SVG segments and card backs
 - [x] Motion on every user flow — shared tokens in `lib/motion.ts`, animated entry/actions/state changes on all PLAN-004 screens (see AGENTS.md "Motion")
-- [ ] Typography scale per §7.6 (name, question, note sizes/weights)
-- [ ] Mobile-first responsive pass — cards near full-screen on small viewports (§7.7)
-- [ ] Dark/neutral background so cards pop
-- [ ] Verify no audio anywhere (explicit non-goal)
+- [x] Typography scale per §7.6 (name, question, note sizes/weights) — `--text-name` / `--text-question` / `--text-note` / `--text-credit` applied to the card display roles; list/header text intentionally keeps a denser hierarchy (see PLAN-006 notes)
+- [x] Verify no audio anywhere (explicit non-goal) — audited: no `Audio`/`AudioContext`/media element anywhere; the only sensory feedback is `navigator.vibrate(18)` haptics on the winner reveal
+- [ ] Mobile-first responsive pass — cards near full-screen on small viewports (§7.7) — card sizes widened (84vw), safe-area insets and ≥44px tap targets added, but **not yet eyeballed on a 360px device**
+- [ ] Dark/neutral background so cards pop — the light warm-neutral canvas already satisfies §7.6; the `.dark` token block exists but no theme switcher is wired, so v1 ships light-only
 
 ## Phase 14 — QA / Edge Cases
 
@@ -135,9 +135,12 @@ Based on §4:
 
 ## Phase 15 — Deployment Readiness
 
+- [x] `output: "standalone"` build + PM2 process definition (`ecosystem.config.js`)
+- [x] `scripts/deploy.sh` release script (pull → install → migrate → generate → build → copy assets → reload)
+- [x] Env var documentation finalized — `.env.production.example` (dev vs managed Postgres/Redis ports called out)
 - [ ] Production Postgres + Redis provisioning
-- [ ] Env var documentation finalized
 - [ ] Basic monitoring/logging for Server Actions/API routes
+- [ ] First real deploy to the VPS (standalone build + PM2 verified locally only)
 - [ ] Smoke test full flow end-to-end in staging
 
 ---

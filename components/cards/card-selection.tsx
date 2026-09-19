@@ -65,14 +65,14 @@ export function CardSelection({
                 ease: [...PHASE_EASE],
               }}
               style={{
-                backgroundColor: tone.solid,
+                backgroundImage: tone.gradient,
                 transformStyle: "preserve-3d",
               }}
-              className="flex h-[min(62vh,28rem)] w-[min(78vw,18.5rem)] shrink-0 snap-center touch-manipulation rounded-[1.6rem] border-2 border-white/30 px-5 py-6 text-white shadow-[0_16px_30px_rgba(28,25,23,0.22)]"
+              className="flex h-[min(60vh,26rem)] w-[min(84vw,19rem)] shrink-0 snap-center touch-manipulation rounded-[1.6rem] border-2 border-white/30 px-5 py-6 text-white shadow-[0_16px_30px_rgba(28,25,23,0.22)]"
             >
               <span className="flex h-full w-full flex-col items-center justify-between">
                 <span className="font-display text-6xl font-extrabold">?</span>
-                <span className="text-center text-sm leading-snug">
+                <span className="text-center text-credit leading-snug font-medium">
                   Đóng góp bởi: {card.contributedBy}
                 </span>
               </span>

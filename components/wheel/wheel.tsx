@@ -2,7 +2,12 @@
 
 import { motion } from "framer-motion";
 import { WHEEL_SPIN_EASING } from "@/lib/constants";
-import { primaryCategory, wheelSliceFill } from "@/lib/game/category-tone";
+import {
+  categoryTone,
+  primaryCategory,
+  wheelSliceFill,
+  wheelSliceGradientId,
+} from "@/lib/game/category-tone";
 import type { PlayPlayer } from "@/lib/game/play-types";
 import { Category } from "@/generated/prisma/enums";
 
@@ -48,6 +53,7 @@ export function Wheel({
   const count = Math.max(players.length, 1);
   const slice = 360 / count;
   const category = primaryCategory(categories);
+  const tone = categoryTone(category);
 
   return (
     <div className="relative mx-auto size-[min(86vw,20.5rem)]">
@@ -77,6 +83,30 @@ export function Wheel({
             r={RADIUS + 4}
             fill="white"
           />
+          <defs>
+            <linearGradient
+              id={wheelSliceGradientId(category, 0)}
+              x1="0"
+              y1="0"
+              x2={SIZE}
+              y2={SIZE}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" style={{ stopColor: tone.light }} />
+              <stop offset="100%" style={{ stopColor: tone.deep }} />
+            </linearGradient>
+            <linearGradient
+              id={wheelSliceGradientId(category, 1)}
+              x1="0"
+              y1="0"
+              x2={SIZE}
+              y2={SIZE}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" style={{ stopColor: tone.deep }} />
+              <stop offset="100%" style={{ stopColor: tone.light }} />
+            </linearGradient>
+          </defs>
           {players.map((player, index) => {
             const start = index * slice;
             const end = start + slice;

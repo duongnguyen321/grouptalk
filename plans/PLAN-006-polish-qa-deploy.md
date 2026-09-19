@@ -34,6 +34,18 @@ Source: [GroupTalk.md](../GroupTalk.md) §7, §8 · Tracks: [TODO.md](../TODO.md
 | 4 | [scripts/deploy.sh](../scripts/deploy.sh) | create |
 | 5 | [.env.production.example](../.env.production.example) | create |
 
+Files added to this table during `/create` — the token layer is only useful once its consumers read from it:
+
+| # | File | Action |
+|---|---|---|
+| 6 | [lib/categories.ts](../lib/categories.ts) | modify (gradient + glow utilities instead of inline `from-*`/`to-*`/`rgba()`) |
+| 7 | [lib/game/category-tone.ts](../lib/game/category-tone.ts) | modify (`gradient` token; wheel gradient ids) |
+| 8 | [components/wheel/wheel.tsx](../components/wheel/wheel.tsx) | modify (SVG `<linearGradient>` defs) |
+| 9 | [components/cards/card-selection.tsx](../components/cards/card-selection.tsx) | modify (gradient backs, credit type, mobile sizing) |
+| 10 | [components/cards/question-card.tsx](../components/cards/question-card.tsx) | modify (§7.6 name/question/note scale, tap target) |
+| 11 | [components/play/play-screen.tsx](../components/play/play-screen.tsx) | modify (safe-area insets, drawer tap targets) |
+| 12 | [components/session/player-entry.tsx](../components/session/player-entry.tsx) | modify (expanded delete hit area) |
+
 ---
 
 ## Technical Logic (per file)
@@ -79,6 +91,29 @@ cp -r public .next/standalone/
 cp -r .next/static .next/standalone/.next/
 pm2 reload ecosystem.config.js --update-env
 ```
+
+---
+
+## Implementation notes (PLAN-006)
+
+**Design tokens (`app/globals.css`)** — the 4 category hues already existed as `--cat-*`; what was missing was a gradient/glow token layer and reachable utilities. Added `--grad-*` (the §7.6 gradients) and `--cat-*-glow` (selected-state shadow, derived with `color-mix()` from the deep hue so it can never drift from the palette).
+
+> Correction to the plan: Tailwind v4 has **no** gradient theme namespace, so gradients cannot be registered as `@theme` colours. Verified against the installed tailwindcss 4.3.3 — the only namespaces available are colour/font/text/spacing/radius/shadow/etc. Gradients are therefore exposed as `@utility bg-grad-*` aliases over the `--grad-*` vars, and the stale hand-written `rgba()` glows in `lib/categories.ts` were replaced by `shadow-(--cat-*-glow)`. Compiled output was confirmed in the built CSS, and the rendered shadow is byte-for-byte the same colour/alpha as the literals it replaced.
+
+**Typography** — added `--text-name` / `--text-question` / `--text-note` / `--text-credit` (`--text-*` *is* a real Tailwind namespace) and applied them to the §7.6 card roles: the answerer name (now 700/22px per spec, was 800), the question (`clamp(1.75rem, 5.6vw, 2.25rem)` = 28→36px, was 21.6→34.4px), the note (14px/500) and the card-back contributor credit (13px/500, was 14px).
+Deliberate deviation: dense surfaces (history rows, screen headers) keep their own tighter hierarchy rather than reusing `text-question`, and the winner-reveal name stays a large display hero — applying the 20–24px "name" role to either would read as a regression, not compliance.
+
+**Gradients applied in 3 places** — category-select tiles (now via the shared `bg-grad-*` utility, previously duplicated `bg-linear-to-br from-* to-*` strings), the wheel segments, and the card backs. SVG cannot take a CSS `linear-gradient` as a `fill`, so the wheel declares two `<linearGradient>` defs per category (forward + reversed) with `style={{ stopColor: var(...) }}` stops and `fill="url(#id)"`; `wheelSliceGradientId()` is the single source for those ids. Neighbouring wedges alternate forward/reversed so they stay visually distinct while both remain true gradients. `tone.solid` became unused and was removed.
+
+**Mobile (§7.7)** — card backs are now `min(84vw, 19rem)` (was 78vw) against a `min(60vh, 26rem)` height, the revealed question card uses `min-h-[min(28rem,56vh)]` so short screens cannot clip it, the question-card hide button and menu close button were raised to 44px, the player-entry chip delete button kept its 24px visual size but gained an 8px expanded hit area, drawer nav links got `py-2.5`, and the toast / play footer / drawer now offset by `env(safe-area-inset-bottom)`.
+
+**Audio audit (§7.1)** — grep for `Audio`, `AudioContext`, `Oscillator`, `<audio>`, `.play()` and media extensions across `app/`, `components/`, `lib/` returns nothing. The only hit is `navigator.vibrate(18)` on the winner reveal, which is haptics rather than sound and is explicitly allowed.
+
+**Deploy** — `output: "standalone"` is set and the build produces `.next/standalone/server.js`; `ecosystem.config.js` runs it under PM2 in `fork` mode with a single instance (the Prisma/Redis pools are per-process singletons). `scripts/deploy.sh` and `.env.production.example` added.
+
+> Correction to the plan: the sketched `bun install --production` before `bun run build` **fails** — `next build` needs `typescript`, `tailwindcss` and `@tailwindcss/postcss`, all of which are devDependencies. The script installs in full instead; the standalone bundle is self-contained, so no pruning step is needed. The `cp -r public .next/standalone/` sketch is also non-idempotent (it nests `public/` inside itself on a second run), so the script copies directory *contents*.
+
+**Verification status** — `bun test` 27 pass / 0 fail, `bunx tsc --noEmit` and `bun run lint` clean, `bun run build` succeeds with standalone output, the built CSS contains every new utility, and all 8 screens return HTTP 200 from the dev server (the wheel HTML was inspected directly: both `<linearGradient>` defs and both alternating slice fills are present). **Not verified:** anything requiring a real viewport or a device — no browser/visual pass was run, so the manual checklists below are still entirely unchecked, and `pm2` was not exercised (no PM2 install here).
 
 ---
 

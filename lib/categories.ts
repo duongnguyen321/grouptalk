@@ -5,29 +5,25 @@ export const CATEGORY_OPTIONS = [
     value: Category.COUPLE,
     label: "Cặp đôi",
     icon: "💕",
-    selectedClass:
-      "bg-linear-to-br from-cat-couple to-cat-couple-deep text-white shadow-[0_10px_24px_rgba(196,69,105,0.35)]",
+    selectedClass: "bg-grad-couple shadow-(--cat-couple-glow) text-white",
   },
   {
     value: Category.GIRLS,
     label: "Nhóm nữ",
     icon: "💁",
-    selectedClass:
-      "bg-linear-to-br from-cat-girls to-cat-girls-deep text-white shadow-[0_10px_24px_rgba(253,121,168,0.35)]",
+    selectedClass: "bg-grad-girls shadow-(--cat-girls-glow) text-white",
   },
   {
     value: Category.BOYS,
     label: "Nhóm nam",
     icon: "🙋",
-    selectedClass:
-      "bg-linear-to-br from-cat-boys to-cat-boys-deep text-white shadow-[0_10px_24px_rgba(72,52,212,0.35)]",
+    selectedClass: "bg-grad-boys shadow-(--cat-boys-glow) text-white",
   },
   {
     value: Category.FRIENDS,
     label: "Nhóm bạn",
     icon: "🎉",
-    selectedClass:
-      "bg-linear-to-br from-cat-friends to-cat-friends-deep text-white shadow-[0_10px_24px_rgba(225,112,85,0.35)]",
+    selectedClass: "bg-grad-friends shadow-(--cat-friends-glow) text-white",
   },
 ] as const;
 

@@ -128,3 +128,32 @@ Plans are sequential and dependent: 001 → 002 → 003 → (004, 005 depend on 
 - Human moderation / admin panel (moderation is vote-threshold only)
 - Free-tier limits / paywall design
 - Ads integration
+- Audio / sound effects (§7.1 — animation stays silent)
+- Dark mode (the `.dark` token block is inert shadcn output; no theme switcher is wired)
+
+## 11. Design tokens (§7.6)
+
+Colour, gradient and glow for each category are defined **once**, in `app/globals.css`:
+
+| Layer | Tokens | Reached via |
+|---|---|---|
+| Base hues | `--cat-couple`, `--cat-girls`, `--cat-boys`, `--cat-friends` + `-deep` | `lib/game/category-tone.ts` (`light`, `deep`) |
+| Gradients | `--grad-*` | `@utility bg-grad-*` classes, or `categoryTone().gradient` for inline `background-image` |
+| Selected glow | `--cat-*-glow` (derived with `color-mix()`) | `shadow-(--cat-*-glow)` in `lib/categories.ts` |
+
+Tailwind v4 has no gradient theme namespace, which is why gradients live as `@utility` aliases rather than `@theme` colours. SVG cannot take a CSS gradient as a `fill`, so the wheel declares `<linearGradient>` defs and references them by id — see AGENTS.md "Design tokens".
+
+Typography uses the `--text-*` namespace: `text-name` (answerer name, §7.6 700/20–24px), `text-question` (the card's question, 800/28–36px via `clamp()`), `text-note` (400–500/13–14px grey), `text-credit` (card-back contributor, 500/12–13px). These are card display roles; dense lists and screen headers keep their own tighter hierarchy.
+
+## 12. Deployment
+
+Bare Node process, not containerised:
+
+```
+ecosystem.config.js   PM2 app → .next/standalone/server.js (fork, 1 instance, port 3000)
+scripts/deploy.sh     pull → install → prisma migrate deploy + generate → build → copy assets → pm2 reload
+.env.production.example  managed Postgres/Redis + Auth.js secrets
+```
+
+Postgres and Redis are separately managed services in production (locally they come from `docker-compose.yml` on host ports 5433/6380). `output: "standalone"` omits `public/` and `.next/static`, so the release script copies their contents in beside `server.js`. Prisma runs through the `@prisma/adapter-pg` driver adapter, so no query-engine binary ships with the build.
+

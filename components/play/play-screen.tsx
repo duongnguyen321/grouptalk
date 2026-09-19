@@ -313,7 +313,7 @@ export function PlayScreen({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center justify-between px-5 py-4 text-sm text-white/70"
+            className="flex items-center justify-between px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-sm text-white/70"
           >
             <span>{players.length} người chơi</span>
             <Link
@@ -341,7 +341,7 @@ export function PlayScreen({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.22, ease: [...PHASE_EASE] }}
-            className="fixed inset-x-4 bottom-6 z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg"
+            className="fixed inset-x-4 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg"
           >
             {toast}
           </motion.p>
@@ -363,7 +363,7 @@ export function PlayScreen({
               animate={{ x: 0 }}
               exit={{ x: 48 }}
               transition={{ duration: MENU_DURATION_S, ease: [...PHASE_EASE] }}
-              className="ml-auto flex h-full w-[min(100%,20rem)] flex-col bg-canvas px-5 py-6 text-ink"
+              className="ml-auto flex h-full w-[min(100%,20rem)] flex-col bg-canvas px-5 py-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-ink"
             >
               <div className="flex items-center justify-between">
                 <p className="font-display text-2xl font-extrabold">Menu</p>
@@ -371,17 +371,25 @@ export function PlayScreen({
                   type="button"
                   aria-label="Đóng menu"
                   onClick={() => setMenuOpen(false)}
-                  className="flex size-10 items-center justify-center rounded-full bg-white"
+                  className="flex size-11 items-center justify-center rounded-full bg-white"
                 >
                   <X className="size-5" />
                 </button>
               </div>
-              <nav className="mt-8 flex flex-col gap-3 text-lg font-bold">
-                <Link href={`/session/${sessionId}/history`}>Xem lịch sử phiên</Link>
-                <Link href={`/session/${sessionId}/contribute`}>Đóng góp câu hỏi</Link>
-                <Link href={`/session/${sessionId}/code`}>Xem mã phiên</Link>
-                <p className="text-sm font-medium text-ink-muted">Mã: {sessionCode}</p>
-                <Link href="/session" className="text-cat-couple-deep">
+              <nav className="mt-6 flex flex-col text-lg font-bold">
+                <Link className="py-2.5" href={`/session/${sessionId}/history`}>
+                  Xem lịch sử phiên
+                </Link>
+                <Link className="py-2.5" href={`/session/${sessionId}/contribute`}>
+                  Đóng góp câu hỏi
+                </Link>
+                <Link className="py-2.5" href={`/session/${sessionId}/code`}>
+                  Xem mã phiên
+                </Link>
+                <p className="py-2 text-sm font-medium text-ink-muted">
+                  Mã: {sessionCode}
+                </p>
+                <Link className="py-2.5 text-cat-couple-deep" href="/session">
                   Thoát phiên
                 </Link>
               </nav>
