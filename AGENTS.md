@@ -35,6 +35,25 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for system structure, data model, and the
 3. If suitable functionality already exists, **reuse it** — do not introduce a new helper/utility.
 4. Only add a new helper after confirming neither dependencies nor the existing codebase already solve it.
 
+## Motion (mandatory for every user flow)
+
+Every screen and every user action must animate. A flow is not done when it merely works.
+
+**Required coverage per screen:**
+
+1. **Entry** — the screen's blocks stagger in (`screenContainer` + `screenItem`).
+2. **Every interactive control** — buttons, cards, chips, list rows get `whileTap={{ scale: TAP_SCALE }}`.
+3. **State changes** — conditional UI (errors, toasts, badges, extra fields, busy labels) mounts/unmounts through `AnimatePresence`, never a hard swap.
+4. **Async work** — in-flight state animates (e.g. the button label swaps to "Đang gửi…", the input dims/scales while joining).
+5. **Failure** — validation errors animate in and the offending control shakes.
+
+**Rules:**
+
+- Import motion tokens from `lib/motion.ts` — never inline durations, eases, or scales.
+- Reuse `screenContainer` / `screenItem` for page-level staggering instead of re-declaring variants.
+- Respect reduced motion: pass `disableForReducedMotion` for confetti-style effects, and keep animation decorative, never load-bearing.
+- No audio — animation stays silent (see PLAN-003 rules).
+
 ## Technical rules (PLAN-001)
 
 - Prisma 7: schema in `prisma/schema.prisma`, config in `prisma.config.ts`, client output in `generated/prisma`. Import from `@/generated/prisma/client` and `@/generated/prisma/enums`.
@@ -57,3 +76,13 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for system structure, data model, and the
 - `withSessionLock` keys `lock:session:${sessionId}` via `SET NX PX 5000`. Spin contention returns `error: "busy"` — do not block/retry. PLAN-005 may still harden Lua release.
 - No audio on wheel, confetti, or card flip. Menu history/contribute/code routes stay stubs until PLAN-004.
 - Do not import client play components from Server Actions; keep eligibility helpers in `lib/game/`.
+
+## Technical rules (PLAN-004)
+
+- `joinSessionByCode` is a full snapshot copy via `lib/game/copy-session.ts` — never a lookup. Source sessions are never locked or mutated, and the same `sessionCode` can be copied unlimited times.
+- Copy remaps `SessionPlayer` ids one-by-one (no `createManyAndReturn` index assumptions) and preserves source `answeredAt` values.
+- Contribute auto-tagging is pure state in `lib/game/contribute-form.ts`: `toggleContributeCategory` returns `{ categories, autoTagged }`. Only `FRIENDS` auto-adds `BOYS`+`GIRLS`; `COUPLE` is never auto-tagged.
+- `SubmitQuestionInput` validation is server-side (`parseContributeCategories` / `parseQuestionTitle` / `parseQuestionType`); contributions go straight into the pool with no approval step.
+- Nickname is written only while `User.displayName` is null; extract copy/UI strings to `lib/constants.ts` (see `HISTORY_DELETED_LABEL`, `CONTRIBUTE_THANKS_TOAST`).
+- Motion tokens moved from `lib/game/play-motion.ts` to `lib/motion.ts` (that file is deleted). `lib/motion.ts` also exports the shared `screenContainer` / `screenItem` stagger variants used by every PLAN-004 screen.
+- PLAN-004 screens are animated end to end: code view staggers digits and animates the copy label, contribute form staggers its fields and animates the "tự động" badge / nickname field / error / toast, history rows slide in, and Session Home shakes the input on a bad code.

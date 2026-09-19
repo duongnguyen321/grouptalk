@@ -124,3 +124,15 @@ function ContributeForm() {
 - [x] Technical todos listed sequentially?
 - [x] Source code files referenced accurately?
 - [x] Manual test checklist defined?
+
+## Implementation notes (2026-09-19)
+
+- Snapshot copy lives in `lib/game/copy-session.ts`; `joinSessionByCode` now calls it (lookup stub removed). One Prisma transaction creates the new `GameSession` + remapped `SessionPlayer` ids + re-timestamped `SessionAnswer` rows. The source session is never read-locked or mutated, so the same code can be copied repeatedly.
+- `SessionAnswer.answeredAt` is copied from the source rather than defaulted to now, so history order survives the copy.
+- Contribute helpers are pure and unit-tested in `lib/game/contribute-form.ts` / `.test.ts`: `toggleContributeCategory` returns `{ categories, autoTagged }` so the "tự động" badge disappears when a user un-ticks an auto-added BOYS/GIRLS (un-ticking FRIENDS drops its auto-added pair, but keeps manually chosen ones).
+- Contribute screen is `components/session/contribute-form.tsx` + `app/session/[sessionId]/contribute/actions.ts` (`submitQuestion`, `loadContributeContext`). Guest nickname is only written when `User.displayName` is still null — later contributions never re-prompt.
+- History screen is `components/session/session-history.tsx` (server-rendered list); the `HISTORY_DELETED_LABEL` badge only renders for `Question.isDeleted`.
+- Session code screen is `components/session/session-code-view.tsx` (big 8 digits + clipboard copy).
+- Play menu links already pointed at the real routes, so `play/page.tsx` needed no change.
+- Motion pass (2026-09-19): shared tokens now live in `lib/motion.ts` (the old `lib/game/play-motion.ts` is deleted and all play components import the new path). PLAN-004 screens follow the mandatory AGENTS.md motion rule — `SessionCodeView` staggers the 8 digits and animates the Copy→Đã copy label, `ContributeForm` staggers its fields and animates the "tự động" badge, nickname field, error, busy label and thank-you toast, `SessionHistory` slides rows in via `AnimatePresence`, and `SessionHome` shakes the code input on an invalid code.
+- Manual test checklist below still unchecked — motion was verified by lint/typecheck only, not in a browser.

@@ -22,9 +22,32 @@ export interface Question {
 }
 
 const TARGET_URLS: string[] = [
+  // Nguồn ban đầu
   "https://www.wikihow.vn/C%C3%A1c-c%C3%A2u-h%E1%BB%8Fi-c%E1%BB%A7a-tr%C3%B2-ch%C6%A1i-S%E1%BB%B1-Th%E1%BA%ADt-hay-Th%E1%BB%AD-Th%C3%A1ch-cho-thanh-thi%E1%BA%BFu-ni%C3%AAn",
   "https://ahaslides.com/vi/blog/truth-or-dare-questions/",
   "https://mytour.vn/vi/blog/bai-viet/280-cau-hoi-su-that-hoac-thu-thach-tot-nhat-de-lam-nong-dem-choi-tiep-theo-cua-ban.html",
+
+  // Style Magazine (Bộ sưu tập 315 câu hỏi Truth or Dare đỉnh cao)
+  "https://stylemagazine.vn/315-cau-hoi-truth-or-dare-dinh-cao/",
+
+  // Toz App (Nguồn chuyên tiệc, drinking game, cặp đôi, bạn bè, crush tiếng Việt)
+  "https://toz-app.com/vi/blog/party-games/200-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/party-games/100-friends-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/party-games/100-couples-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/party-games/100-funny-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/party-games/100-teens-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/party-games/158-questions-to-ask-your-crush",
+  "https://toz-app.com/vi/blog/drinking-games/117-couples-truth-or-drink-questions",
+  "https://toz-app.com/vi/blog/drinking-games/114-friends-truth-or-drink-questions",
+  "https://toz-app.com/vi/blog/drinking-games/108-funny-truth-or-drink-questions",
+  "https://toz-app.com/vi/blog/party-games/147-friends-21-questions",
+  "https://toz-app.com/vi/blog/party-games/121-couples-21-questions",
+  "https://toz-app.com/vi/blog/party-games/169-couples-quiz-questions",
+  "https://toz-app.com/vi/blog/party-games/100-friends-never-have-i-ever-questions",
+  "https://toz-app.com/vi/blog/party-games/100-couples-never-have-i-ever-questions",
+  "https://toz-app.com/vi/blog/party-games/100-juicy-truth-or-dare-questions",
+  "https://toz-app.com/vi/blog/drinking-games/124-hot-truth-or-drink-questions",
+  "https://toz-app.com/vi/blog/party-games/168-juicy-21-questions",
 ];
 
 const BLACKLIST_KEYWORDS = [
@@ -54,6 +77,52 @@ const BLACKLIST_KEYWORDS = [
   "câu hỏi thật hay",
   "làm nóng đêm chơi",
   "thảo luận về các chủ đề",
+];
+
+// Danh sách từ vựng chức năng cốt lõi tiếng Việt
+const VIETNAMESE_CORE_WORDS = [
+  "bạn",
+  "người",
+  "ai",
+  "của",
+  "là",
+  "trong",
+  "có",
+  "không",
+  "gì",
+  "nào",
+  "đã",
+  "từng",
+  "chưa",
+  "khi",
+  "ở",
+  "với",
+  "cho",
+  "mình",
+  "anh",
+  "em",
+  "được",
+  "làm",
+  "thế",
+  "này",
+  "đó",
+  "nếu",
+  "hãy",
+  "điều",
+  "cái",
+  "bao",
+  "nhiêu",
+  "tại",
+  "sao",
+  "vì",
+  "nhất",
+  "thích",
+  "yêu",
+  "nói",
+  "hỏi",
+  "chuyện",
+  "lần",
+  "một",
 ];
 
 // Danh sách động từ mệnh lệnh/hành động mở đầu của một CHALLENGE
@@ -141,6 +210,34 @@ function hasAnyWord(text: string, phrases: string[]): boolean {
   return phrases.some((phrase) => hasWord(text, phrase));
 }
 
+// Kiểm tra bảo đảm 100% câu tiếng Việt hợp lệ
+function isVietnamese(text: string): boolean {
+  // 1. Loại trừ URL, link hoặc ký hiệu tham chiếu
+  if (/\b(https?:\/\/|www\.|\.com|\.vn|\.org|\.net)\b/i.test(text)) return false;
+  if (/^[↑\*\-\#\>\@]/i.test(text)) return false;
+
+  // 2. Phải có tối thiểu 2 nguyên âm có dấu thanh tiếng Việt
+  const diacriticMatches = text.match(
+    /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/gi,
+  );
+  if (!diacriticMatches || diacriticMatches.length < 2) {
+    return false;
+  }
+
+  // 3. Không chứa các hệ ký tự ngoại ngữ (Hán, Hàn, Nhật, Cyrillic, Thái, Ả Rập...)
+  if (
+    /[\u0400-\u04FF\u4E00-\u9FFF\u3040-\u30FF\uAC00-\uD7AF\u0E00-\u0E7F\u0600-\u06FF]/.test(
+      text,
+    )
+  ) {
+    return false;
+  }
+
+  // 4. Phải chứa ít nhất 1 từ ngữ pháp cốt lõi tiếng Việt
+  const words = text.toLowerCase().split(/[\s,?.!;:()"]+/);
+  return VIETNAMESE_CORE_WORDS.some((w) => words.includes(w));
+}
+
 function cleanText(raw: string): {
   title: string;
   isExplicitChallenge: boolean;
@@ -179,6 +276,14 @@ function cleanText(raw: string): {
     modified = prev !== text;
   }
 
+  // Chuẩn hóa cấu trúc "Tôi chưa bao giờ..." (Never Have I Ever) thành câu hỏi YES/NO tự nhiên
+  if (/^tôi chưa bao giờ\s+/i.test(text)) {
+    text = text.replace(/^tôi chưa bao giờ\s+/i, "Bạn đã bao giờ ");
+    if (!text.endsWith("?")) {
+      text = text.replace(/[\.\s]*$/, " chưa?");
+    }
+  }
+
   if (text.length > 0) {
     text = text.charAt(0).toUpperCase() + text.slice(1);
   }
@@ -191,6 +296,7 @@ function isValidEntry(text: string): boolean {
 
   if (text.length < 8 || text.length > 220) return false;
   if (BLACKLIST_KEYWORDS.some((kw) => lower.includes(kw))) return false;
+  if (!isVietnamese(text)) return false;
 
   const isQuestion =
     text.endsWith("?") ||

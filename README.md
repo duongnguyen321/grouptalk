@@ -6,9 +6,9 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-003 are implemented: identity, Splash, Session Home, session setup, and the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide). Join-by-code is still a lookup stub; history / contribute / session-code screens are placeholders until PLAN-004.
+PLAN-001 through PLAN-004 are implemented: identity, Splash, Session Home, session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), and community continuity (session-code copy, question contribution, session history).
 
-Next: [plans/PLAN-004-community-continuity.md](plans/PLAN-004-community-continuity.md).
+Next: [plans/PLAN-005-redis-locking.md](plans/PLAN-005-redis-locking.md).
 
 ## Stack
 
@@ -72,4 +72,7 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Session setup wizard: multi-select categories, optional "thích thầm" for Nhóm bạn, player chips (min 2), persisted draft in localStorage until start
 - `startGameSession` writes one `GameSession` and its `SessionPlayer` rows, then clears the draft
 - Play loop: Redis-locked spin, silent ease-out wheel, confetti winner toast, 3 contributor teasers, immediate `SessionAnswer` on reveal, personal vote-hide + 30% global soft-delete
+- Session copy by 8-digit code: entering a code snapshots players + answer history into a brand-new `GameSession` (`copiedFromSessionId`); the source session keeps working and the code can be reused
+- Contribute questions (title, categories with "Nhóm bạn" → automatic Nhóm nam/nữ tagging, topic, type, one-time guest nickname) — inserted straight into the pool, no moderation
+- Session history list of every answered card, flagging questions that were globally removed
 

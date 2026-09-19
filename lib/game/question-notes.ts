@@ -7,3 +7,9 @@ export const QUESTION_TYPE_NOTES: Record<QuestionType, string> = {
     "Đây là câu hỏi thử thách — hãy thực hiện thử thách này!",
   [QuestionType.OPEN_ENDED]: "Trả lời tự do theo cách của bạn.",
 };
+
+export const QUESTION_TYPE_OPTIONS = [
+  { value: QuestionType.YESNO, label: "Có / Không" },
+  { value: QuestionType.CHALLENGE, label: "Thử thách" },
+  { value: QuestionType.OPEN_ENDED, label: "Câu hỏi mở" },
+] as const;

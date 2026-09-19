@@ -21,3 +21,7 @@ export const WINNER_REVEAL_MS = 1500;
 export const CARD_FLIP_MS = 500;
 export const HIDE_TOAST_MS = 2000;
 export const SPIN_BUSY_ERROR = "busy";
+export const QUESTION_TITLE_MIN_LENGTH = 4;
+export const QUESTION_TITLE_MAX_LENGTH = 280;
+export const HISTORY_DELETED_LABEL = "câu hỏi này đã được gỡ khỏi hệ thống";
+export const CONTRIBUTE_THANKS_TOAST = "Cảm ơn bạn đã đóng góp!";

@@ -1,21 +1,40 @@
+import { notFound } from "next/navigation";
+import { SessionHistory } from "@/components/session/session-history";
+import { prisma } from "@/lib/db";
+
 type HistoryPageProps = {
   params: Promise<{ sessionId: string }>;
 };
 
-export default async function SessionHistoryPlaceholderPage({
-  params,
-}: HistoryPageProps) {
+export default async function SessionHistoryPage({ params }: HistoryPageProps) {
   const { sessionId } = await params;
+  const session = await prisma.gameSession.findUnique({
+    where: { id: sessionId },
+    select: { id: true },
+  });
+
+  if (!session) {
+    notFound();
+  }
+
+  const answers = await prisma.sessionAnswer.findMany({
+    where: { sessionId },
+    include: {
+      question: { select: { title: true, isDeleted: true } },
+      sessionPlayer: { select: { displayName: true } },
+    },
+    orderBy: { answeredAt: "asc" },
+  });
 
   return (
-    <main className="flex min-h-full flex-1 flex-col items-center justify-center bg-canvas px-6 text-center">
-      <p className="text-sm tracking-[0.22em] text-ink-muted uppercase">
-        Lịch sử phiên
-      </p>
-      <h1 className="mt-3 font-display text-3xl font-extrabold text-ink">
-        Màn lịch sử sẽ có ở bước sau.
-      </h1>
-      <p className="mt-3 font-mono text-sm text-ink-muted">{sessionId}</p>
-    </main>
+    <SessionHistory
+      sessionId={session.id}
+      rows={answers.map((answer) => ({
+        id: answer.id,
+        playerName: answer.sessionPlayer.displayName,
+        title: answer.question.title,
+        isDeleted: answer.question.isDeleted,
+      }))}
+    />
   );
 }

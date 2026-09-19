@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import {
   loadTeaserCardsAction,
@@ -26,6 +27,14 @@ import {
   categoryLabel,
   primaryCategory,
 } from "@/lib/game/category-tone";
+import {
+  MENU_DURATION_S,
+  PHASE_EASE,
+  phaseCenter,
+  phaseEnter,
+  phaseExit,
+  phaseTransition,
+} from "@/lib/motion";
 import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
 import {
   nextWheelRotation,
@@ -185,13 +194,20 @@ export function PlayScreen({
     <main className="relative flex min-h-full flex-1 flex-col bg-play text-white">
       <header className="flex items-center justify-between px-4 pt-5 pb-3">
         <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <span
+          {categories.map((category, index) => (
+            <motion.span
               key={category}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: index * 0.06,
+                duration: 0.24,
+                ease: [...PHASE_EASE],
+              }}
               className="rounded-full bg-white/12 px-3 py-1 text-sm font-bold"
             >
               {categoryIcon(category)} {categoryLabel(category)}
-            </span>
+            </motion.span>
           ))}
         </div>
         <button
@@ -204,57 +220,111 @@ export function PlayScreen({
         </button>
       </header>
 
-      {(phase === "idle" || phase === "spinning") && (
-        <section className="flex flex-1 flex-col items-center justify-center px-4">
-          <Wheel
-            players={players}
-            categories={categories}
-            rotation={rotation}
-            durationMs={spinMs}
-            spinning={spinning}
-            onSpinComplete={finishSpin}
-          />
-          <Button
-            type="button"
-            disabled={phase !== "idle" || busy}
-            onClick={handleSpin}
-            className="mt-8 size-28 rounded-full bg-cat-friends text-2xl font-extrabold text-ink shadow-[0_12px_28px_rgba(225,112,85,0.45)] hover:bg-cat-friends/90 disabled:opacity-50"
+      <AnimatePresence mode="wait">
+        {(phase === "idle" || phase === "spinning") && (
+          <motion.section
+            key="wheel"
+            initial={phaseEnter}
+            animate={phaseCenter}
+            exit={phaseExit}
+            transition={phaseTransition}
+            className="flex flex-1 flex-col items-center justify-center px-4"
           >
-            QUAY
-          </Button>
-          {error ? (
-            <p className="mt-4 text-center text-sm text-cat-couple">{error}</p>
-          ) : null}
-        </section>
-      )}
+            <Wheel
+              players={players}
+              categories={categories}
+              rotation={rotation}
+              durationMs={spinMs}
+              spinning={spinning}
+              onSpinComplete={finishSpin}
+            />
+            <motion.div
+              animate={
+                spinning
+                  ? { scale: 0.92, opacity: 0.55 }
+                  : { scale: 1, opacity: 1 }
+              }
+              transition={{ duration: 0.22, ease: [...PHASE_EASE] }}
+            >
+              <Button
+                type="button"
+                disabled={phase !== "idle" || busy}
+                onClick={handleSpin}
+                className="mt-8 size-28 rounded-full bg-cat-friends text-2xl font-extrabold text-ink shadow-[0_12px_28px_rgba(225,112,85,0.45)] hover:bg-cat-friends/90 disabled:opacity-50"
+              >
+                QUAY
+              </Button>
+            </motion.div>
+            {error ? (
+              <p className="mt-4 text-center text-sm text-cat-couple">{error}</p>
+            ) : null}
+          </motion.section>
+        )}
 
-      {phase === "winner" && winner ? (
-        <WinnerReveal name={winner.displayName} onDone={afterWinner} />
-      ) : null}
-
-      {phase === "cards" && (
-        <CardSelection cards={cards} disabled={busy} onSelect={reveal} />
-      )}
-
-      {phase === "revealed" && revealed && (
-        <QuestionCard
-          card={revealed}
-          onHide={() => setHideOpen(true)}
-          onNext={resetRound}
-        />
-      )}
-
-      {phase !== "winner" ? (
-        <footer className="flex items-center justify-between px-5 py-4 text-sm text-white/70">
-          <span>{players.length} người chơi</span>
-          <Link
-            href={`/session/${sessionId}/history`}
-            className="underline underline-offset-4"
+        {phase === "winner" && winner ? (
+          <motion.div
+            key="winner"
+            initial={phaseEnter}
+            animate={phaseCenter}
+            exit={phaseExit}
+            transition={phaseTransition}
+            className="flex flex-1 flex-col"
           >
-            Xem lịch sử phiên
-          </Link>
-        </footer>
-      ) : null}
+            <WinnerReveal name={winner.displayName} onDone={afterWinner} />
+          </motion.div>
+        ) : null}
+
+        {phase === "cards" ? (
+          <motion.div
+            key="cards"
+            initial={phaseEnter}
+            animate={phaseCenter}
+            exit={phaseExit}
+            transition={phaseTransition}
+            className="flex min-h-0 flex-1 flex-col"
+          >
+            <CardSelection cards={cards} disabled={busy} onSelect={reveal} />
+          </motion.div>
+        ) : null}
+
+        {phase === "revealed" && revealed ? (
+          <motion.div
+            key="revealed"
+            initial={phaseEnter}
+            animate={phaseCenter}
+            exit={phaseExit}
+            transition={phaseTransition}
+            className="flex min-h-0 flex-1 flex-col"
+          >
+            <QuestionCard
+              card={revealed}
+              onHide={() => setHideOpen(true)}
+              onNext={resetRound}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {phase !== "winner" ? (
+          <motion.footer
+            key="footer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center justify-between px-5 py-4 text-sm text-white/70"
+          >
+            <span>{players.length} người chơi</span>
+            <Link
+              href={`/session/${sessionId}/history`}
+              className="underline underline-offset-4"
+            >
+              Xem lịch sử phiên
+            </Link>
+          </motion.footer>
+        ) : null}
+      </AnimatePresence>
 
       <VoteHideDialog
         open={hideOpen}
@@ -263,38 +333,62 @@ export function PlayScreen({
         onConfirm={confirmHide}
       />
 
-      {toast ? (
-        <p className="fixed inset-x-4 bottom-6 z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg">
-          {toast}
-        </p>
-      ) : null}
+      <AnimatePresence>
+        {toast ? (
+          <motion.p
+            key="toast"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.22, ease: [...PHASE_EASE] }}
+            className="fixed inset-x-4 bottom-6 z-50 rounded-full bg-ink px-4 py-3 text-center text-sm font-bold text-white shadow-lg"
+          >
+            {toast}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
 
-      {menuOpen ? (
-        <div className="fixed inset-0 z-50 bg-ink/55">
-          <aside className="ml-auto flex h-full w-[min(100%,20rem)] flex-col bg-canvas px-5 py-6 text-ink">
-            <div className="flex items-center justify-between">
-              <p className="font-display text-2xl font-extrabold">Menu</p>
-              <button
-                type="button"
-                aria-label="Đóng menu"
-                onClick={() => setMenuOpen(false)}
-                className="flex size-10 items-center justify-center rounded-full bg-white"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <nav className="mt-8 flex flex-col gap-3 text-lg font-bold">
-              <Link href={`/session/${sessionId}/history`}>Xem lịch sử phiên</Link>
-              <Link href={`/session/${sessionId}/contribute`}>Đóng góp câu hỏi</Link>
-              <Link href={`/session/${sessionId}/code`}>Xem mã phiên</Link>
-              <p className="text-sm font-medium text-ink-muted">Mã: {sessionCode}</p>
-              <Link href="/session" className="text-cat-couple-deep">
-                Thoát phiên
-              </Link>
-            </nav>
-          </aside>
-        </div>
-      ) : null}
+      <AnimatePresence>
+        {menuOpen ? (
+          <motion.div
+            key="menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: MENU_DURATION_S }}
+            className="fixed inset-0 z-50 bg-ink/55"
+          >
+            <motion.aside
+              initial={{ x: 48 }}
+              animate={{ x: 0 }}
+              exit={{ x: 48 }}
+              transition={{ duration: MENU_DURATION_S, ease: [...PHASE_EASE] }}
+              className="ml-auto flex h-full w-[min(100%,20rem)] flex-col bg-canvas px-5 py-6 text-ink"
+            >
+              <div className="flex items-center justify-between">
+                <p className="font-display text-2xl font-extrabold">Menu</p>
+                <button
+                  type="button"
+                  aria-label="Đóng menu"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex size-10 items-center justify-center rounded-full bg-white"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
+              <nav className="mt-8 flex flex-col gap-3 text-lg font-bold">
+                <Link href={`/session/${sessionId}/history`}>Xem lịch sử phiên</Link>
+                <Link href={`/session/${sessionId}/contribute`}>Đóng góp câu hỏi</Link>
+                <Link href={`/session/${sessionId}/code`}>Xem mã phiên</Link>
+                <p className="text-sm font-medium text-ink-muted">Mã: {sessionCode}</p>
+                <Link href="/session" className="text-cat-couple-deep">
+                  Thoát phiên
+                </Link>
+              </nav>
+            </motion.aside>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <span className="sr-only">{categoryLabel(accent)}</span>
     </main>

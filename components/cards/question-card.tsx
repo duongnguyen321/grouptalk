@@ -1,9 +1,11 @@
 "use client";
 
 import { Ban } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { QUESTION_TYPE_NOTES } from "@/lib/game/question-notes";
 import { categoryTone } from "@/lib/game/category-tone";
+import { PHASE_EASE } from "@/lib/motion";
 import type { RevealedCard } from "@/lib/game/play-types";
 
 type QuestionCardProps = {
@@ -17,8 +19,14 @@ export function QuestionCard({ card, onHide, onNext }: QuestionCardProps) {
   const initial = card.playerName.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <div className="flex min-h-full flex-1 flex-col px-5 pb-6">
-      <article className="relative mx-auto mt-4 flex min-h-[28rem] w-full max-w-md flex-1 flex-col rounded-[2rem] bg-white p-6 shadow-[0_18px_40px_rgba(28,25,23,0.12)]">
+    <div className="flex min-h-0 flex-1 flex-col px-5 pb-6">
+      <motion.article
+        initial={{ opacity: 0, rotateY: -90, scale: 0.94 }}
+        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+        transition={{ duration: 0.42, ease: [...PHASE_EASE] }}
+        style={{ transformStyle: "preserve-3d" }}
+        className="relative mx-auto mt-4 flex min-h-[28rem] w-full max-w-md flex-1 flex-col rounded-[2rem] bg-white p-6 shadow-[0_18px_40px_rgba(28,25,23,0.12)]"
+      >
         <button
           type="button"
           onClick={onHide}
@@ -47,15 +55,21 @@ export function QuestionCard({ card, onHide, onNext }: QuestionCardProps) {
         <p className="mt-6 text-[0.85rem] leading-snug text-ink-muted">
           💬 {QUESTION_TYPE_NOTES[card.type]}
         </p>
-      </article>
+      </motion.article>
 
-      <Button
-        type="button"
-        onClick={onNext}
-        className="mx-auto mt-5 h-14 w-full max-w-md rounded-full bg-cat-friends-deep text-base font-extrabold text-white hover:bg-cat-friends-deep/90"
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18, duration: 0.28, ease: [...PHASE_EASE] }}
       >
-        Quay tiếp
-      </Button>
+        <Button
+          type="button"
+          onClick={onNext}
+          className="mx-auto mt-5 h-14 w-full max-w-md rounded-full bg-cat-friends-deep text-base font-extrabold text-white hover:bg-cat-friends-deep/90"
+        >
+          Quay tiếp
+        </Button>
+      </motion.div>
     </div>
   );
 }
