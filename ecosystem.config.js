@@ -9,6 +9,7 @@
  * connection pools on the process, and the spin lock is per-session Redis state rather
  * than in-process state.
  */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require("path");
 const fs = require("fs");
 

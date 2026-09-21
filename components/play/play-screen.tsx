@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, LogOut, Menu, PlusCircle, Share2, X } from "lucide-react";
+import { Clock, GitBranch, LogOut, Menu, PlusCircle, Share2, X } from "lucide-react";
 import {
   loadTeaserCardsAction,
   revealCardAction,
@@ -363,12 +363,23 @@ export function PlayScreen({
             className="flex items-center justify-between px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-sm text-white/70"
           >
             <PlayerChipRow players={players} />
-            <Link
-              href={`/session/${sessionId}/history`}
-              className="underline underline-offset-4 hover:text-white"
-            >
-              Xem lịch sử phiên
-            </Link>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/duongnguyen321/grouptalk"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub repository"
+                className="flex size-8 items-center justify-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white active:scale-95"
+              >
+                <GitBranch className="size-4" />
+              </a>
+              <Link
+                href={`/session/${sessionId}/history`}
+                className="underline underline-offset-4 hover:text-white"
+              >
+                Xem lịch sử phiên
+              </Link>
+            </div>
           </motion.footer>
         ) : null}
       </AnimatePresence>

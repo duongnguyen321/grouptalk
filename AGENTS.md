@@ -163,4 +163,14 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Robots policy: public pages (`/`, `/session`, `/session/new/*`, `/contribute`, `/questions`) allow indexing and are exposed in `app/sitemap.ts`. Ephemeral/private session subroutes (`/session/*/play`, `/session/*/code`, `/session/*/history`, `/session/manage`) strictly set `robots: { index: false, follow: false }` and are disallowed in `app/robots.ts`.
 - Dynamic OpenGraph preview card is served via `app/opengraph-image.tsx` using `ImageResponse` with 1200x630 dimension, brand category gradients, and zero emoji policy.
 
+## Technical rules (PLAN-013)
+
+- CI workflow (`.github/workflows/ci.yml`) runs on PRs and pushes to `main` and feature branches. Steps: setup-bun (`1.4.0`), frozen install, `prisma generate`, `eslint`, `tsc --noEmit`, `bun test`, and `next build` validation.
+- CD workflow (`.github/workflows/deploy-production.yml`) runs on push to `main` with concurrency group `grouptalk-production` (`cancel-in-progress: false`).
+- SSH deployment connects via `appleboy/ssh-action@v1.2.4` using secrets `GROUPTALK_IP`, `GROUPTALK_USERNAME`, `GROUPTALK_PASSWORD` (or `GROUPTALK_SSH_KEY`), targeting `GROUPTALK_PATH`.
+- Deployment lifecycle pulls code, starts Docker containers (`postgres`, `redis`), checks health, runs `bun install --frozen-lockfile`, `prisma migrate deploy`, `prisma generate`, `bun run build`, copies standalone assets (`public/`, `.next/static/`), and reloads PM2 (`pm2 reload ecosystem.config.js --update-env`).
+- Relative date formatting belongs in `lib/date.ts` (`formatRelativeTime`) rather than inline component functions to prevent React 19 purity warnings with `Date.now()`.
+- Zero emoji policy strictly maintained across all GitHub Actions YAML steps, terminal logs, and documentation.
+
+
 

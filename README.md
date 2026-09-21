@@ -6,7 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-012 are implemented: identity, Splash, Session Home (with recent sessions list & community overview stats), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), and full-route SEO optimization for production domain `https://grouptalk.t5edu.site`.
+PLAN-001 through PLAN-013 are implemented: identity, Splash, Session Home (with recent sessions list & community overview stats), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), full-route SEO optimization for production domain `https://grouptalk.t5edu.site`, and automated CI/CD GitHub Actions for pull requests and SSH production deployment.
 
 ## Stack
 
@@ -82,6 +82,7 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Crush boost questions (PLAN-009): when 'Thích thầm' is enabled, teaser card selection guarantees 1 emotional question ('Thích thầm' / 'Tình cảm' with fallback to 'Kỷ niệm') plus 2 topic-weighted questions (3x for romantic topics, 2x for memories), with random disguise shuffling and zero regression when disabled
 - Author access control (PLAN-010): strict session ownership protection with cookie-synced guest deviceId and unauthorized redirect banners
 - Question stats & explorer (PLAN-011): real-time question and SessionPlayer participation counters on Splash and Session Home, and an interactive `/questions` library with horizontal topic filters, question type badges, category tags, and 20-item infinite scroll
+- Automated CI/CD (PLAN-013): GitHub Actions workflows for continuous integration validation and automated SSH production deployment to VPS
 
 ## Production deploy
 
@@ -92,4 +93,32 @@ Bare Node process under PM2; Postgres and Redis services are managed via Docker 
 3. Run `./scripts/deploy.sh`. It pulls, starts and verifies health of Postgres and Redis containers via Docker Compose, runs `prisma migrate deploy` + `generate`, builds the standalone output, copies `public/` and `.next/static` in beside `server.js`, then `pm2 reload`s.
 
 The PM2 app listens on port **30300** (configurable via `PORT` in `.env.production`); put a reverse proxy (nginx/Caddy) in front for TLS. `pm2 startup && pm2 save` once, so the app survives a reboot.
+
+## CI/CD with GitHub Actions
+
+Two automated workflows are configured in `.github/workflows/`:
+
+1. **CI (`.github/workflows/ci.yml`)**:
+   - Triggers on pull requests to `main` and pushes to `main` / `feature/**` / `fix/**`.
+   - Runs `bun install --frozen-lockfile`, `prisma generate`, `bun run lint`, `bunx tsc --noEmit`, `bun test`, and `bun run build`.
+
+2. **Deploy (`.github/workflows/deploy-production.yml`)**:
+   - Triggers on push to `main` or manual dispatch.
+   - Deploys via SSH to VPS using `appleboy/ssh-action@v1.2.4` and reloads PM2.
+
+### Required GitHub Secrets
+
+Configure the following secrets in GitHub Repository Settings -> Secrets and variables -> Actions:
+
+| Secret | Required | Description |
+|---|---|---|
+| `GROUPTALK_IP` | Yes | VPS IP or hostname |
+| `GROUPTALK_USERNAME` | Yes | SSH username |
+| `GROUPTALK_PASSWORD` | Yes* | SSH password (*or provide `GROUPTALK_SSH_KEY`) |
+| `GROUPTALK_SSH_KEY` | Optional | SSH private key (if key auth is used) |
+| `GROUPTALK_PORT` | Optional | SSH port (defaults to 22) |
+| `GROUPTALK_PATH` | Yes | Project directory on VPS (e.g. `/var/www/grouptalk`) |
+| `GROUPTALK_GIT_USERNAME` | Optional | GitHub username for private repo git auth |
+| `GROUPTALK_GIT_TOKEN` | Optional | GitHub Personal Access Token for private repo git auth |
+
 

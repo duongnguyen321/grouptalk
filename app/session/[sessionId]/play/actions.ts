@@ -9,7 +9,7 @@ import {
 } from "@/lib/game/eligibility";
 import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
 import { loadRevealedCard, pickThreeQuestions } from "@/lib/game/select-question";
-import { getCurrentUser, getCurrentUserOrNull } from "@/lib/identity";
+import { getCurrentUserOrNull } from "@/lib/identity";
 import { LockContentionError, withSessionLock } from "@/lib/redis-lock";
 
 type ActionFail = { ok: false; error: string };

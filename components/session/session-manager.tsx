@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Clock,
   FolderOpen,
@@ -27,6 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { categoryIcon, categoryLabel } from "@/lib/game/category-tone";
+import { formatRelativeTime } from "@/lib/date";
 import {
   clearRecentSessions,
   getRecentSessionsServerSnapshot,
@@ -34,7 +35,7 @@ import {
   removeRecentSession,
   subscribeRecentSessions,
 } from "@/lib/recent-sessions";
-import { PHASE_EASE, screenContainer, screenItem, TAP_SCALE } from "@/lib/motion";
+import { screenContainer, screenItem, TAP_SCALE } from "@/lib/motion";
 
 export function SessionManager() {
   const router = useRouter();
@@ -61,21 +62,7 @@ export function SessionManager() {
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  function formatRelativeTime(dateStr: string) {
-    try {
-      const date = new Date(dateStr);
-      const diffMs = Date.now() - date.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-      if (diffMins < 1) return "Vừa xong";
-      if (diffMins < 60) return `${diffMins} phút trước`;
-      const diffHours = Math.floor(diffMins / 60);
-      if (diffHours < 24) return `${diffHours} giờ trước`;
-      const diffDays = Math.floor(diffHours / 24);
-      return `${diffDays} ngày trước`;
-    } catch {
-      return "";
-    }
-  }
+
 
   function handleDelete(sessionId: string) {
     removeRecentSession(sessionId);

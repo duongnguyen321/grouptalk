@@ -208,7 +208,17 @@ Based on §4:
 - [x] Dynamic OpenGraph preview image `app/opengraph-image.tsx` (1200x630)
 - [x] Full SEO metadata across all 10 page routes with canonical URLs and keywords
 
+## Phase 22 — CI/CD GitHub Actions (PLAN-013)
 
+- [x] Fix ESLint purity `Date.now()` and extract shared `lib/date.ts` (`formatRelativeTime`)
+- [x] Fix PM2 `ecosystem.config.js` ESLint require-import compatibility
+- [x] Clean unused imports in `play/actions.ts` and `session-manager.tsx`
+- [x] Add database availability guard in `lib/game/priority-spin.test.ts` for clean test runs in isolated environments
+- [x] Verify local quality checks: `bun run lint` (0 errors), `bunx tsc --noEmit` (0 errors), `bun test` (48 pass), `bun run build` (success)
+- [x] Create GitHub Actions CI workflow `.github/workflows/ci.yml` (Lint, Typecheck, Test, Next.js standalone build verification)
+- [x] Create GitHub Actions CD workflow `.github/workflows/deploy-production.yml` (SSH deploy via `appleboy/ssh-action@v1.2.4`, change detection, PM2 reload)
+- [x] Document required `GROUPTALK_*` GitHub Secrets in `README.md` and `PLAN-013-cicd-github-actions.md`
+- [x] Maintain strict Zero Emoji policy across workflows, logs, and documentation
 
 ---
 

@@ -1,0 +1,234 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: grouptalk-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect deployment-sensitive changes
+        id: changes
+        shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${BEFORE_SHA:-}" ]] || [[ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]] || ! git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+            is_initial=true
+          else
+            is_initial=false
+          fi
+
+          if [[ "$is_initial" == "true" ]]; then
+            mapfile -t changed_files < <(git diff-tree --no-commit-id --name-only -r "$AFTER_SHA")
+            commit_count=1
+            commit_titles="$(git log -1 --format='- %h %s' "$AFTER_SHA")"
+          else
+            mapfile -t changed_files < <(git diff --name-only "$BEFORE_SHA" "$AFTER_SHA")
+            commit_count="$(git rev-list --count "$BEFORE_SHA..$AFTER_SHA")"
+            commit_titles="$(git log --reverse --format='- %h %s' "$BEFORE_SHA..$AFTER_SHA")"
+          fi
+
+          main_schema_changed=false
+          package_json_changed=false
+          infra_changed=false
+
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              prisma/schema.prisma|prisma/migrations/*)
+                main_schema_changed=true
+                ;;
+              package.json|bun.lock)
+                package_json_changed=true
+                ;;
+              ecosystem.config.js|docker-compose.yml|scripts/deploy.sh)
+                infra_changed=true
+                ;;
+            esac
+          done
+
+          echo "main_schema=$main_schema_changed" >> "$GITHUB_OUTPUT"
+          echo "package_json=$package_json_changed" >> "$GITHUB_OUTPUT"
+          echo "infra=$infra_changed" >> "$GITHUB_OUTPUT"
+          echo "commit_count=$commit_count" >> "$GITHUB_OUTPUT"
+          echo "commit_titles<<EOF" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$commit_titles" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy over SSH
+        id: deploy
+        uses: appleboy/ssh-action@v1.2.4
+        env:
+          GROUPTALK_PATH: ${{ secrets.GROUPTALK_PATH }}
+          GROUPTALK_GIT_USERNAME: ${{ secrets.GROUPTALK_GIT_USERNAME }}
+          GROUPTALK_GIT_TOKEN: ${{ secrets.GROUPTALK_GIT_TOKEN }}
+          GROUPTALK_GIT_REPOSITORY: ${{ github.repository }}
+          MAIN_SCHEMA_CHANGED: ${{ steps.changes.outputs.main_schema }}
+          PACKAGE_JSON_CHANGED: ${{ steps.changes.outputs.package_json }}
+          INFRA_CHANGED: ${{ steps.changes.outputs.infra }}
+        with:
+          host: ${{ secrets.GROUPTALK_IP }}
+          port: ${{ secrets.GROUPTALK_PORT || 22 }}
+          username: ${{ secrets.GROUPTALK_USERNAME }}
+          password: ${{ secrets.GROUPTALK_PASSWORD }}
+          key: ${{ secrets.GROUPTALK_SSH_KEY }}
+          envs: GROUPTALK_PATH,GROUPTALK_GIT_USERNAME,GROUPTALK_GIT_TOKEN,GROUPTALK_GIT_REPOSITORY,MAIN_SCHEMA_CHANGED,PACKAGE_JSON_CHANGED,INFRA_CHANGED
+          command_timeout: 25m
+          script: |
+            set -eu
+
+            echo "Starting deployment at $(date -u '+%Y-%m-%d %H:%M:%SZ')"
+
+            if [ -z "${GROUPTALK_PATH:-}" ]; then
+              echo "Error: GROUPTALK_PATH is not configured in secrets." >&2
+              exit 1
+            fi
+
+            cd "$GROUPTALK_PATH"
+
+            # Setup environment PATH for Bun, Node and PM2
+            if command -v bun >/dev/null 2>&1; then
+              bun_bin_dir="$(dirname "$(command -v bun)")"
+            elif [ -n "${HOME:-}" ] && [ -x "$HOME/.bun/bin/bun" ]; then
+              bun_bin_dir="$HOME/.bun/bin"
+            else
+              echo "Error: Bun was not found in PATH or $HOME/.bun/bin/bun." >&2
+              exit 127
+            fi
+
+            PATH="$bun_bin_dir:$PATH"
+
+            if [ -n "${HOME:-}" ]; then
+              for candidate_node_path in \
+                "$HOME"/.nvm/versions/node/*/bin \
+                "$HOME"/.volta/bin \
+                "$HOME"/.local/share/mise/installs/node/*/bin \
+                "$HOME"/.asdf/installs/nodejs/*/bin \
+                "$HOME"/.local/share/fnm/node-versions/*/installation/bin
+              do
+                if [ -d "$candidate_node_path" ]; then
+                  PATH="$candidate_node_path:$PATH"
+                fi
+              done
+            fi
+            export PATH
+
+            command -v bun >/dev/null 2>&1 || {
+              echo "Error: bun is required on the host." >&2
+              exit 1
+            }
+            command -v bunx >/dev/null 2>&1 || {
+              echo "Error: bunx is required on the host." >&2
+              exit 1
+            }
+            command -v pm2 >/dev/null 2>&1 || {
+              echo "Error: pm2 is required on the host (npm i -g pm2)." >&2
+              exit 1
+            }
+
+            # Detect Docker Compose
+            if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+              DOCKER_COMPOSE="docker compose"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              DOCKER_COMPOSE="docker-compose"
+            else
+              echo "Error: docker compose is required." >&2
+              exit 1
+            fi
+
+            echo "Pulling latest changes from GitHub..."
+            if [ -n "${GROUPTALK_GIT_USERNAME:-}" ] && [ -n "${GROUPTALK_GIT_TOKEN:-}" ]; then
+              git_askpass_path="$(mktemp "${TMPDIR:-/tmp}/grouptalk-git-askpass.XXXXXX")"
+              printf '%s\n' \
+                '#!/bin/sh' \
+                'case "$1" in' \
+                '  *Username*) printf "%s\n" "$GROUPTALK_GIT_USERNAME" ;;' \
+                '  *Password*) printf "%s\n" "$GROUPTALK_GIT_TOKEN" ;;' \
+                'esac' > "$git_askpass_path"
+              chmod 700 "$git_askpass_path"
+
+              GIT_ASKPASS="$git_askpass_path" GIT_TERMINAL_PROMPT=0 \
+                git fetch "https://github.com/$GROUPTALK_GIT_REPOSITORY.git" main
+              git reset --hard FETCH_HEAD
+              rm -f "$git_askpass_path"
+            else
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
+            echo "Ensuring Postgres and Redis containers are healthy..."
+            $DOCKER_COMPOSE up -d postgres redis
+
+            wait_for_healthy() {
+              local service="$1"
+              local timeout="${2:-60}"
+              local elapsed=0
+              local interval=2
+
+              while [ "$elapsed" -lt "$timeout" ]; do
+                local container_id
+                container_id="$($DOCKER_COMPOSE ps -q "$service" 2>/dev/null || true)"
+                if [ -n "$container_id" ]; then
+                  local status
+                  status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$container_id" 2>/dev/null || true)"
+                  if [ "$status" = "healthy" ]; then
+                    echo "Service ${service} is healthy."
+                    return 0
+                  elif [ "$status" = "unhealthy" ]; then
+                    echo "Error: ${service} reported unhealthy status." >&2
+                    return 1
+                  fi
+                fi
+                sleep "$interval"
+                elapsed=$((elapsed + interval))
+              done
+
+              echo "Warning: Health check wait timed out for ${service} (${timeout}s). Continuing..."
+              return 0
+            }
+
+            wait_for_healthy postgres 40 || true
+            wait_for_healthy redis 20 || true
+
+            echo "Installing dependencies..."
+            bun install --frozen-lockfile
+
+            echo "Applying database migrations and generating client..."
+            bunx prisma migrate deploy
+            bunx prisma generate
+
+            echo "Building standalone production package..."
+            bun run build
+
+            echo "Syncing public and static assets beside server.js..."
+            mkdir -p .next/standalone/public .next/standalone/.next
+            cp -R public/. .next/standalone/public/
+            cp -R .next/static/. .next/standalone/.next/static/
+
+            echo "Reloading PM2 process..."
+            pm2 reload ecosystem.config.js --update-env
+            pm2 save
+
+            echo "GroupTalk deployed successfully: $(git rev-parse --short HEAD)"

@@ -7,6 +7,7 @@ import { signInWithGoogle } from "@/app/auth/actions";
 import { getDeviceId, getOrCreateDeviceId } from "@/lib/device";
 import { createSessionDraft } from "@/app/session/actions";
 import { StatsOverviewCard } from "@/components/ui/stats-overview-card";
+import { SiteFooter } from "@/components/ui/site-footer";
 import type { OverviewStats } from "@/app/questions/actions";
 
 type SplashScreenProps = {
@@ -135,6 +136,8 @@ export function SplashScreen({
           >
             Đóng góp câu hỏi
           </Link>
+
+          <SiteFooter className="pt-2 pb-0" />
         </div>
       </div>
     </main>
