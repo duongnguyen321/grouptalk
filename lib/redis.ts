@@ -5,10 +5,7 @@ const globalForRedis = globalThis as unknown as {
 };
 
 function createRedis() {
-  const url = process.env.REDIS_URL;
-  if (!url) {
-    throw new Error("REDIS_URL is not set");
-  }
+  const url = process.env.REDIS_URL || "redis://127.0.0.1:6380";
 
   return new Redis(url, {
     maxRetriesPerRequest: 2,

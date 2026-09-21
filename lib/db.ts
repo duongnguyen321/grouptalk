@@ -8,10 +8,9 @@ const globalForDb = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL is not set");
-  }
+  const connectionString =
+    process.env.DATABASE_URL ||
+    "postgresql://postgres:postgres@127.0.0.1:5433/grouptalk";
 
   const pool =
     globalForDb.pool ??
