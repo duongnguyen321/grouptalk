@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Baloo_2 } from "next/font/google";
 import { AuthSessionProvider } from "@/components/providers/session-provider";
@@ -85,7 +86,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="vi" className={`${baloo.variable} h-full antialiased`}>
       <body

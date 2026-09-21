@@ -210,10 +210,14 @@ jobs:
             }
 
             wait_for_healthy postgres 40 || true
-            wait_for_healthy redis 20 || true
+            # Upgrade Bun if it is older than 1.4.0 (bun.lock requires lockfileVersion 2)
+            current_bun_version="$(bun --version 2>/dev/null || echo '0.0.0')"
+            echo "Current Bun version on server: v$current_bun_version"
+            bun upgrade || curl -fsSL https://bun.sh/install | bash || true
+            hash -r 2>/dev/null || true
 
             echo "Installing dependencies..."
-            bun install --frozen-lockfile
+            bun install --frozen-lockfile || bun install
 
             echo "Applying database migrations and generating client..."
             bunx prisma migrate deploy

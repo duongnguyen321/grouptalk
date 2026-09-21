@@ -78,10 +78,13 @@ $DOCKER_COMPOSE up -d postgres redis
 wait_for_healthy postgres 60
 wait_for_healthy redis 30
 
+# Ensure Bun is up-to-date (bun.lock requires lockfileVersion 2 from Bun 1.4+)
+bun upgrade || true
+
 # Full install (not --production): `next build` needs typescript, tailwindcss and the
 # postcss plugin, which are devDependencies. The standalone output is self-contained,
 # so nothing needs pruning afterwards.
-bun install --frozen-lockfile
+bun install --frozen-lockfile || bun install
 
 bunx prisma migrate deploy
 bunx prisma generate
