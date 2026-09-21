@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { PlayScreen } from "@/components/play/play-screen";
 import { prisma } from "@/lib/db";
 import { getCurrentUserOrNull } from "@/lib/identity";
+
+export const metadata: Metadata = {
+  title: "Vòng quay & Câu hỏi",
+  description:
+    "Vòng quay ngẫu nhiên và rút 3 thẻ bài câu hỏi bí mật trong phiên chơi GroupTalk.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 type PlayPageProps = {
   params: Promise<{ sessionId: string }>;

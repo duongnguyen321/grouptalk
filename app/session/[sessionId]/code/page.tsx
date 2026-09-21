@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { SessionCodeView } from "@/components/session/session-code-view";
 import { prisma } from "@/lib/db";
 import { getCurrentUserOrNull } from "@/lib/identity";
+
+export const metadata: Metadata = {
+  title: "Mã phiên chơi",
+  description:
+    "Mã 8 số chia sẻ phiên chơi GroupTalk để copy sang thiết bị khác.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 type SessionCodePageProps = {
   params: Promise<{ sessionId: string }>;

@@ -8,9 +8,20 @@ import {
 } from "@/app/questions/actions";
 
 export const metadata: Metadata = {
-  title: "Kho câu hỏi & Thống kê | GroupTalk",
+  title: "Kho câu hỏi & Thống kê",
   description:
-    "Khám phá danh sách câu hỏi đa dạng theo từng chủ đề trong trò chơi GroupTalk.",
+    "Khám phá hàng trăm câu hỏi đa dạng theo từng chủ đề: Thích thầm, Tình cảm, Kỷ niệm, Thử thách... trong trò chơi GroupTalk.",
+  alternates: {
+    canonical: "/questions",
+  },
+  keywords: [
+    "kho câu hỏi deeptalk",
+    "danh sách câu hỏi",
+    "chủ đề câu hỏi",
+    "thống kê câu hỏi grouptalk",
+    "câu hỏi cặp đôi",
+    "câu hỏi bạn bè",
+  ],
 };
 
 export const dynamic = "force-dynamic";

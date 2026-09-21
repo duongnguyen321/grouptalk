@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { SessionHistory } from "@/components/session/session-history";
 import { prisma } from "@/lib/db";
 import { getCurrentUserOrNull } from "@/lib/identity";
+
+export const metadata: Metadata = {
+  title: "Lịch sử phiên chơi",
+  description:
+    "Xem lại danh sách các câu hỏi đã trả lời trong phiên chơi GroupTalk.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 type HistoryPageProps = {
   params: Promise<{ sessionId: string }>;

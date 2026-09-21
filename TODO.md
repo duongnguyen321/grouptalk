@@ -195,6 +195,20 @@ Based on §4:
 - [x] Full-featured `/questions` explorer page with `BackHeader`, horizontal topic chips filter, question type & category badges, and infinite scroll (`app/questions/page.tsx`, `components/questions/questions-explorer.tsx`)
 - [x] Unit test suite in `lib/questions-pagination.test.ts`
 
+## Phase 21 — Brand Icons & Full-Route SEO (PLAN-012)
+
+- [x] AI-generated app icon via Gemini prompt matching PRD §7.6 color palette and squircle aesthetic
+- [x] Automated icon processing script `scripts/process-ai-icon.ts`
+- [x] High-resolution Apple Touch Icon `app/apple-icon.png` (180x180) & `public/apple-icon.png`
+- [x] Multi-resolution 32-bit RGBA `app/favicon.ico` (16, 32, 48 px) & `public/favicon.ico`
+- [x] PWA Icons `public/icon-192.png` & `public/icon-512.png`
+- [x] Web App Manifest `app/manifest.ts` (standalone, theme `#F6F1EA`)
+- [x] Next.js Robots file `app/robots.ts` with public indexing and private session route protection
+- [x] Next.js Sitemap `app/sitemap.ts` with domain `https://grouptalk.t5edu.site`
+- [x] Dynamic OpenGraph preview image `app/opengraph-image.tsx` (1200x630)
+- [x] Full SEO metadata across all 10 page routes with canonical URLs and keywords
+
+
 
 ---
 

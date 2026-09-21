@@ -155,3 +155,12 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Question items display topic badges, question type pills (`YESNO`, `CHALLENGE`, `OPEN_ENDED`), category tags with Lucide icons (`Heart`, `User`, `Users`, `UsersRound`), and contributor credit.
 - Zero emoji policy strictly maintained across all components, actions, and tests.
 
+## Technical rules (PLAN-012)
+
+- Production domain is canonical `https://grouptalk.t5edu.site`. Root `metadataBase` in `app/layout.tsx` is initialized from `NEXT_PUBLIC_APP_URL` falling back to this production URL.
+- All icons (`app/apple-icon.png`, `app/favicon.ico`, `app/icon.png`, `public/icon-192.png`, `public/icon-512.png`) are generated from AI image using `scripts/process-ai-icon.ts`.
+- ICO multi-resolution file must use 32-bit RGBA (`sharp.ensureAlpha()`) to satisfy Next.js Turbopack image decoder constraints.
+- Robots policy: public pages (`/`, `/session`, `/session/new/*`, `/contribute`, `/questions`) allow indexing and are exposed in `app/sitemap.ts`. Ephemeral/private session subroutes (`/session/*/play`, `/session/*/code`, `/session/*/history`, `/session/manage`) strictly set `robots: { index: false, follow: false }` and are disallowed in `app/robots.ts`.
+- Dynamic OpenGraph preview card is served via `app/opengraph-image.tsx` using `ImageResponse` with 1200x630 dimension, brand category gradients, and zero emoji policy.
+
+

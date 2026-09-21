@@ -6,7 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-011 are implemented: identity, Splash, Session Home (with recent sessions list & community overview stats), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, and the question library explorer (/questions) with topic chips filtering and infinite scroll.
+PLAN-001 through PLAN-012 are implemented: identity, Splash, Session Home (with recent sessions list & community overview stats), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), and full-route SEO optimization for production domain `https://grouptalk.t5edu.site`.
 
 ## Stack
 
