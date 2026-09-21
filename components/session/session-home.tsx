@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import {
   ChevronRight,
   Clock,
@@ -20,6 +21,7 @@ import {
 } from "@/app/session/server-actions";
 import { StatsOverviewCard } from "@/components/ui/stats-overview-card";
 import { SiteFooter } from "@/components/ui/site-footer";
+import { UserAccountBar } from "@/components/ui/user-account-bar";
 import type { OverviewStats } from "@/app/questions/actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -78,8 +80,6 @@ function RecentSessions() {
   if (recent.length === 0) {
     return null;
   }
-
-
 
   function handleDelete(sessionId: string) {
     removeRecentSession(sessionId);
@@ -235,13 +235,25 @@ function RecentSessions() {
   );
 }
 
-export function SessionHome({
-  unauthorized,
-  stats,
-}: {
+export type SessionHomeProps = {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    displayName?: string | null;
+  } | null;
   unauthorized?: boolean;
   stats?: OverviewStats;
-} = {}) {
+  googleSignInAvailable?: boolean;
+};
+
+export function SessionHome({
+  user,
+  unauthorized,
+  stats,
+  googleSignInAvailable = true,
+}: SessionHomeProps = {}) {
   const router = useRouter();
   const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
@@ -264,7 +276,6 @@ export function SessionHome({
     seenHome.add(entry.sessionId);
     return true;
   });
-
 
   async function submitCode(value: string) {
     const nextCode = value.replace(/\D/g, "").slice(0, SESSION_CODE_LENGTH);
@@ -306,10 +317,13 @@ export function SessionHome({
             className="flex items-start justify-between gap-4"
           >
             <div>
-              <p className="text-sm font-medium tracking-[0.22em] text-ink-muted uppercase">
-                Bắt đầu buổi chơi
-              </p>
-              <h1 className="mt-3 font-display text-4xl leading-none font-extrabold text-ink">
+              <Link
+                href="/"
+                className="text-sm font-medium tracking-[0.22em] text-ink-muted uppercase transition hover:text-ink"
+              >
+                GroupTalk · Bắt đầu
+              </Link>
+              <h1 className="mt-2 font-display text-4xl leading-none font-extrabold text-ink">
                 Chọn cách vào phiên
               </h1>
             </div>
@@ -322,6 +336,13 @@ export function SessionHome({
               <span>Đóng góp</span>
             </motion.a>
           </motion.header>
+
+          <motion.div variants={screenItem} className="mt-5">
+            <UserAccountBar
+              user={user}
+              googleSignInAvailable={googleSignInAvailable}
+            />
+          </motion.div>
 
           {unauthorized ? (
             <motion.div

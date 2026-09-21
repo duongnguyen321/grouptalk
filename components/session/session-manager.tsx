@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { BackHeader } from "@/components/ui/back-header";
+import { UserAccountBar } from "@/components/ui/user-account-bar";
 import {
   deleteAllMyGameSessions,
   deleteGameSession,
@@ -37,7 +38,21 @@ import {
 } from "@/lib/recent-sessions";
 import { screenContainer, screenItem, TAP_SCALE } from "@/lib/motion";
 
-export function SessionManager() {
+export type SessionManagerProps = {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    displayName?: string | null;
+  } | null;
+  googleSignInAvailable?: boolean;
+};
+
+export function SessionManager({
+  user,
+  googleSignInAvailable = true,
+}: SessionManagerProps = {}) {
   const router = useRouter();
   const localRecent = useSyncExternalStore(
     subscribeRecentSessions,
@@ -61,8 +76,6 @@ export function SessionManager() {
       return true;
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-
 
   function handleDelete(sessionId: string) {
     removeRecentSession(sessionId);
@@ -109,6 +122,13 @@ export function SessionManager() {
             </motion.button>
           ) : null}
         </motion.header>
+
+        <motion.div variants={screenItem} className="mt-4">
+          <UserAccountBar
+            user={user}
+            googleSignInAvailable={googleSignInAvailable}
+          />
+        </motion.div>
 
         {recent.length === 0 ? (
           <motion.div

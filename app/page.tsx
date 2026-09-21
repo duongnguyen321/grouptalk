@@ -20,6 +20,7 @@ export default async function HomePage() {
 
   return (
     <SplashScreen
+      user={session?.user ?? null}
       hasGoogleSession={Boolean(session?.user)}
       googleSignInAvailable={Boolean(
         process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET,

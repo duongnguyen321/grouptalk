@@ -218,9 +218,20 @@ Based on §4:
 - [x] Create GitHub Actions CI workflow `.github/workflows/ci.yml` (Lint, Typecheck, Test, Next.js standalone build verification)
 - [x] Create GitHub Actions CD workflow `.github/workflows/deploy-production.yml` (SSH deploy via `appleboy/ssh-action@v1.2.4`, change detection, PM2 reload)
 - [x] Document required `GROUPTALK_*` GitHub Secrets in `README.md` and `PLAN-013-cicd-github-actions.md`
-- [x] Maintain strict Zero Emoji policy across workflows, logs, and documentation
+## Phase 23 — Auth Flow & Home Overhaul (PLAN-014)
+
+- [x] NextAuth v5 `signOutAction` in `app/auth/actions.ts` supporting programmatic calls and Form Actions
+- [x] Flexible `signInWithGoogle` handling `FormData` and custom redirects
+- [x] Reusable `UserAccountBar` (`components/ui/user-account-bar.tsx`) with zero-emoji Lucide icons, Framer Motion tap scale, and avatar/status display
+- [x] Complete removal of home page redirect trap in `SplashScreen` (`components/splash/splash-screen.tsx`)
+- [x] Server-side user identity passing in `app/page.tsx`, `app/session/page.tsx`, and `app/session/manage/page.tsx`
+- [x] Direct Google login entry point for anonymous players in `/session` and `/session/manage`
+- [x] Direct sign-out button for authenticated Google users across all hub screens
+- [x] Unit test suite in `lib/auth-actions.test.ts` (51 tests passing)
+- [x] Validation: `bun run lint` (0 errors), `bun x tsc --noEmit` (0 errors), `bun test` (51 pass), `bun run build` (success)
 
 ---
+
 
 ## Explicitly Out of Scope for v1 (per PRD §1.2)
 

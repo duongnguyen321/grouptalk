@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SessionManager } from "@/components/session/session-manager";
+import { auth } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Quản lý phiên chơi",
@@ -11,6 +12,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SessionManagePage() {
-  return <SessionManager />;
+export default async function SessionManagePage() {
+  const session = await auth();
+
+  return (
+    <SessionManager
+      user={session?.user ?? null}
+      googleSignInAvailable={Boolean(
+        process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET,
+      )}
+    />
+  );
 }
+

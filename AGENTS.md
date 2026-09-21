@@ -172,5 +172,10 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Relative date formatting belongs in `lib/date.ts` (`formatRelativeTime`) rather than inline component functions to prevent React 19 purity warnings with `Date.now()`.
 - Zero emoji policy strictly maintained across all GitHub Actions YAML steps, terminal logs, and documentation.
 
+## Technical rules (PLAN-014)
 
-
+- NextAuth v5 `signOut` is wrapped in `signOutAction` in `app/auth/actions.ts` and handles both programmatic calls (`redirectTo`) and `<form action={signOutAction}>` submissions.
+- `signInWithGoogle` supports flexible redirection and FormData compatibility for `<form action={signInWithGoogle}>`.
+- Zero redirect trap: The root landing page (`/`, `SplashScreen`) NEVER auto-redirects returning or existing guests to `/session`. Users retain full agency to view stats, read game overview, or click "Chơi ngay" / "Vào phòng chơi".
+- User identity is unified via `UserAccountBar` (`components/ui/user-account-bar.tsx`), rendered on `/`, `/session`, and `/session/manage`. Shows Google profile with "Đăng xuất" or Guest status with 1-click "Đăng nhập Google".
+- Zero emoji policy strictly maintained across all user account bars, landing headers, and actions.

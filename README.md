@@ -6,7 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-013 are implemented: identity, Splash, Session Home (with recent sessions list & community overview stats), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), full-route SEO optimization for production domain `https://grouptalk.t5edu.site`, and automated CI/CD GitHub Actions for pull requests and SSH production deployment.
+PLAN-001 through PLAN-014 are implemented: identity, Splash Landing (with zero redirect trap, clean landing presentation & community overview stats), Session Home (with unified UserAccountBar, sign-in, and sign-out controls), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), full-route SEO optimization for production domain `https://grouptalk.t5edu.site`, and automated CI/CD GitHub Actions for pull requests and SSH production deployment.
 
 ## Stack
 
@@ -50,7 +50,7 @@ Seed loads 6 topics and 16 system questions.
 bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a guest `User` and stores `deviceId` in localStorage. Returning guests skip Splash.
+Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a guest `User` and stores `deviceId` in localStorage. Sign in with Google anytime to sync history across devices.
 
 ## Scripts
 

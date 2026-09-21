@@ -1,7 +1,14 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 
-export async function signInWithGoogle() {
-  await signIn("google", { redirectTo: "/session" });
+export async function signInWithGoogle(redirectToOrFormData?: string | FormData) {
+  const redirectTo = typeof redirectToOrFormData === "string" ? redirectToOrFormData : "/session";
+  await signIn("google", { redirectTo });
 }
+
+export async function signOutAction(redirectToOrFormData?: string | FormData) {
+  const redirectTo = typeof redirectToOrFormData === "string" ? redirectToOrFormData : "/";
+  await signOut({ redirectTo });
+}
+
