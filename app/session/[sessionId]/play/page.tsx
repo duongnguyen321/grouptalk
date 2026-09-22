@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type PlayPageProps = {
   params: Promise<{ sessionId: string }>;
 };
@@ -31,6 +34,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
         categories: true,
         priorityConfig: true,
         selectedTopicIds: true,
+        selectedQuestionTypes: true,
         players: {
           select: { id: true, displayName: true },
           orderBy: { id: "asc" },
@@ -59,6 +63,11 @@ export default async function PlayPage({ params }: PlayPageProps) {
   const initialSelectedTopicIds = Array.isArray(session.selectedTopicIds)
     ? (session.selectedTopicIds as string[])
     : [];
+  const initialSelectedQuestionTypes = Array.isArray(
+    session.selectedQuestionTypes,
+  )
+    ? (session.selectedQuestionTypes as import("@/generated/prisma/enums").QuestionType[])
+    : [];
 
   return (
     <PlayScreen
@@ -69,6 +78,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
       initialWeights={initialWeights}
       allTopics={allTopics}
       initialSelectedTopicIds={initialSelectedTopicIds}
+      initialSelectedQuestionTypes={initialSelectedQuestionTypes}
     />
   );
 }

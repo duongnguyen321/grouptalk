@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Category } from "@/generated/prisma/enums";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import {
   PLAYER_NAME_MAX_LENGTH,
   SESSION_DRAFT_STORAGE_KEY,
@@ -13,6 +13,7 @@ export type SessionDraftSnapshot = {
   categories: Category[];
   crushQuestionEnabled: boolean;
   selectedTopicIds: string[];
+  selectedQuestionTypes: QuestionType[];
   players: string[];
 };
 
@@ -24,6 +25,8 @@ type SessionDraftState = SessionDraftSnapshot & {
   setCrush: (value: boolean) => void;
   setSelectedTopicIds: (ids: string[]) => void;
   toggleTopicId: (id: string) => void;
+  setSelectedQuestionTypes: (types: QuestionType[]) => void;
+  toggleQuestionType: (type: QuestionType) => void;
   addPlayer: (name: string) => { ok: true } | { ok: false; error: string };
   removePlayer: (name: string) => void;
   reset: () => void;
@@ -33,6 +36,7 @@ const emptyDraft: SessionDraftSnapshot = {
   categories: [],
   crushQuestionEnabled: false,
   selectedTopicIds: [],
+  selectedQuestionTypes: [],
   players: [],
 };
 
@@ -83,6 +87,31 @@ export const useSessionDraftStore = create<SessionDraftState>()(
           : [...selectedTopicIds, id];
         set({ selectedTopicIds: next });
       },
+      setSelectedQuestionTypes: (types) => set({ selectedQuestionTypes: types }),
+      toggleQuestionType: (type) => {
+        const { selectedQuestionTypes } = get();
+        const allTypes = [
+          QuestionType.YESNO,
+          QuestionType.CHALLENGE,
+          QuestionType.OPEN_ENDED,
+        ];
+        if (selectedQuestionTypes.length === 0) {
+          const next = allTypes.filter((t) => t !== type);
+          set({ selectedQuestionTypes: next });
+          return;
+        }
+        if (selectedQuestionTypes.includes(type)) {
+          const next = selectedQuestionTypes.filter((t) => t !== type);
+          set({ selectedQuestionTypes: next });
+        } else {
+          const next = [...selectedQuestionTypes, type];
+          if (next.length === allTypes.length) {
+            set({ selectedQuestionTypes: [] });
+          } else {
+            set({ selectedQuestionTypes: next });
+          }
+        }
+      },
       addPlayer: (name) => {
         const normalized = normalizePlayerName(name);
         if (!normalized) {
@@ -119,6 +148,7 @@ export const useSessionDraftStore = create<SessionDraftState>()(
         categories: state.categories,
         crushQuestionEnabled: state.crushQuestionEnabled,
         selectedTopicIds: state.selectedTopicIds,
+        selectedQuestionTypes: state.selectedQuestionTypes,
         players: state.players,
       }),
       onRehydrateStorage: () => () => {

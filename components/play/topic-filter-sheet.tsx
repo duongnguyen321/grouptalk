@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Layers, X } from "lucide-react";
-import { setTopicFilterAction } from "@/app/session/[sessionId]/play/actions";
+import { Check, HelpCircle, Layers, SlidersHorizontal, X } from "lucide-react";
+import { QuestionType } from "@/generated/prisma/enums";
+import { setQuestionFiltersAction } from "@/app/session/[sessionId]/play/actions";
 import { Button } from "@/components/ui/button";
 import { getOrCreateDeviceId } from "@/lib/device";
+import { QUESTION_TYPE_OPTIONS } from "@/lib/game/question-notes";
 import { MENU_DURATION_S, PHASE_EASE, TAP_SCALE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -14,8 +16,12 @@ type TopicFilterSheetProps = {
   sessionId: string;
   allTopics: { id: string; name: string }[];
   activeTopicIds: string[];
+  activeQuestionTypes?: QuestionType[];
   onOpenChange: (open: boolean) => void;
-  onSaved: (topicIds: string[]) => void;
+  onSaved: (filters: {
+    topicIds: string[];
+    questionTypes: QuestionType[];
+  }) => void;
 };
 
 export function TopicFilterSheet({
@@ -23,6 +29,7 @@ export function TopicFilterSheet({
   sessionId,
   allTopics,
   activeTopicIds,
+  activeQuestionTypes = [],
   onOpenChange,
   onSaved,
 }: TopicFilterSheetProps) {
@@ -39,10 +46,11 @@ export function TopicFilterSheet({
           onClick={() => onOpenChange(false)}
         >
           <TopicFilterContent
-            key={activeTopicIds.join(",")}
+            key={`${activeTopicIds.join(",")}_${activeQuestionTypes.join(",")}`}
             sessionId={sessionId}
             allTopics={allTopics}
             activeTopicIds={activeTopicIds}
+            activeQuestionTypes={activeQuestionTypes}
             onOpenChange={onOpenChange}
             onSaved={onSaved}
           />
@@ -56,15 +64,25 @@ function TopicFilterContent({
   sessionId,
   allTopics,
   activeTopicIds,
+  activeQuestionTypes,
   onOpenChange,
   onSaved,
 }: Omit<TopicFilterSheetProps, "open">) {
   const [draftIds, setDraftIds] = useState<string[]>(activeTopicIds);
+  const [draftTypes, setDraftTypes] = useState<QuestionType[]>(
+    activeQuestionTypes ?? [],
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activeCount = draftIds.length === 0 ? allTopics.length : draftIds.length;
-  const hasError = allTopics.length > 0 && activeCount === 0;
+  const activeTopicCount =
+    draftIds.length === 0 ? allTopics.length : draftIds.length;
+  const hasTopicError = allTopics.length > 0 && activeTopicCount === 0;
+
+  const allTypes = QUESTION_TYPE_OPTIONS.map((o) => o.value);
+  const currentActiveTypes =
+    draftTypes.length === 0 ? allTypes : draftTypes;
+  const activeTypeCount = currentActiveTypes.length;
 
   function isTopicActive(topicId: string) {
     if (draftIds.length === 0) {
@@ -73,7 +91,7 @@ function TopicFilterContent({
     return draftIds.includes(topicId);
   }
 
-  function handleToggle(topicId: string) {
+  function handleToggleTopic(topicId: string) {
     setError(null);
     if (draftIds.length === 0) {
       const remaining = allTopics
@@ -96,20 +114,57 @@ function TopicFilterContent({
     }
   }
 
-  function handleSelectAll() {
+  function handleSelectAllTopics() {
     setError(null);
     setDraftIds([]);
   }
 
+  function isTypeActive(type: QuestionType) {
+    if (draftTypes.length === 0) {
+      return true;
+    }
+    return draftTypes.includes(type);
+  }
+
+  function handleToggleType(type: QuestionType) {
+    setError(null);
+    if (currentActiveTypes.includes(type)) {
+      if (currentActiveTypes.length === 1) {
+        return;
+      }
+      const next = currentActiveTypes.filter((t) => t !== type);
+      setDraftTypes(next);
+    } else {
+      const next = [...currentActiveTypes, type];
+      if (next.length === allTypes.length) {
+        setDraftTypes([]);
+      } else {
+        setDraftTypes(next);
+      }
+    }
+  }
+
+  function handleSelectAllTypes() {
+    setError(null);
+    setDraftTypes([]);
+  }
+
   async function handleSave() {
-    if (hasError || isSaving) return;
+    if (hasTopicError || isSaving) return;
 
     setIsSaving(true);
     setError(null);
 
-    const result = await setTopicFilterAction(sessionId, draftIds, {
-      deviceId: getOrCreateDeviceId(),
-    });
+    const result = await setQuestionFiltersAction(
+      sessionId,
+      {
+        topicIds: draftIds,
+        questionTypes: draftTypes,
+      },
+      {
+        deviceId: getOrCreateDeviceId(),
+      },
+    );
 
     setIsSaving(false);
 
@@ -118,7 +173,10 @@ function TopicFilterContent({
       return;
     }
 
-    onSaved(draftIds);
+    onSaved({
+      topicIds: draftIds,
+      questionTypes: draftTypes,
+    });
     onOpenChange(false);
   }
 
@@ -137,14 +195,14 @@ function TopicFilterContent({
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Layers className="size-5 text-ink-muted" />
+          <SlidersHorizontal className="size-5 text-ink-muted" />
           <h2 className="font-display text-xl font-extrabold">
-            Chủ đề câu hỏi
+            Bộ lọc câu hỏi
           </h2>
         </div>
         <motion.button
           type="button"
-          aria-label="Đóng bảng chủ đề"
+          aria-label="Đóng bộ lọc"
           whileTap={{ scale: TAP_SCALE }}
           onClick={() => onOpenChange(false)}
           className="flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-xs hover:bg-white/80"
@@ -153,48 +211,108 @@ function TopicFilterContent({
         </motion.button>
       </div>
 
-      <div className="mt-2 flex items-center justify-between">
-        <p className="text-sm text-ink-muted">
-          Đang bật {activeCount}/{allTopics.length} chủ đề
-        </p>
-        {draftIds.length > 0 ? (
-          <button
-            type="button"
-            onClick={handleSelectAll}
-            className="text-xs font-bold text-cat-friends-deep underline underline-offset-2 hover:opacity-80"
-          >
-            Chọn tất cả
-          </button>
+      <div className="mt-4 flex-1 space-y-5 overflow-y-auto pr-1 pb-4">
+        {/* Dạng câu hỏi Section */}
+        <div className="rounded-2xl border border-ink/5 bg-white p-4 shadow-2xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <HelpCircle className="size-4 text-cat-friends-deep" />
+              <h3 className="text-sm font-extrabold text-ink">
+                Dạng câu hỏi ({activeTypeCount}/{allTypes.length})
+              </h3>
+            </div>
+            {draftTypes.length > 0 ? (
+              <button
+                type="button"
+                onClick={handleSelectAllTypes}
+                className="text-xs font-bold text-cat-friends-deep underline underline-offset-2 hover:opacity-80"
+              >
+                Chọn tất cả
+              </button>
+            ) : null}
+          </div>
+
+          <p className="mt-1 text-xs text-ink-muted">
+            Chọn dạng câu hỏi xuất hiện khi quay vòng.
+          </p>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {QUESTION_TYPE_OPTIONS.map((option) => {
+              const active = isTypeActive(option.value);
+              return (
+                <motion.button
+                  key={option.value}
+                  type="button"
+                  whileTap={{ scale: TAP_SCALE }}
+                  onClick={() => handleToggleType(option.value)}
+                  className={cn(
+                    "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition",
+                    active
+                      ? "bg-cat-friends text-ink shadow-xs"
+                      : "border border-ink/10 bg-canvas text-ink-muted hover:border-ink/20",
+                  )}
+                >
+                  {active ? <Check className="size-3 stroke-[3]" /> : null}
+                  <span>{option.label}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Chủ đề Section */}
+        {allTopics.length > 0 ? (
+          <div className="rounded-2xl border border-ink/5 bg-white p-4 shadow-2xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Layers className="size-4 text-cat-friends-deep" />
+                <h3 className="text-sm font-extrabold text-ink">
+                  Chủ đề câu hỏi ({activeTopicCount}/{allTopics.length})
+                </h3>
+              </div>
+              {draftIds.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={handleSelectAllTopics}
+                  className="text-xs font-bold text-cat-friends-deep underline underline-offset-2 hover:opacity-80"
+                >
+                  Chọn tất cả
+                </button>
+              ) : null}
+            </div>
+
+            <p className="mt-1 text-xs text-ink-muted">
+              Chọn chủ đề mong muốn trong phiên chơi.
+            </p>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {allTopics.map((t) => {
+                const active = isTopicActive(t.id);
+                return (
+                  <motion.button
+                    key={t.id}
+                    type="button"
+                    whileTap={{ scale: TAP_SCALE }}
+                    onClick={() => handleToggleTopic(t.id)}
+                    className={cn(
+                      "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition",
+                      active
+                        ? "bg-cat-friends text-ink shadow-xs"
+                        : "border border-ink/10 bg-canvas text-ink-muted hover:border-ink/20",
+                    )}
+                  >
+                    {active ? <Check className="size-3 stroke-[3]" /> : null}
+                    <span>{t.name}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
         ) : null}
       </div>
 
-      <div className="mt-4 flex-1 overflow-y-auto">
-        <div className="flex flex-wrap gap-2 pb-4">
-          {allTopics.map((t) => {
-            const active = isTopicActive(t.id);
-            return (
-              <motion.button
-                key={t.id}
-                type="button"
-                whileTap={{ scale: TAP_SCALE }}
-                onClick={() => handleToggle(t.id)}
-                className={cn(
-                  "inline-flex min-h-10 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition",
-                  active
-                    ? "bg-cat-friends text-ink shadow-xs"
-                    : "border border-ink/10 bg-white text-ink-muted hover:border-ink/20",
-                )}
-              >
-                {active ? <Check className="size-3.5 stroke-[3]" /> : null}
-                <span>{t.name}</span>
-              </motion.button>
-            );
-          })}
-        </div>
-      </div>
-
       <AnimatePresence>
-        {hasError ? (
+        {hasTopicError ? (
           <motion.p
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -218,7 +336,7 @@ function TopicFilterContent({
       <div className="pt-2">
         <Button
           type="button"
-          disabled={hasError || isSaving}
+          disabled={hasTopicError || isSaving}
           onClick={handleSave}
           className="h-13 w-full rounded-2xl text-base font-extrabold"
         >

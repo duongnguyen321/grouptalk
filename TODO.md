@@ -246,6 +246,24 @@ Based on §4:
 - [x] Unit tests: topic filtering suite in `lib/game/eligibility.test.ts` (53 tests pass)
 - [x] Quality validation: `bun run lint` (0 errors), `bunx tsc --noEmit` (0 errors), `bun test` (53 pass), `bun run build` (success)
 
+## Phase 25 — QuestionType Filter & Tag Another Player (PLAN-016)
+
+- [x] Schema migration: `selectedQuestionTypes Json?` on `GameSession` (`prisma/migrations/20260922111500_add_selected_question_types`)
+- [x] Core game logic: `filterEligibleQuestions` in `lib/game/eligibility.ts` filters questions by `selectedQuestionTypes`
+- [x] Server actions: `setQuestionFiltersAction` (unified filter) and `tagPlayerAction` in `app/session/[sessionId]/play/actions.ts`
+- [x] Session draft store: `selectedQuestionTypes: QuestionType[]` with `setSelectedQuestionTypes` and `toggleQuestionType` in `lib/store/session-draft.ts`
+- [x] Setup UI: `CategorySelect` question type filter chips (`Có / Không`, `Thử thách`, `Câu hỏi mở`) with min-1 validation
+- [x] Drawer UI: unified `TopicFilterSheet` supporting both question types and topics
+- [x] QuestionCard UI: 1-tap chip row of `otherPlayers` using Lucide `UserPlus` icon and motion tap scaling
+- [x] PlayScreen integration: wire `handleTagPlayer`, update dynamic respondent and card title, support unlimited chained passes
+- [x] Session copy continuity: `copySessionFromCode` preserves `selectedQuestionTypes` on session clone
+- [x] Auto-discard on vote-hide: `confirmHide` triggers `discardCardAction` and `loadTeaserCardsAction` to discard hidden card and draw 3 fresh cards
+- [x] Tag player deduplication: `revealCardAction` and `tagPlayerAction` return `answeredPlayerIds`, filtering out all players who already answered
+- [x] Session-wide question exclusion: `pickThreeQuestions` filters by `where: { sessionId }` ensuring questions answered by any member (or tagged member) do not repeat
+- [x] Session history freshness: dynamic server-rendering and `safeRevalidatePath` on history and play pages
+- [x] Unit & integration tests: question type filtering and tag player history persistence (`lib/game/tag-player-history.test.ts`, 57 pass)
+- [x] Quality validation: `bun run lint` (0 errors), `bunx tsc --noEmit` (0 errors), `bun test` (57 pass), `bun run build` (success)
+
 ---
 
 

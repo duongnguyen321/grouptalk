@@ -53,7 +53,12 @@ export async function resolveGoogleUser(
 export async function getCurrentUser(input: {
   deviceId?: string;
 } = {}): Promise<User> {
-  const session = await auth();
+  let session = null;
+  try {
+    session = await auth();
+  } catch {
+    // auth() may throw outside Next.js request context (e.g. unit tests or scripts)
+  }
 
   if (session?.user?.id) {
     const byId = await prisma.user.findUnique({

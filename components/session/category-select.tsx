@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Heart, Sparkles } from "lucide-react";
-import { Category } from "@/generated/prisma/enums";
+import { Check, Heart, HelpCircle, Sparkles } from "lucide-react";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import { getTopicsForCategories } from "@/app/session/new/actions";
 import { BackHeader } from "@/components/ui/back-header";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CATEGORY_OPTIONS } from "@/lib/categories";
+import { QUESTION_TYPE_OPTIONS } from "@/lib/game/question-notes";
 import { TAP_SCALE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useSessionDraftStore } from "@/lib/store/session-draft";
@@ -23,10 +24,16 @@ export function CategorySelect() {
   const selectedTopicIds = useSessionDraftStore(
     (state) => state.selectedTopicIds,
   );
+  const selectedQuestionTypes = useSessionDraftStore(
+    (state) => state.selectedQuestionTypes,
+  );
   const selectCategory = useSessionDraftStore((state) => state.selectCategory);
   const setCrush = useSessionDraftStore((state) => state.setCrush);
   const setSelectedTopicIds = useSessionDraftStore(
     (state) => state.setSelectedTopicIds,
+  );
+  const setSelectedQuestionTypes = useSessionDraftStore(
+    (state) => state.setSelectedQuestionTypes,
   );
 
   const [topics, setTopics] = useState<{ id: string; name: string }[]>([]);
@@ -91,6 +98,43 @@ export function CategorySelect() {
     setSelectedTopicIds([]);
   }
 
+  const activeTypeCount =
+    selectedQuestionTypes.length === 0
+      ? QUESTION_TYPE_OPTIONS.length
+      : selectedQuestionTypes.length;
+
+  function isTypeActive(type: QuestionType) {
+    if (selectedQuestionTypes.length === 0) {
+      return true;
+    }
+    return selectedQuestionTypes.includes(type);
+  }
+
+  function handleToggleType(type: QuestionType) {
+    const allTypes = QUESTION_TYPE_OPTIONS.map((o) => o.value);
+    const currentActive =
+      selectedQuestionTypes.length === 0 ? allTypes : selectedQuestionTypes;
+
+    if (currentActive.includes(type)) {
+      if (currentActive.length === 1) {
+        return;
+      }
+      const next = currentActive.filter((t) => t !== type);
+      setSelectedQuestionTypes(next);
+    } else {
+      const next = [...currentActive, type];
+      if (next.length === allTypes.length) {
+        setSelectedQuestionTypes([]);
+      } else {
+        setSelectedQuestionTypes(next);
+      }
+    }
+  }
+
+  function handleSelectAllTypes() {
+    setSelectedQuestionTypes([]);
+  }
+
   return (
     <main className="flex min-h-full flex-1 flex-col bg-canvas">
       <BackHeader backHref="/session" />
@@ -136,8 +180,8 @@ export function CategorySelect() {
                   {option.label}
                 </span>
                 {isSelected ? (
-                  <span className="absolute top-3 right-3 grid size-7 place-items-center rounded-full bg-white/90 text-sm font-extrabold text-ink">
-                    ✓
+                  <span className="absolute top-3 right-3 grid size-7 place-items-center rounded-full bg-white/90 text-ink">
+                    <Check className="size-4 stroke-[3]" />
                   </span>
                 ) : null}
               </motion.button>
@@ -160,6 +204,55 @@ export function CategorySelect() {
               aria-label="Bật câu hỏi thích thầm"
             />
           </label>
+        ) : null}
+
+        {categories.length > 0 ? (
+          <div className="mt-6 rounded-[1.5rem] bg-white p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <HelpCircle className="size-4 text-cat-friends-deep" />
+                <span className="text-sm font-extrabold text-ink">
+                  Dạng câu hỏi ({activeTypeCount}/{QUESTION_TYPE_OPTIONS.length})
+                </span>
+              </div>
+              {selectedQuestionTypes.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={handleSelectAllTypes}
+                  className="text-xs font-bold text-cat-friends-deep underline underline-offset-2 hover:opacity-80"
+                >
+                  Chọn tất cả
+                </button>
+              ) : null}
+            </div>
+
+            <p className="mt-1 text-xs text-ink-muted">
+              Lọc dạng câu hỏi muốn xuất hiện trong phiên này.
+            </p>
+
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              {QUESTION_TYPE_OPTIONS.map((option) => {
+                const active = isTypeActive(option.value);
+                return (
+                  <motion.button
+                    key={option.value}
+                    type="button"
+                    whileTap={{ scale: TAP_SCALE }}
+                    onClick={() => handleToggleType(option.value)}
+                    className={cn(
+                      "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition",
+                      active
+                        ? "bg-cat-friends text-ink shadow-xs"
+                        : "border border-ink/10 bg-canvas text-ink-muted hover:border-ink/20",
+                    )}
+                  >
+                    {active ? <Check className="size-3 stroke-[3]" /> : null}
+                    <span>{option.label}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
         ) : null}
 
         {categories.length > 0 && displayedTopics.length > 0 ? (

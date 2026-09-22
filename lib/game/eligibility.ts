@@ -1,4 +1,4 @@
-import { Category } from "@/generated/prisma/enums";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import {
   CRUSH_GUARANTEED_TOPICS,
   CRUSH_TOPIC_NAME,
@@ -12,6 +12,7 @@ export type EligibleQuestion = {
   isDeleted: boolean;
   topicName: string;
   topicId?: string;
+  type?: QuestionType;
   categories: Category[];
 };
 
@@ -24,6 +25,7 @@ export function filterEligibleQuestions(
     answeredQuestionIds: ReadonlySet<string>;
     allowAnsweredRepeats: boolean;
     selectedTopicIds?: ReadonlySet<string>;
+    selectedQuestionTypes?: ReadonlySet<QuestionType>;
   },
 ) {
   return questions.filter((question) => {
@@ -54,6 +56,14 @@ export function filterEligibleQuestions(
       options.selectedTopicIds &&
       options.selectedTopicIds.size > 0 &&
       (!question.topicId || !options.selectedTopicIds.has(question.topicId))
+    ) {
+      return false;
+    }
+
+    if (
+      options.selectedQuestionTypes &&
+      options.selectedQuestionTypes.size > 0 &&
+      (!question.type || !options.selectedQuestionTypes.has(question.type))
     ) {
       return false;
     }

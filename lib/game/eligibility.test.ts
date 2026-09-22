@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { Category } from "@/generated/prisma/enums";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import { CRUSH_TOPIC_NAME } from "@/lib/constants";
 import {
   filterEligibleQuestions,
@@ -286,4 +286,130 @@ test("topic filter: empty or undefined selectedTopicIds permits all topics", () 
   expect(withEmpty.map((q) => q.id)).toEqual(["q-1", "q-2"]);
   expect(withUndefined.map((q) => q.id)).toEqual(["q-1", "q-2"]);
 });
+
+test("question type filter: excludes questions not matching selectedQuestionTypes", () => {
+  const qYesNo = {
+    id: "q-yesno",
+    type: QuestionType.YESNO,
+    isDeleted: false,
+    topicName: "Bạn bè",
+    categories: [Category.FRIENDS],
+  };
+  const qChallenge = {
+    id: "q-challenge",
+    type: QuestionType.CHALLENGE,
+    isDeleted: false,
+    topicName: "Bạn bè",
+    categories: [Category.FRIENDS],
+  };
+  const qOpen = {
+    id: "q-open",
+    type: QuestionType.OPEN_ENDED,
+    isDeleted: false,
+    topicName: "Bạn bè",
+    categories: [Category.FRIENDS],
+  };
+
+  const onlyChallenge = filterEligibleQuestions([qYesNo, qChallenge, qOpen], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedQuestionTypes: new Set([QuestionType.CHALLENGE]),
+  });
+
+  expect(onlyChallenge.map((q) => q.id)).toEqual(["q-challenge"]);
+
+  const yesNoAndOpen = filterEligibleQuestions([qYesNo, qChallenge, qOpen], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedQuestionTypes: new Set([
+      QuestionType.YESNO,
+      QuestionType.OPEN_ENDED,
+    ]),
+  });
+
+  expect(yesNoAndOpen.map((q) => q.id)).toEqual(["q-yesno", "q-open"]);
+});
+
+test("question type filter: empty or undefined permits all question types", () => {
+  const qYesNo = {
+    id: "q-yesno",
+    type: QuestionType.YESNO,
+    isDeleted: false,
+    topicName: "Bạn bè",
+    categories: [Category.FRIENDS],
+  };
+  const qChallenge = {
+    id: "q-challenge",
+    type: QuestionType.CHALLENGE,
+    isDeleted: false,
+    topicName: "Bạn bè",
+    categories: [Category.FRIENDS],
+  };
+
+  const emptySet = filterEligibleQuestions([qYesNo, qChallenge], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedQuestionTypes: new Set(),
+  });
+
+  const undefinedSet = filterEligibleQuestions([qYesNo, qChallenge], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+  });
+
+  expect(emptySet.map((q) => q.id)).toEqual(["q-yesno", "q-challenge"]);
+  expect(undefinedSet.map((q) => q.id)).toEqual(["q-yesno", "q-challenge"]);
+});
+
+test("combined filter: filters both topic and question type simultaneously", () => {
+  const q1 = {
+    id: "q-1",
+    type: QuestionType.YESNO,
+    topicId: "t-1",
+    isDeleted: false,
+    topicName: "Kỷ niệm",
+    categories: [Category.FRIENDS],
+  };
+  const q2 = {
+    id: "q-2",
+    type: QuestionType.CHALLENGE,
+    topicId: "t-1",
+    isDeleted: false,
+    topicName: "Kỷ niệm",
+    categories: [Category.FRIENDS],
+  };
+  const q3 = {
+    id: "q-3",
+    type: QuestionType.YESNO,
+    topicId: "t-2",
+    isDeleted: false,
+    topicName: "Ước mơ",
+    categories: [Category.FRIENDS],
+  };
+
+  const filtered = filterEligibleQuestions([q1, q2, q3], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedTopicIds: new Set(["t-1"]),
+    selectedQuestionTypes: new Set([QuestionType.CHALLENGE]),
+  });
+
+  expect(filtered.map((q) => q.id)).toEqual(["q-2"]);
+});
+
 

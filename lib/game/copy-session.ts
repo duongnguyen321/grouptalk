@@ -38,6 +38,7 @@ export async function copySessionFromCode(
           categories: source.categories,
           crushQuestionEnabled: source.crushQuestionEnabled,
           selectedTopicIds: source.selectedTopicIds ?? undefined,
+          selectedQuestionTypes: source.selectedQuestionTypes ?? undefined,
         },
         select: { id: true },
       });

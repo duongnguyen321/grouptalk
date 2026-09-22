@@ -189,3 +189,18 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Session copy continuity: `copySessionFromCode` clones `selectedTopicIds` to ensure copied sessions retain customized topic filters.
 - Zero emoji policy strictly maintained across `TopicFilterSheet`, `AddPlayerSheet`, `CategorySelect`, and `QuestionCard`.
 
+## Technical rules (PLAN-016)
+
+- Question type filter persistence: `GameSession.selectedQuestionTypes` is stored as `Json?` (array of `QuestionType` strings: `YESNO`, `CHALLENGE`, `OPEN_ENDED`). When null, empty, or containing all valid types, all question types are allowed, and `setQuestionFiltersAction` writes `Prisma.DbNull` to keep DB rows clean.
+- Unified filter action: `setQuestionFiltersAction` updates `selectedTopicIds` and `selectedQuestionTypes` atomically. `setTopicFilterAction` is retained as a backward-compatible wrapper.
+- Chained question passing: `tagPlayerAction` allows passing the active revealed question to any other player in the session. It validates author and target player, upserts `SessionAnswer` (`sessionId`, `sessionPlayerId`, `questionId`), and updates `lastActiveAt`.
+- Dynamic respondent UI: `QuestionCard` provides a 1-tap chip row for `otherPlayers` using `UserPlus` Lucide icon with `whileTap={{ scale: TAP_SCALE }}`. Tapping updates active respondent and card `playerName` with toast feedback.
+- Session copy continuity: `copySessionFromCode` preserves `selectedQuestionTypes` alongside `selectedTopicIds` during session cloning.
+- Vote-hide auto-discard: Voting to hide a question (`confirmHide`) immediately invokes `discardCardAction` and `loadTeaserCardsAction` to discard answers, reload 3 fresh cards, and return to the cards selection phase.
+- Tag player deduplication: `revealCardAction` and `tagPlayerAction` return `answeredPlayerIds`. `QuestionCard` strictly filters out any player who has already answered that question in the session.
+- Session-wide question exclusion: `pickThreeQuestions` filters by `where: { sessionId }` to guarantee that once any player answers or is tagged to answer a question, it is excluded from future teaser cards for all session members until pool exhaustion (`allowAnsweredRepeats`).
+- Session history freshness: `/session/[sessionId]/history` and `/session/[sessionId]/play` enforce `export const dynamic = "force-dynamic"` and `export const revalidate = 0`. Server Actions (`revealCardAction`, `tagPlayerAction`, `discardCardAction`, `voteHideAction`) trigger `safeRevalidatePath` to ensure instant consistency upon history navigation.
+- Zero emoji policy strictly maintained across all new components, actions, and unit tests.
+
+
+

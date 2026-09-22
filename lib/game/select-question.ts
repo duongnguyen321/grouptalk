@@ -21,6 +21,7 @@ type QuestionWithMeta = {
 function toEligible(question: QuestionWithMeta) {
   return {
     id: question.id,
+    type: question.type,
     isDeleted: question.isDeleted,
     topicName: question.topic.name,
     topicId: question.topicId,
@@ -56,6 +57,7 @@ export async function pickThreeQuestions(
       categories: true,
       crushQuestionEnabled: true,
       selectedTopicIds: true,
+      selectedQuestionTypes: true,
     },
   });
 
@@ -81,7 +83,7 @@ export async function pickThreeQuestions(
       },
     }),
     prisma.sessionAnswer.findMany({
-      where: { sessionId, sessionPlayerId },
+      where: { sessionId },
       select: { questionId: true },
     }),
     prisma.questionVote.findMany({
@@ -98,6 +100,11 @@ export async function pickThreeQuestions(
     Array.isArray(session.selectedTopicIds) && session.selectedTopicIds.length > 0
       ? new Set<string>(session.selectedTopicIds as string[])
       : undefined;
+  const selectedQuestionTypes =
+    Array.isArray(session.selectedQuestionTypes) &&
+    session.selectedQuestionTypes.length > 0
+      ? new Set<QuestionType>(session.selectedQuestionTypes as QuestionType[])
+      : undefined;
   const byId = new Map(questions.map((question) => [question.id, question]));
   const eligibilityInput = {
     sessionCategories: session.categories,
@@ -105,6 +112,7 @@ export async function pickThreeQuestions(
     hiddenQuestionIds,
     answeredQuestionIds,
     selectedTopicIds,
+    selectedQuestionTypes,
   };
 
   let pool = filterEligibleQuestions(questions.map(toEligible), {

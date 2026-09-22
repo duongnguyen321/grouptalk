@@ -1,13 +1,13 @@
 "use client";
 
-import { Ban, MessageCircle, RefreshCw } from "lucide-react";
+import { Ban, MessageCircle, RefreshCw, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { QUESTION_TYPE_NOTES } from "@/lib/game/question-notes";
 import { categoryTone } from "@/lib/game/category-tone";
 import { PHASE_EASE, TAP_SCALE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import type { RevealedCard } from "@/lib/game/play-types";
+import type { PlayPlayer, RevealedCard } from "@/lib/game/play-types";
 
 type QuestionCardProps = {
   card: RevealedCard;
@@ -15,6 +15,10 @@ type QuestionCardProps = {
   onNext: () => void;
   onDiscard?: () => void;
   isDiscarding?: boolean;
+  otherPlayers?: PlayPlayer[];
+  hasOtherPlayersInSession?: boolean;
+  onTagPlayer?: (player: PlayPlayer) => void;
+  isTagging?: boolean;
 };
 
 export function QuestionCard({
@@ -23,6 +27,10 @@ export function QuestionCard({
   onNext,
   onDiscard,
   isDiscarding = false,
+  otherPlayers,
+  hasOtherPlayersInSession = false,
+  onTagPlayer,
+  isTagging = false,
 }: QuestionCardProps) {
   const tone = categoryTone(card.accent);
   const initial = card.playerName.trim().charAt(0).toUpperCase() || "?";
@@ -48,24 +56,56 @@ export function QuestionCard({
 
         <div className="flex items-center gap-3 pr-12">
           <span
-            className="flex size-11 items-center justify-center rounded-full text-lg font-extrabold text-white"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-lg font-extrabold text-white"
             style={{ backgroundImage: tone.gradient }}
           >
             {initial}
           </span>
-          <p className="text-name leading-tight font-bold text-ink">
-            {card.playerName}
-          </p>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-ink-muted">Lượt trả lời</p>
+            <p className="text-name leading-tight font-bold text-ink truncate">
+              {card.playerName}
+            </p>
+          </div>
         </div>
 
-        <p className="mt-8 flex flex-1 items-center justify-center text-center text-question font-extrabold text-ink">
+        <p className="mt-6 flex flex-1 items-center justify-center text-center text-question font-extrabold text-ink">
           {card.title}
         </p>
 
-        <div className="mt-6 flex items-center gap-2 text-note leading-snug font-medium text-ink-muted">
+        <div className="mt-4 flex items-center gap-2 text-note leading-snug font-medium text-ink-muted">
           <MessageCircle className="size-4 shrink-0 text-ink-muted" />
           <span>{QUESTION_TYPE_NOTES[card.type]}</span>
         </div>
+
+        {hasOtherPlayersInSession ? (
+          <div className="mt-5 border-t border-ink/10 pt-3">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-ink-muted">
+              <UserPlus className="size-3.5 text-cat-friends-deep" />
+              <span>Mời người khác cùng trả lời:</span>
+            </div>
+            {otherPlayers && otherPlayers.length > 0 ? (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {otherPlayers.map((player) => (
+                  <motion.button
+                    key={player.id}
+                    type="button"
+                    disabled={isTagging}
+                    whileTap={{ scale: TAP_SCALE }}
+                    onClick={() => onTagPlayer?.(player)}
+                    className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-ink/10 bg-canvas px-3 py-1 text-xs font-bold text-ink hover:border-cat-friends-deep hover:bg-cat-friends/20 transition disabled:opacity-50"
+                  >
+                    <span>{player.displayName}</span>
+                  </motion.button>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-xs font-medium text-ink-muted italic">
+                Tất cả người chơi đã trả lời câu này.
+              </p>
+            )}
+          </div>
+        ) : null}
       </motion.article>
 
       <motion.div

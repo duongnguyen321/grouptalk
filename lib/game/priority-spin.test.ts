@@ -47,11 +47,15 @@ test("priority config persistence, weighted spin, and copy remapping", async () 
   expect(p3).toBeDefined();
 
   // 2. Test setPriorityAction with boost (p1: 5x, p2: 2x)
-  const setResult = await setPriorityAction(session.id, {
-    [p1.id]: 5,
-    [p2.id]: 2,
-    [p3.id]: 1,
-  });
+  const setResult = await setPriorityAction(
+    session.id,
+    {
+      [p1.id]: 5,
+      [p2.id]: 2,
+      [p3.id]: 1,
+    },
+    { deviceId: user.deviceId! },
+  );
   expect(setResult.ok).toBe(true);
 
   // Verify in DB
@@ -69,7 +73,9 @@ test("priority config persistence, weighted spin, and copy remapping", async () 
   // 3. Test spinAction picks players respecting weights
   const spinCounts: Record<string, number> = { [p1.id]: 0, [p2.id]: 0, [p3.id]: 0 };
   for (let i = 0; i < 30; i++) {
-    const spinResult = await spinAction(session.id);
+    const spinResult = await spinAction(session.id, {
+      deviceId: user.deviceId!,
+    });
     expect(spinResult.ok).toBe(true);
     if (spinResult.ok) {
       spinCounts[spinResult.player.id] = (spinCounts[spinResult.player.id] ?? 0) + 1;
@@ -106,11 +112,15 @@ test("priority config persistence, weighted spin, and copy remapping", async () 
   }
 
   // 5. Test reset all to 1x sets priorityConfig to null
-  const resetResult = await setPriorityAction(session.id, {
-    [p1.id]: 1,
-    [p2.id]: 1,
-    [p3.id]: 1,
-  });
+  const resetResult = await setPriorityAction(
+    session.id,
+    {
+      [p1.id]: 1,
+      [p2.id]: 1,
+      [p3.id]: 1,
+    },
+    { deviceId: user.deviceId! },
+  );
   expect(resetResult.ok).toBe(true);
   const resetSession = await prisma.gameSession.findUnique({
     where: { id: session.id },

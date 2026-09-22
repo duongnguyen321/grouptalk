@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { LogIn, LogOut, ShieldCheck, User } from "lucide-react";
 import Image from "next/image";
@@ -23,6 +24,7 @@ export function UserAccountBar({
   googleSignInAvailable = true,
   className = "",
 }: UserAccountBarProps) {
+  const [imageError, setImageError] = useState(false);
   const isGoogle = Boolean(user);
   const displayName = user?.displayName || user?.name || user?.email || "Người dùng";
 
@@ -32,13 +34,14 @@ export function UserAccountBar({
         className={`flex items-center justify-between rounded-2xl border border-ink/10 bg-white px-4 py-3 shadow-[0_2px_10px_rgba(28,25,23,0.04)] ${className}`}
       >
         <div className="flex items-center gap-3 min-w-0">
-          {user?.image ? (
+          {user?.image && !imageError ? (
             <Image
               src={user.image}
               alt={displayName}
               width={36}
               height={36}
               className="size-9 shrink-0 rounded-full border border-ink/10 object-cover"
+              onError={() => setImageError(true)}
             />
           ) : (
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cat-friends/30 font-display text-sm font-extrabold text-cat-friends-deep">

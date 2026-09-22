@@ -1,6 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
+import { QuestionType } from "@/generated/prisma/enums";
 import { PLAYER_NAME_MAX_LENGTH, SPIN_BUSY_ERROR } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import {
@@ -15,6 +17,14 @@ import { LockContentionError, withSessionLock } from "@/lib/redis-lock";
 
 type ActionFail = { ok: false; error: string };
 type DeviceInput = { deviceId?: string };
+
+function safeRevalidatePath(path: string) {
+  try {
+    revalidatePath(path);
+  } catch {
+    // revalidatePath throws when executed outside Next.js request context (e.g. unit tests)
+  }
+}
 
 async function verifySessionAuthor(
   sessionId: string,
@@ -148,7 +158,10 @@ export async function revealCardAction(
   sessionPlayerId: string,
   questionId: string,
   input?: DeviceInput,
-): Promise<{ ok: true; card: RevealedCard } | ActionFail> {
+): Promise<
+  | { ok: true; card: RevealedCard; answeredPlayerIds: string[] }
+  | ActionFail
+> {
   const auth = await verifySessionAuthor(sessionId, input);
   if (!auth.ok) {
     return auth;
@@ -205,12 +218,22 @@ export async function revealCardAction(
       return { ok: false, error: "Không mở được thẻ." };
     }
 
-    await prisma.gameSession.update({
-      where: { id: sessionId },
-      data: { lastActiveAt: new Date() },
-    });
+    const [sessionAnswers] = await Promise.all([
+      prisma.sessionAnswer.findMany({
+        where: { sessionId, questionId },
+        select: { sessionPlayerId: true },
+      }),
+      prisma.gameSession.update({
+        where: { id: sessionId },
+        data: { lastActiveAt: new Date() },
+      }),
+    ]);
 
-    return { ok: true, card };
+    const answeredPlayerIds = sessionAnswers.map((a) => a.sessionPlayerId);
+
+    safeRevalidatePath(`/session/${sessionId}/history`);
+
+    return { ok: true, card, answeredPlayerIds };
   } catch {
     return { ok: false, error: "Không ghi nhận lượt trả lời." };
   }
@@ -258,15 +281,20 @@ export async function voteHideAction(
       data: { lastActiveAt: new Date() },
     });
 
+    safeRevalidatePath(`/session/${sessionId}/history`);
+
     return { ok: true };
   } catch {
     return { ok: false, error: "Không ẩn được câu hỏi." };
   }
 }
 
-export async function setTopicFilterAction(
+export async function setQuestionFiltersAction(
   sessionId: string,
-  topicIds: string[],
+  filters: {
+    topicIds?: string[];
+    questionTypes?: string[];
+  },
   input?: DeviceInput,
 ): Promise<{ ok: true } | ActionFail> {
   const auth = await verifySessionAuthor(sessionId, input);
@@ -275,17 +303,106 @@ export async function setTopicFilterAction(
   }
 
   try {
-    const cleaned = Array.from(new Set(topicIds.filter(Boolean)));
+    const updateData: Prisma.GameSessionUpdateInput = {
+      lastActiveAt: new Date(),
+    };
+
+    if (filters.topicIds !== undefined) {
+      const cleaned = Array.from(new Set(filters.topicIds.filter(Boolean)));
+      updateData.selectedTopicIds = cleaned.length > 0 ? cleaned : Prisma.DbNull;
+    }
+
+    if (filters.questionTypes !== undefined) {
+      const validTypes = Object.values(QuestionType);
+      const cleanedTypes = Array.from(
+        new Set(
+          filters.questionTypes.filter((t): t is QuestionType =>
+            validTypes.includes(t as QuestionType),
+          ),
+        ),
+      );
+      updateData.selectedQuestionTypes =
+        cleanedTypes.length > 0 && cleanedTypes.length < validTypes.length
+          ? cleanedTypes
+          : Prisma.DbNull;
+    }
+
     await prisma.gameSession.update({
       where: { id: sessionId },
-      data: {
-        selectedTopicIds: cleaned.length > 0 ? cleaned : Prisma.DbNull,
-        lastActiveAt: new Date(),
-      },
+      data: updateData,
     });
     return { ok: true };
   } catch {
-    return { ok: false, error: "Không lưu được chủ đề đã chọn." };
+    return { ok: false, error: "Không lưu được bộ lọc câu hỏi." };
+  }
+}
+
+export async function setTopicFilterAction(
+  sessionId: string,
+  topicIds: string[],
+  input?: DeviceInput,
+): Promise<{ ok: true } | ActionFail> {
+  return setQuestionFiltersAction(sessionId, { topicIds }, input);
+}
+
+export async function tagPlayerAction(
+  sessionId: string,
+  sessionPlayerId: string,
+  questionId: string,
+  input?: DeviceInput,
+): Promise<
+  | { ok: true; player: PlayPlayer; answeredPlayerIds: string[] }
+  | ActionFail
+> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
+  try {
+    const player = await prisma.sessionPlayer.findFirst({
+      where: { id: sessionPlayerId, sessionId },
+      select: { id: true, displayName: true },
+    });
+
+    if (!player) {
+      return { ok: false, error: "Không tìm thấy người chơi được mời." };
+    }
+
+    await prisma.sessionAnswer.upsert({
+      where: {
+        sessionId_sessionPlayerId_questionId: {
+          sessionId,
+          sessionPlayerId,
+          questionId,
+        },
+      },
+      create: {
+        sessionId,
+        sessionPlayerId,
+        questionId,
+      },
+      update: {},
+    });
+
+    const [sessionAnswers] = await Promise.all([
+      prisma.sessionAnswer.findMany({
+        where: { sessionId, questionId },
+        select: { sessionPlayerId: true },
+      }),
+      prisma.gameSession.update({
+        where: { id: sessionId },
+        data: { lastActiveAt: new Date() },
+      }),
+    ]);
+
+    const answeredPlayerIds = sessionAnswers.map((a) => a.sessionPlayerId);
+
+    safeRevalidatePath(`/session/${sessionId}/history`);
+
+    return { ok: true, player, answeredPlayerIds };
+  } catch {
+    return { ok: false, error: "Không thể mời người chơi này." };
   }
 }
 
@@ -304,7 +421,6 @@ export async function discardCardAction(
     await prisma.sessionAnswer.deleteMany({
       where: {
         sessionId,
-        sessionPlayerId,
         questionId,
       },
     });
@@ -313,6 +429,8 @@ export async function discardCardAction(
       where: { id: sessionId },
       data: { lastActiveAt: new Date() },
     });
+
+    safeRevalidatePath(`/session/${sessionId}/history`);
 
     return { ok: true };
   } catch {

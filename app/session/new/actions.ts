@@ -1,6 +1,6 @@
 "use server";
 
-import { Category } from "@/generated/prisma/enums";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/identity";
 import { nextSessionCode } from "@/lib/session-code";
@@ -13,6 +13,7 @@ type StartGameSessionInput = {
   categories: string[];
   crushQuestionEnabled: boolean;
   selectedTopicIds?: string[];
+  selectedQuestionTypes?: string[];
   players: string[];
   deviceId?: string;
 };
@@ -68,6 +69,16 @@ export async function startGameSession(
       ? input.selectedTopicIds
       : undefined;
 
+  const validTypes = Object.values(QuestionType);
+  const selectedQuestionTypes =
+    Array.isArray(input.selectedQuestionTypes) &&
+    input.selectedQuestionTypes.length > 0 &&
+    input.selectedQuestionTypes.length < validTypes.length
+      ? input.selectedQuestionTypes.filter((t): t is QuestionType =>
+          validTypes.includes(t as QuestionType),
+        )
+      : undefined;
+
   try {
     const user = await getCurrentUser({ deviceId: input.deviceId });
     const sessionCode = await nextSessionCode();
@@ -80,6 +91,7 @@ export async function startGameSession(
           categories,
           crushQuestionEnabled,
           selectedTopicIds: selectedTopicIds ?? undefined,
+          selectedQuestionTypes: selectedQuestionTypes ?? undefined,
         },
         select: { id: true },
       });

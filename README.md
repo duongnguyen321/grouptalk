@@ -84,6 +84,7 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Question stats & explorer (PLAN-011): real-time question and SessionPlayer participation counters on Splash and Session Home, and an interactive `/questions` library with horizontal topic filters, question type badges, category tags, and 20-item infinite scroll
 - Automated CI/CD (PLAN-013): GitHub Actions workflows for continuous integration validation and automated SSH production deployment to VPS
 - Session controls (PLAN-015): Host topic filter selection at session setup and in-session via `TopicFilterSheet` drawer, card re-draw escape hatch ("Câu khác" button with `SessionAnswer` deletion and fresh 3-card reload), mid-session player additions (`AddPlayerSheet`) with instant wheel re-slice, and session copy filter continuity.
+- QuestionType filter & player tagging (PLAN-016): Filter questions by type (`YESNO`, `CHALLENGE`, `OPEN_ENDED`) at setup and in-game via unified `TopicFilterSheet`; 1-tap player invitation chips on `QuestionCard` allowing participants to pass questions chained without limits, persisting individual `SessionAnswer` records; session-wide question filtering preventing repeats of any answered questions across all members; and dynamic session history cache invalidation.
 
 ## Production deploy
 

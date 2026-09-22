@@ -10,6 +10,7 @@ import {
   loadTeaserCardsAction,
   revealCardAction,
   spinAction,
+  tagPlayerAction,
   voteHideAction,
 } from "@/app/session/[sessionId]/play/actions";
 import { CardSelection } from "@/components/cards/card-selection";
@@ -23,7 +24,7 @@ import { TopicFilterSheet } from "@/components/play/topic-filter-sheet";
 import { Wheel } from "@/components/wheel/wheel";
 import { WinnerReveal } from "@/components/wheel/winner-reveal";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/generated/prisma/enums";
+import { Category, QuestionType } from "@/generated/prisma/enums";
 import {
   HIDE_TOAST_MS,
   PRIORITY_LONG_PRESS_MS,
@@ -65,6 +66,7 @@ type PlayScreenProps = {
   initialWeights: Record<string, number>;
   allTopics?: { id: string; name: string }[];
   initialSelectedTopicIds?: string[];
+  initialSelectedQuestionTypes?: QuestionType[];
 };
 
 export function PlayScreen({
@@ -75,6 +77,7 @@ export function PlayScreen({
   initialWeights,
   allTopics = [],
   initialSelectedTopicIds = [],
+  initialSelectedQuestionTypes = [],
 }: PlayScreenProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<PlayPhase>("idle");
@@ -83,10 +86,14 @@ export function PlayScreen({
   const [winner, setWinner] = useState<PlayPlayer | null>(null);
   const [cards, setCards] = useState<TeaserCard[]>([]);
   const [revealed, setRevealed] = useState<RevealedCard | null>(null);
+  const [answeredPlayerIds, setAnsweredPlayerIds] = useState<string[]>([]);
   const [players, setPlayers] = useState<PlayPlayer[]>(initialPlayers);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
     initialSelectedTopicIds,
   );
+  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<
+    QuestionType[]
+  >(initialSelectedQuestionTypes);
   const [menuOpen, setMenuOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [priorityOpen, setPriorityOpen] = useState(false);
@@ -96,6 +103,7 @@ export function PlayScreen({
   const [hideOpen, setHideOpen] = useState(false);
   const [hideBusy, setHideBusy] = useState(false);
   const [isDiscarding, setIsDiscarding] = useState(false);
+  const [isTagging, setIsTagging] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -201,11 +209,12 @@ export function PlayScreen({
     }
 
     setRevealed(result.card);
+    setAnsweredPlayerIds(result.answeredPlayerIds ?? [winner.id]);
     setPhase("revealed");
   }
 
   async function confirmHide() {
-    if (!revealed) {
+    if (!winner || !revealed || hideBusy) {
       return;
     }
 
@@ -213,23 +222,83 @@ export function PlayScreen({
     const result = await voteHideAction(sessionId, revealed.id, {
       deviceId: getOrCreateDeviceId(),
     });
-    setHideBusy(false);
-    setHideOpen(false);
 
     if (!result.ok) {
+      setHideBusy(false);
+      setHideOpen(false);
       setError(result.error);
       return;
     }
 
-    showToast("Đã ẩn câu hỏi này");
+    const discardResult = await discardCardAction(
+      sessionId,
+      winner.id,
+      revealed.id,
+      { deviceId: getOrCreateDeviceId() },
+    );
+
+    if (!discardResult.ok) {
+      setHideBusy(false);
+      setHideOpen(false);
+      setError(discardResult.error);
+      return;
+    }
+
+    const reloadResult = await loadTeaserCardsAction(sessionId, winner.id, {
+      deviceId: getOrCreateDeviceId(),
+    });
+
+    setHideBusy(false);
+    setHideOpen(false);
+
+    if (!reloadResult.ok) {
+      setError(reloadResult.error);
+      setPhase("idle");
+      return;
+    }
+
+    setCards(reloadResult.cards);
+    setRevealed(null);
+    setAnsweredPlayerIds([]);
+    setPhase("cards");
+    showToast("Đã ẩn câu hỏi và đổi 3 thẻ mới");
   }
 
   function resetRound() {
     setWinner(null);
+    setAnsweredPlayerIds([]);
     setCards([]);
     setRevealed(null);
     setError(null);
     setPhase("idle");
+  }
+
+  async function handleTagPlayer(targetPlayer: PlayPlayer) {
+    if (!revealed || isTagging) {
+      return;
+    }
+
+    setIsTagging(true);
+    const result = await tagPlayerAction(
+      sessionId,
+      targetPlayer.id,
+      revealed.id,
+      { deviceId: getOrCreateDeviceId() },
+    );
+    setIsTagging(false);
+
+    if (!result.ok) {
+      showToast(result.error);
+      return;
+    }
+
+    setAnsweredPlayerIds(
+      result.answeredPlayerIds ?? [...answeredPlayerIds, targetPlayer.id],
+    );
+    setRevealed((prev) =>
+      prev ? { ...prev, playerName: targetPlayer.displayName } : null,
+    );
+    showToast(`Đã mời ${targetPlayer.displayName} cùng trả lời!`);
   }
 
   async function handleDiscard() {
@@ -265,6 +334,7 @@ export function PlayScreen({
 
     setCards(reloadResult.cards);
     setRevealed(null);
+    setAnsweredPlayerIds([]);
     setPhase("cards");
     showToast("Đã đổi 3 thẻ mới");
   }
@@ -400,6 +470,12 @@ export function PlayScreen({
               onNext={resetRound}
               onDiscard={handleDiscard}
               isDiscarding={isDiscarding}
+              otherPlayers={players.filter(
+                (p) => !answeredPlayerIds.includes(p.id),
+              )}
+              hasOtherPlayersInSession={players.length > 1}
+              onTagPlayer={handleTagPlayer}
+              isTagging={isTagging}
             />
           </motion.div>
         ) : null}
@@ -464,10 +540,12 @@ export function PlayScreen({
         sessionId={sessionId}
         allTopics={allTopics}
         activeTopicIds={selectedTopicIds}
+        activeQuestionTypes={selectedQuestionTypes}
         onOpenChange={setTopicFilterOpen}
-        onSaved={(savedIds) => {
-          setSelectedTopicIds(savedIds);
-          showToast("Đã cập nhật chủ đề");
+        onSaved={(filters) => {
+          setSelectedTopicIds(filters.topicIds);
+          setSelectedQuestionTypes(filters.questionTypes);
+          showToast("Đã cập nhật bộ lọc câu hỏi");
         }}
       />
 

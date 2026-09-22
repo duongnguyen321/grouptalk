@@ -22,6 +22,9 @@ export function PlayerEntry() {
   const selectedTopicIds = useSessionDraftStore(
     (state) => state.selectedTopicIds,
   );
+  const selectedQuestionTypes = useSessionDraftStore(
+    (state) => state.selectedQuestionTypes,
+  );
   const players = useSessionDraftStore((state) => state.players);
   const addPlayer = useSessionDraftStore((state) => state.addPlayer);
   const removePlayer = useSessionDraftStore((state) => state.removePlayer);
@@ -69,6 +72,7 @@ export function PlayerEntry() {
       categories,
       crushQuestionEnabled,
       selectedTopicIds,
+      selectedQuestionTypes,
       players,
       deviceId: getOrCreateDeviceId(),
     });
