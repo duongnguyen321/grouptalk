@@ -1,7 +1,7 @@
 "use server";
 
 import { Prisma } from "@/generated/prisma/client";
-import { SPIN_BUSY_ERROR } from "@/lib/constants";
+import { PLAYER_NAME_MAX_LENGTH, SPIN_BUSY_ERROR } from "@/lib/constants";
 import { prisma } from "@/lib/db";
 import {
   pickWeightedRandom,
@@ -10,6 +10,7 @@ import {
 import type { PlayPlayer, RevealedCard, TeaserCard } from "@/lib/game/play-types";
 import { loadRevealedCard, pickThreeQuestions } from "@/lib/game/select-question";
 import { getCurrentUserOrNull } from "@/lib/identity";
+import { isSamePlayerName, normalizePlayerName } from "@/lib/player-name";
 import { LockContentionError, withSessionLock } from "@/lib/redis-lock";
 
 type ActionFail = { ok: false; error: string };
@@ -260,6 +261,117 @@ export async function voteHideAction(
     return { ok: true };
   } catch {
     return { ok: false, error: "Không ẩn được câu hỏi." };
+  }
+}
+
+export async function setTopicFilterAction(
+  sessionId: string,
+  topicIds: string[],
+  input?: DeviceInput,
+): Promise<{ ok: true } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
+  try {
+    const cleaned = Array.from(new Set(topicIds.filter(Boolean)));
+    await prisma.gameSession.update({
+      where: { id: sessionId },
+      data: {
+        selectedTopicIds: cleaned.length > 0 ? cleaned : Prisma.DbNull,
+        lastActiveAt: new Date(),
+      },
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Không lưu được chủ đề đã chọn." };
+  }
+}
+
+export async function discardCardAction(
+  sessionId: string,
+  sessionPlayerId: string,
+  questionId: string,
+  input?: DeviceInput,
+): Promise<{ ok: true } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
+  try {
+    await prisma.sessionAnswer.deleteMany({
+      where: {
+        sessionId,
+        sessionPlayerId,
+        questionId,
+      },
+    });
+
+    await prisma.gameSession.update({
+      where: { id: sessionId },
+      data: { lastActiveAt: new Date() },
+    });
+
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Không bỏ được thẻ này." };
+  }
+}
+
+export async function addPlayerAction(
+  sessionId: string,
+  displayName: string,
+  input?: DeviceInput,
+): Promise<{ ok: true; players: PlayPlayer[] } | ActionFail> {
+  const auth = await verifySessionAuthor(sessionId, input);
+  if (!auth.ok) {
+    return auth;
+  }
+
+  const normalized = normalizePlayerName(displayName);
+  if (!normalized) {
+    return { ok: false, error: "Nhập tên rồi mới thêm." };
+  }
+
+  if (normalized.length > PLAYER_NAME_MAX_LENGTH) {
+    return {
+      ok: false,
+      error: `Tên tối đa ${PLAYER_NAME_MAX_LENGTH} ký tự.`,
+    };
+  }
+
+  try {
+    const existing = await prisma.sessionPlayer.findMany({
+      where: { sessionId },
+      select: { id: true, displayName: true },
+      orderBy: { id: "asc" },
+    });
+
+    if (existing.some((p) => isSamePlayerName(p.displayName, normalized))) {
+      return { ok: false, error: "Tên này đã có rồi." };
+    }
+
+    const created = await prisma.sessionPlayer.create({
+      data: {
+        sessionId,
+        displayName: normalized,
+      },
+      select: { id: true, displayName: true },
+    });
+
+    await prisma.gameSession.update({
+      where: { id: sessionId },
+      data: { lastActiveAt: new Date() },
+    });
+
+    return {
+      ok: true,
+      players: [...existing, created],
+    };
+  } catch {
+    return { ok: false, error: "Không thêm được người chơi." };
   }
 }
 

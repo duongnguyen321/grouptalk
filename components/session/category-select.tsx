@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, Heart, Sparkles } from "lucide-react";
 import { Category } from "@/generated/prisma/enums";
+import { getTopicsForCategories } from "@/app/session/new/actions";
 import { BackHeader } from "@/components/ui/back-header";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,10 +20,76 @@ export function CategorySelect() {
   const crushQuestionEnabled = useSessionDraftStore(
     (state) => state.crushQuestionEnabled,
   );
+  const selectedTopicIds = useSessionDraftStore(
+    (state) => state.selectedTopicIds,
+  );
   const selectCategory = useSessionDraftStore((state) => state.selectCategory);
   const setCrush = useSessionDraftStore((state) => state.setCrush);
+  const setSelectedTopicIds = useSessionDraftStore(
+    (state) => state.setSelectedTopicIds,
+  );
+
+  const [topics, setTopics] = useState<{ id: string; name: string }[]>([]);
+
+  const displayedTopics = categories.length === 0 ? [] : topics;
   const hasFriends = categories.includes(Category.FRIENDS);
-  const canContinue = categories.length === 1;
+  const activeTopicCount =
+    selectedTopicIds.length === 0 ? displayedTopics.length : selectedTopicIds.length;
+  const hasTopicError = displayedTopics.length > 0 && activeTopicCount === 0;
+  const canContinue = categories.length === 1 && !hasTopicError;
+
+  useEffect(() => {
+    let active = true;
+    getTopicsForCategories(categories)
+      .then((loaded) => {
+        if (active) {
+          setTopics(loaded);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setTopics([]);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [categories]);
+
+  function isTopicActive(topicId: string) {
+    if (selectedTopicIds.length === 0) {
+      return true;
+    }
+    return selectedTopicIds.includes(topicId);
+  }
+
+  function handleToggleTopic(topicId: string) {
+    if (selectedTopicIds.length === 0) {
+      // Currently all are selected; deselect this one
+      const remaining = displayedTopics
+        .filter((t) => t.id !== topicId)
+        .map((t) => t.id);
+      setSelectedTopicIds(remaining);
+      return;
+    }
+
+    if (selectedTopicIds.includes(topicId)) {
+      const next = selectedTopicIds.filter((id) => id !== topicId);
+      setSelectedTopicIds(next);
+    } else {
+      const next = [...selectedTopicIds, topicId];
+      if (next.length === displayedTopics.length) {
+        setSelectedTopicIds([]);
+      } else {
+        setSelectedTopicIds(next);
+      }
+    }
+  }
+
+  function handleSelectAllTopics() {
+    setSelectedTopicIds([]);
+  }
 
   return (
     <main className="flex min-h-full flex-1 flex-col bg-canvas">
@@ -78,7 +147,9 @@ export function CategorySelect() {
 
         {hasFriends ? (
           <label className="mt-5 flex min-h-20 cursor-pointer items-center gap-4 rounded-[1.5rem] bg-white px-4 py-4">
-            <span className="text-2xl font-bold">💌</span>
+            <span className="flex size-10 items-center justify-center rounded-full bg-cat-couple/15 text-cat-couple-deep">
+              <Heart className="size-5 fill-current" />
+            </span>
             <span className="flex-1 text-lg leading-snug font-extrabold text-ink">
               Trong nhóm có ai đang &lsquo;thích thầm&rsquo; không?
             </span>
@@ -89,6 +160,68 @@ export function CategorySelect() {
               aria-label="Bật câu hỏi thích thầm"
             />
           </label>
+        ) : null}
+
+        {categories.length > 0 && displayedTopics.length > 0 ? (
+          <div className="mt-6 rounded-[1.5rem] bg-white p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 text-cat-friends-deep" />
+                <span className="text-sm font-extrabold text-ink">
+                  Chủ đề câu hỏi ({activeTopicCount}/{displayedTopics.length})
+                </span>
+              </div>
+              {selectedTopicIds.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={handleSelectAllTopics}
+                  className="text-xs font-bold text-cat-friends-deep underline underline-offset-2 hover:opacity-80"
+                >
+                  Chọn tất cả
+                </button>
+              ) : null}
+            </div>
+
+            <p className="mt-1 text-xs text-ink-muted">
+              Chạm để bật/tắt chủ đề muốn chơi trong phiên này.
+            </p>
+
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              {displayedTopics.map((t) => {
+                const active = isTopicActive(t.id);
+                return (
+                  <motion.button
+                    key={t.id}
+                    type="button"
+                    whileTap={{ scale: TAP_SCALE }}
+                    onClick={() => handleToggleTopic(t.id)}
+                    className={cn(
+                      "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition",
+                      active
+                        ? "bg-cat-friends text-ink shadow-xs"
+                        : "border border-ink/10 bg-canvas text-ink-muted hover:border-ink/20",
+                    )}
+                  >
+                    {active ? <Check className="size-3 stroke-[3]" /> : null}
+                    <span>{t.name}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            <AnimatePresence>
+              {hasTopicError ? (
+                <motion.p
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-3 text-xs font-semibold text-cat-couple-deep"
+                >
+                  Vui lòng chọn ít nhất 1 chủ đề để tiếp tục.
+                </motion.p>
+              ) : null}
+            </AnimatePresence>
+          </div>
         ) : null}
 
         <div className="mt-auto pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))]">
@@ -105,3 +238,4 @@ export function CategorySelect() {
     </main>
   );
 }
+

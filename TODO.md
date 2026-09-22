@@ -230,7 +230,24 @@ Based on §4:
 - [x] Unit test suite in `lib/auth-actions.test.ts` (51 tests passing)
 - [x] Validation: `bun run lint` (0 errors), `bun x tsc --noEmit` (0 errors), `bun test` (51 pass), `bun run build` (success)
 
+## Phase 24 — Topic Filter, Card Re-draw & Add Player Mid-Session (PLAN-015)
+
+- [x] Schema migration: `selectedTopicIds Json?` on `GameSession` (`prisma/migrations/20260922091500_add_selected_topic_ids`)
+- [x] Core game logic: `filterEligibleQuestions` in `lib/game/eligibility.ts` filters questions by `selectedTopicIds`
+- [x] Server actions: `setTopicFilterAction`, `discardCardAction`, and `addPlayerAction` in `app/session/[sessionId]/play/actions.ts`
+- [x] Topic helper: `getTopicsForCategories` in `app/session/new/actions.ts` queries distinct topics per category
+- [x] Session draft store: `selectedTopicIds` in `lib/store/session-draft.ts` with auto-reset on category change
+- [x] Session creation: `CategorySelect` topic chips multi-select and `startGameSession` persistence
+- [x] TopicFilterSheet: in-session topic toggling drawer in `components/play/topic-filter-sheet.tsx`
+- [x] AddPlayerSheet: in-session player addition drawer in `components/play/add-player-sheet.tsx` with instant wheel/priority reload
+- [x] QuestionCard: "Câu khác" discard action button with Lucide `RefreshCw` icon in `components/cards/question-card.tsx`
+- [x] PlayScreen integration: wire discard flow, topics drawer, add player drawer, and dynamic players state
+- [x] Session copy continuity: `copySessionFromCode` preserves `selectedTopicIds`
+- [x] Unit tests: topic filtering suite in `lib/game/eligibility.test.ts` (53 tests pass)
+- [x] Quality validation: `bun run lint` (0 errors), `bunx tsc --noEmit` (0 errors), `bun test` (53 pass), `bun run build` (success)
+
 ---
+
 
 
 ## Explicitly Out of Scope for v1 (per PRD §1.2)

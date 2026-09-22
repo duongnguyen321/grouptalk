@@ -12,6 +12,7 @@ import { isSamePlayerName, normalizePlayerName } from "@/lib/player-name";
 export type SessionDraftSnapshot = {
   categories: Category[];
   crushQuestionEnabled: boolean;
+  selectedTopicIds: string[];
   players: string[];
 };
 
@@ -21,6 +22,8 @@ type SessionDraftState = SessionDraftSnapshot & {
   selectCategory: (category: Category) => void;
   toggleCategory: (category: Category) => void;
   setCrush: (value: boolean) => void;
+  setSelectedTopicIds: (ids: string[]) => void;
+  toggleTopicId: (id: string) => void;
   addPlayer: (name: string) => { ok: true } | { ok: false; error: string };
   removePlayer: (name: string) => void;
   reset: () => void;
@@ -29,6 +32,7 @@ type SessionDraftState = SessionDraftSnapshot & {
 const emptyDraft: SessionDraftSnapshot = {
   categories: [],
   crushQuestionEnabled: false,
+  selectedTopicIds: [],
   players: [],
 };
 
@@ -39,10 +43,13 @@ export const useSessionDraftStore = create<SessionDraftState>()(
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
       selectCategory: (category) => {
+        const prevCategories = get().categories;
+        const isSame = prevCategories.length === 1 && prevCategories[0] === category;
         set({
           categories: [category],
           crushQuestionEnabled:
             category === Category.FRIENDS ? get().crushQuestionEnabled : false,
+          selectedTopicIds: isSame ? get().selectedTopicIds : [],
         });
       },
       toggleCategory: (category) => {
@@ -67,6 +74,14 @@ export const useSessionDraftStore = create<SessionDraftState>()(
         }
 
         set({ crushQuestionEnabled: value });
+      },
+      setSelectedTopicIds: (ids) => set({ selectedTopicIds: ids }),
+      toggleTopicId: (id) => {
+        const { selectedTopicIds } = get();
+        const next = selectedTopicIds.includes(id)
+          ? selectedTopicIds.filter((item) => item !== id)
+          : [...selectedTopicIds, id];
+        set({ selectedTopicIds: next });
       },
       addPlayer: (name) => {
         const normalized = normalizePlayerName(name);
@@ -103,6 +118,7 @@ export const useSessionDraftStore = create<SessionDraftState>()(
       partialize: (state) => ({
         categories: state.categories,
         crushQuestionEnabled: state.crushQuestionEnabled,
+        selectedTopicIds: state.selectedTopicIds,
         players: state.players,
       }),
       onRehydrateStorage: () => () => {

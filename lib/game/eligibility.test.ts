@@ -215,3 +215,75 @@ test("crush mode on: handles tiny pool without crash", () => {
   expect(result.length).toBeLessThanOrEqual(2);
 });
 
+test("topic filter: filters out questions not matching selectedTopicIds", () => {
+  const q1 = {
+    id: "q-1",
+    isDeleted: false,
+    topicName: "Kỷ niệm",
+    topicId: "topic-memories",
+    categories: [Category.FRIENDS],
+  };
+  const q2 = {
+    id: "q-2",
+    isDeleted: false,
+    topicName: "Ước mơ",
+    topicId: "topic-dreams",
+    categories: [Category.FRIENDS],
+  };
+  const q3 = {
+    id: "q-3",
+    isDeleted: false,
+    topicName: "Bí mật",
+    topicId: "topic-secrets",
+    categories: [Category.FRIENDS],
+  };
+
+  const result = filterEligibleQuestions([q1, q2, q3], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedTopicIds: new Set(["topic-memories", "topic-dreams"]),
+  });
+
+  expect(result.map((q) => q.id)).toEqual(["q-1", "q-2"]);
+});
+
+test("topic filter: empty or undefined selectedTopicIds permits all topics", () => {
+  const q1 = {
+    id: "q-1",
+    isDeleted: false,
+    topicName: "Kỷ niệm",
+    topicId: "topic-memories",
+    categories: [Category.FRIENDS],
+  };
+  const q2 = {
+    id: "q-2",
+    isDeleted: false,
+    topicName: "Ước mơ",
+    topicId: "topic-dreams",
+    categories: [Category.FRIENDS],
+  };
+
+  const withEmpty = filterEligibleQuestions([q1, q2], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+    selectedTopicIds: new Set(),
+  });
+
+  const withUndefined = filterEligibleQuestions([q1, q2], {
+    sessionCategories: [Category.FRIENDS],
+    crushQuestionEnabled: false,
+    hiddenQuestionIds: new Set(),
+    answeredQuestionIds: new Set(),
+    allowAnsweredRepeats: false,
+  });
+
+  expect(withEmpty.map((q) => q.id)).toEqual(["q-1", "q-2"]);
+  expect(withUndefined.map((q) => q.id)).toEqual(["q-1", "q-2"]);
+});
+

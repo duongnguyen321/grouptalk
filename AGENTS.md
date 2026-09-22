@@ -179,3 +179,13 @@ Every screen and every user action must animate. A flow is not done when it mere
 - Zero redirect trap: The root landing page (`/`, `SplashScreen`) NEVER auto-redirects returning or existing guests to `/session`. Users retain full agency to view stats, read game overview, or click "Chơi ngay" / "Vào phòng chơi".
 - User identity is unified via `UserAccountBar` (`components/ui/user-account-bar.tsx`), rendered on `/`, `/session`, and `/session/manage`. Shows Google profile with "Đăng xuất" or Guest status with 1-click "Đăng nhập Google".
 - Zero emoji policy strictly maintained across all user account bars, landing headers, and actions.
+
+## Technical rules (PLAN-015)
+
+- Topic filter persistence: `GameSession.selectedTopicIds` is stored as `Json?` (array of string topic IDs). When null or empty, all category-matching topics are eligible. `setTopicFilterAction` writes `Prisma.DbNull` when all topics are permitted to keep DB rows clean.
+- In-game topic filtering: `filterEligibleQuestions` excludes questions whose `topicId` is missing from `selectedTopicIds` whenever `selectedTopicIds.size > 0`.
+- Card re-draw flow: `discardCardAction` deletes the specific `SessionAnswer` row (`sessionId`, `sessionPlayerId`, `questionId`), allowing `loadTeaserCardsAction` to redraw 3 fresh cards without altering the wheel state.
+- Add player mid-session: `addPlayerAction` validates author, normalizes player name, rejects duplicates with `isSamePlayerName`, and creates a `SessionPlayer`. The client wheel and priority system reload with the new player at weight 1x.
+- Session copy continuity: `copySessionFromCode` clones `selectedTopicIds` to ensure copied sessions retain customized topic filters.
+- Zero emoji policy strictly maintained across `TopicFilterSheet`, `AddPlayerSheet`, `CategorySelect`, and `QuestionCard`.
+

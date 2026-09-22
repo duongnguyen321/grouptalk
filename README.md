@@ -6,7 +6,7 @@ Product source of truth: [GroupTalk.md](GroupTalk.md). System map: [ARCHITECTURE
 
 ## Current status
 
-PLAN-001 through PLAN-014 are implemented: identity, Splash Landing (with zero redirect trap, clean landing presentation & community overview stats), Session Home (with unified UserAccountBar, sign-in, and sign-out controls), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), full-route SEO optimization for production domain `https://grouptalk.t5edu.site`, and automated CI/CD GitHub Actions for pull requests and SSH production deployment.
+PLAN-001 through PLAN-015 are implemented: identity, Splash Landing (with zero redirect trap, clean landing presentation & community overview stats), Session Home (with unified UserAccountBar, sign-in, and sign-out controls), session setup, the core play loop (wheel → winner confetti → 3 teaser cards → reveal + vote-hide), community continuity (session-code copy, question contribution, session history), concurrency hardening (per-session Redis spin lock with atomic compare-and-delete release), §7 design system, full UX overhaul, secret priority spin configuration, crush boost teaser cards, author session access control, question library explorer (/questions) with topic chips filtering and infinite scroll, AI-generated brand icons (apple-icon, favicon.ico, PWA icons), full-route SEO optimization for production domain `https://grouptalk.t5edu.site`, automated CI/CD GitHub Actions for pull requests and SSH production deployment, and in-game session controls (topic filter, card re-draw, and mid-session player additions).
 
 ## Stack
 
@@ -83,6 +83,7 @@ Open [http://localhost:3000](http://localhost:3000). **Chơi ngay** creates a gu
 - Author access control (PLAN-010): strict session ownership protection with cookie-synced guest deviceId and unauthorized redirect banners
 - Question stats & explorer (PLAN-011): real-time question and SessionPlayer participation counters on Splash and Session Home, and an interactive `/questions` library with horizontal topic filters, question type badges, category tags, and 20-item infinite scroll
 - Automated CI/CD (PLAN-013): GitHub Actions workflows for continuous integration validation and automated SSH production deployment to VPS
+- Session controls (PLAN-015): Host topic filter selection at session setup and in-session via `TopicFilterSheet` drawer, card re-draw escape hatch ("Câu khác" button with `SessionAnswer` deletion and fresh 3-card reload), mid-session player additions (`AddPlayerSheet`) with instant wheel re-slice, and session copy filter continuity.
 
 ## Production deploy
 

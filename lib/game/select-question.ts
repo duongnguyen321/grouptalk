@@ -13,6 +13,7 @@ type QuestionWithMeta = {
   type: QuestionType;
   isDeleted: boolean;
   categories: Category[];
+  topicId?: string;
   topic: { name: string };
   contributedBy: { displayName: string | null } | null;
 };
@@ -22,6 +23,7 @@ function toEligible(question: QuestionWithMeta) {
     id: question.id,
     isDeleted: question.isDeleted,
     topicName: question.topic.name,
+    topicId: question.topicId,
     categories: question.categories,
   };
 }
@@ -53,6 +55,7 @@ export async function pickThreeQuestions(
     select: {
       categories: true,
       crushQuestionEnabled: true,
+      selectedTopicIds: true,
     },
   });
 
@@ -72,6 +75,7 @@ export async function pickThreeQuestions(
         type: true,
         isDeleted: true,
         categories: true,
+        topicId: true,
         topic: { select: { name: true } },
         contributedBy: { select: { displayName: true } },
       },
@@ -90,12 +94,17 @@ export async function pickThreeQuestions(
   const answeredQuestionIds = new Set(
     answers.map((answer) => answer.questionId),
   );
+  const selectedTopicIds =
+    Array.isArray(session.selectedTopicIds) && session.selectedTopicIds.length > 0
+      ? new Set<string>(session.selectedTopicIds as string[])
+      : undefined;
   const byId = new Map(questions.map((question) => [question.id, question]));
   const eligibilityInput = {
     sessionCategories: session.categories,
     crushQuestionEnabled: session.crushQuestionEnabled,
     hiddenQuestionIds,
     answeredQuestionIds,
+    selectedTopicIds,
   };
 
   let pool = filterEligibleQuestions(questions.map(toEligible), {

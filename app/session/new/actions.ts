@@ -12,9 +12,37 @@ import {
 type StartGameSessionInput = {
   categories: string[];
   crushQuestionEnabled: boolean;
+  selectedTopicIds?: string[];
   players: string[];
   deviceId?: string;
 };
+
+export async function getTopicsForCategories(
+  categoryNames: string[],
+): Promise<{ id: string; name: string }[]> {
+  const categories = parseSessionCategories(categoryNames);
+  if (!categories || categories.length === 0) {
+    return [];
+  }
+
+  try {
+    const topics = await prisma.topic.findMany({
+      where: {
+        questions: {
+          some: {
+            isDeleted: false,
+            categories: { hasSome: categories },
+          },
+        },
+      },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    });
+    return topics;
+  } catch {
+    return [];
+  }
+}
 
 export async function startGameSession(
   input: StartGameSessionInput,
@@ -35,6 +63,11 @@ export async function startGameSession(
   const crushQuestionEnabled =
     categories.includes(Category.FRIENDS) && input.crushQuestionEnabled;
 
+  const selectedTopicIds =
+    Array.isArray(input.selectedTopicIds) && input.selectedTopicIds.length > 0
+      ? input.selectedTopicIds
+      : undefined;
+
   try {
     const user = await getCurrentUser({ deviceId: input.deviceId });
     const sessionCode = await nextSessionCode();
@@ -46,6 +79,7 @@ export async function startGameSession(
           sessionCode,
           categories,
           crushQuestionEnabled,
+          selectedTopicIds: selectedTopicIds ?? undefined,
         },
         select: { id: true },
       });

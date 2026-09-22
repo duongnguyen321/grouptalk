@@ -11,6 +11,7 @@ export type EligibleQuestion = {
   id: string;
   isDeleted: boolean;
   topicName: string;
+  topicId?: string;
   categories: Category[];
 };
 
@@ -22,6 +23,7 @@ export function filterEligibleQuestions(
     hiddenQuestionIds: ReadonlySet<string>;
     answeredQuestionIds: ReadonlySet<string>;
     allowAnsweredRepeats: boolean;
+    selectedTopicIds?: ReadonlySet<string>;
   },
 ) {
   return questions.filter((question) => {
@@ -44,6 +46,14 @@ export function filterEligibleQuestions(
     if (
       !options.crushQuestionEnabled &&
       question.topicName === CRUSH_TOPIC_NAME
+    ) {
+      return false;
+    }
+
+    if (
+      options.selectedTopicIds &&
+      options.selectedTopicIds.size > 0 &&
+      (!question.topicId || !options.selectedTopicIds.has(question.topicId))
     ) {
       return false;
     }

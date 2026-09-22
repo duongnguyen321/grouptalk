@@ -4,8 +4,9 @@ import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, GitBranch, LogOut, Menu, PlusCircle, Share2, X } from "lucide-react";
+import { Clock, GitBranch, Layers, LogOut, Menu, PlusCircle, Share2, UserPlus, X } from "lucide-react";
 import {
+  discardCardAction,
   loadTeaserCardsAction,
   revealCardAction,
   spinAction,
@@ -14,9 +15,11 @@ import {
 import { CardSelection } from "@/components/cards/card-selection";
 import { QuestionCard } from "@/components/cards/question-card";
 import { VoteHideDialog } from "@/components/cards/vote-hide-dialog";
+import { AddPlayerSheet } from "@/components/play/add-player-sheet";
 import { ExitSessionDialog } from "@/components/play/exit-session-dialog";
 import { PlayerChipRow } from "@/components/play/player-chip-row";
 import { PrioritySheet } from "@/components/play/priority-sheet";
+import { TopicFilterSheet } from "@/components/play/topic-filter-sheet";
 import { Wheel } from "@/components/wheel/wheel";
 import { WinnerReveal } from "@/components/wheel/winner-reveal";
 import { Button } from "@/components/ui/button";
@@ -60,14 +63,18 @@ type PlayScreenProps = {
   categories: Category[];
   players: PlayPlayer[];
   initialWeights: Record<string, number>;
+  allTopics?: { id: string; name: string }[];
+  initialSelectedTopicIds?: string[];
 };
 
 export function PlayScreen({
   sessionId,
   sessionCode,
   categories,
-  players,
+  players: initialPlayers,
   initialWeights,
+  allTopics = [],
+  initialSelectedTopicIds = [],
 }: PlayScreenProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<PlayPhase>("idle");
@@ -76,12 +83,19 @@ export function PlayScreen({
   const [winner, setWinner] = useState<PlayPlayer | null>(null);
   const [cards, setCards] = useState<TeaserCard[]>([]);
   const [revealed, setRevealed] = useState<RevealedCard | null>(null);
+  const [players, setPlayers] = useState<PlayPlayer[]>(initialPlayers);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(
+    initialSelectedTopicIds,
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [priorityOpen, setPriorityOpen] = useState(false);
+  const [topicFilterOpen, setTopicFilterOpen] = useState(false);
+  const [addPlayerOpen, setAddPlayerOpen] = useState(false);
   const [weights, setWeights] = useState<Record<string, number>>(initialWeights);
   const [hideOpen, setHideOpen] = useState(false);
   const [hideBusy, setHideBusy] = useState(false);
+  const [isDiscarding, setIsDiscarding] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -218,6 +232,43 @@ export function PlayScreen({
     setPhase("idle");
   }
 
+  async function handleDiscard() {
+    if (!winner || !revealed || isDiscarding) {
+      return;
+    }
+
+    setIsDiscarding(true);
+    const discardResult = await discardCardAction(
+      sessionId,
+      winner.id,
+      revealed.id,
+      { deviceId: getOrCreateDeviceId() },
+    );
+
+    if (!discardResult.ok) {
+      setIsDiscarding(false);
+      setError(discardResult.error);
+      return;
+    }
+
+    const reloadResult = await loadTeaserCardsAction(sessionId, winner.id, {
+      deviceId: getOrCreateDeviceId(),
+    });
+
+    setIsDiscarding(false);
+
+    if (!reloadResult.ok) {
+      setError(reloadResult.error);
+      setPhase("idle");
+      return;
+    }
+
+    setCards(reloadResult.cards);
+    setRevealed(null);
+    setPhase("cards");
+    showToast("Đã đổi 3 thẻ mới");
+  }
+
   return (
     <main className="relative flex min-h-full flex-1 flex-col bg-play text-white">
       <header className="flex items-center justify-between px-4 pt-5 pb-3">
@@ -347,6 +398,8 @@ export function PlayScreen({
               card={revealed}
               onHide={() => setHideOpen(true)}
               onNext={resetRound}
+              onDiscard={handleDiscard}
+              isDiscarding={isDiscarding}
             />
           </motion.div>
         ) : null}
@@ -404,6 +457,29 @@ export function PlayScreen({
         weights={weights}
         onOpenChange={setPriorityOpen}
         onWeightsChange={setWeights}
+      />
+
+      <TopicFilterSheet
+        open={topicFilterOpen}
+        sessionId={sessionId}
+        allTopics={allTopics}
+        activeTopicIds={selectedTopicIds}
+        onOpenChange={setTopicFilterOpen}
+        onSaved={(savedIds) => {
+          setSelectedTopicIds(savedIds);
+          showToast("Đã cập nhật chủ đề");
+        }}
+      />
+
+      <AddPlayerSheet
+        open={addPlayerOpen}
+        sessionId={sessionId}
+        existingNames={players.map((p) => p.displayName)}
+        onOpenChange={setAddPlayerOpen}
+        onPlayerAdded={(updatedPlayers) => {
+          setPlayers(updatedPlayers);
+          showToast("Đã thêm người chơi mới");
+        }}
       />
 
       <AnimatePresence>
@@ -471,6 +547,28 @@ export function PlayScreen({
                   <Share2 className="size-5 text-ink-muted" />
                   <span>Xem mã phiên</span>
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTopicFilterOpen(true);
+                  }}
+                  className="flex items-center gap-3 py-2.5 text-left transition hover:opacity-80"
+                >
+                  <Layers className="size-5 text-ink-muted" />
+                  <span>Chủ đề câu hỏi</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setAddPlayerOpen(true);
+                  }}
+                  className="flex items-center gap-3 py-2.5 text-left transition hover:opacity-80"
+                >
+                  <UserPlus className="size-5 text-ink-muted" />
+                  <span>Thêm người chơi</span>
+                </button>
                 <div className="my-2 h-px bg-ink/10" />
                 <button
                   type="button"

@@ -21,20 +21,27 @@ type PlayPageProps = {
 
 export default async function PlayPage({ params }: PlayPageProps) {
   const { sessionId } = await params;
-  const session = await prisma.gameSession.findUnique({
-    where: { id: sessionId },
-    select: {
-      id: true,
-      ownerUserId: true,
-      sessionCode: true,
-      categories: true,
-      priorityConfig: true,
-      players: {
-        select: { id: true, displayName: true },
-        orderBy: { id: "asc" },
+  const [session, allTopics] = await Promise.all([
+    prisma.gameSession.findUnique({
+      where: { id: sessionId },
+      select: {
+        id: true,
+        ownerUserId: true,
+        sessionCode: true,
+        categories: true,
+        priorityConfig: true,
+        selectedTopicIds: true,
+        players: {
+          select: { id: true, displayName: true },
+          orderBy: { id: "asc" },
+        },
       },
-    },
-  });
+    }),
+    prisma.topic.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   if (!session || session.players.length === 0) {
     notFound();
@@ -49,6 +56,9 @@ export default async function PlayPage({ params }: PlayPageProps) {
     weights?: Record<string, number>;
   } | null;
   const initialWeights = priorityConfig?.weights ?? {};
+  const initialSelectedTopicIds = Array.isArray(session.selectedTopicIds)
+    ? (session.selectedTopicIds as string[])
+    : [];
 
   return (
     <PlayScreen
@@ -57,6 +67,8 @@ export default async function PlayPage({ params }: PlayPageProps) {
       categories={session.categories}
       players={session.players}
       initialWeights={initialWeights}
+      allTopics={allTopics}
+      initialSelectedTopicIds={initialSelectedTopicIds}
     />
   );
 }

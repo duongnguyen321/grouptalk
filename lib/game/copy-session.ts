@@ -37,6 +37,7 @@ export async function copySessionFromCode(
           copiedFromSessionId: source.id,
           categories: source.categories,
           crushQuestionEnabled: source.crushQuestionEnabled,
+          selectedTopicIds: source.selectedTopicIds ?? undefined,
         },
         select: { id: true },
       });

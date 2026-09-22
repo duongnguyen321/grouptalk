@@ -19,6 +19,9 @@ export function PlayerEntry() {
   const crushQuestionEnabled = useSessionDraftStore(
     (state) => state.crushQuestionEnabled,
   );
+  const selectedTopicIds = useSessionDraftStore(
+    (state) => state.selectedTopicIds,
+  );
   const players = useSessionDraftStore((state) => state.players);
   const addPlayer = useSessionDraftStore((state) => state.addPlayer);
   const removePlayer = useSessionDraftStore((state) => state.removePlayer);
@@ -65,6 +68,7 @@ export function PlayerEntry() {
     const result = await startGameSession({
       categories,
       crushQuestionEnabled,
+      selectedTopicIds,
       players,
       deviceId: getOrCreateDeviceId(),
     });
